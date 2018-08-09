@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>EXAMPLE APPLICATION</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/demoAppcss.css" rel="stylesheet">
+
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/applicationFunctions.js"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/index.html">Choose your application</a>
+        </div>
+
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active" id="demoAppURL"><a href="#index.html;">Demo application</a></li>
+                <li class="not" id="withoutDiscoveryURL"><a href="/withoutDiscovery.html">Without Discovery</a>
+                <li class="not" id="indianDemoAppURL"><a href="/indianDemoApp.html">Indian demo application</a>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="parent">
+    <div class="container">
+
+        <div class="jumbotron">
+            <div class="msisdnConfigure">
+                <input type="checkbox" id="msisdn-toogle"> With msisdn<br>
+                <input type="text" id="msisdn" placeholder="Your msisdn" class="center-block"><br>
+            </div>
+
+            <p class="text-center">Auth Type To Request</p>
+            <form action="authType" class="text-center">
+                <input type="radio" id="authz" name="authType" value="authz" class="radioButtonCenter" checked/>
+                <label class="radio-label">Authorization</label>
+
+                <input type="radio" id="authn" name="authType" value="authn" class="radioButtonCenter"/>
+                <label class="radio-label">Authentication</label>
+            </form>
+
+            <!--configure request options-->
+            <div id="configureContainer">
+                <div class="test">
+                    <div class="item">
+                        <a href="javascript:openRequestOptionsMenu()" id="open-menu-options">
+                            <img src="img/arrow.png" class="img-arrow">
+                            Request options
+                        </a>
+                    </div>
+                    <div id="requestOptionsMore" style="visibility: hidden;">
+                        <table class="testtable">
+                            <tr>
+                                <th>UserInfo</th>
+                                <th>Identity</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="user-info" type="checkbox" data-scope="address"> Address<br>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="identity-info" type="checkbox" data-scope="mc_identity_phonenumber"> Phone<br>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="user-info" type="checkbox" data-scope="email"> Email<br>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="identity-info" type="checkbox" data-scope="mc_identity_signup"> Sign Up<br>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="user-info" type="checkbox" data-scope="phone"> Phone<br>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="identity-info" type="checkbox" data-scope="mc_identity_nationalid"> National ID<br>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="user-info" type="checkbox" data-scope="profile"> Profile<br>
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!--configure request parameters-->
+                <div class="test">
+                    <div id="parameterContainer">
+                        <div class="item">
+                            <a href="javascript:openRequestParametersMenu()" id="open-menu-parameters">
+                                <img src="img/arrow.png" class="img-arrow">
+                                Request parameters
+                            </a>
+                        </div>
+                        <div id="requestParameters" style="visibility: hidden;">
+                            <p class="request-parameter-info">Client ID</p>
+                            <input type="text" id="clientID" placeholder="Your client ID"><br>
+                            <p class="request-parameter-info">Client Secret</p>
+                            <input type="text" id="clientSecret" placeholder="Your client secret"><br>
+                            <p class="request-parameter-info">Discovery URL</p>
+                            <input type="text" id="discoveryURL" placeholder="Your discovery URL"><br>
+                            <p class="request-parameter-info">Redirect URL</p>
+                            <input type="text" id="redirectURL" placeholder="Your redirect URL"><br>
+                            <div class="extra-options">
+                                <div class="box">
+                                    <div class="text-version">
+                                        <p>API version</p>
+                                    </div>
+                                    <div class="class-api-version">
+                                        <select name="apiVersion" id="api">
+                                            <option value="mc_v1.2">v2.0</option>
+                                            <option value="mc_v1.1">v1.1</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="checkbox" id="xRedirect" name="xRedirect"> X-Redirect<br>
+                            <p></p>
+                            <input type="checkbox" id="includeRequestIP" name="includeRequestIP"> Include Request Ip<br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a id="getToken" href="javascript:start()">
+                <img src="img/mc_button.png" id="getTokenButton" align="middle">
+            </a>
+            <span class="additionally-buttons">
+                <a href="#" class="information hidden" id="user-info-button">UserInfo</a>
+                <a href="#" class="information hidden" id="identity-button">Identity</a>
+            </span>
+
+        </div><!-- /.container -->
+
+    </div>
+    <div class="configure-another-place" width="1000">
+        <div id="information">
+            <h2> Using the Application</h2>
+            <h5>
+                <p>The Application consists of two parts:
+                <p>1. Demo app.
+                <p>2. Without discovery app.
+                <p>3. Indian demo app</p>
+                <p>The default environment is a sandbox.
+                    <br>
+                    <br>
+                <p>Msisdn - phone number, used to identify your operator.
+                <p>Tap "Request options" button to configure your request scopes.
+                <p>Tap "Request parameters" button to configure your request parameters.
+            </h5>
+            <h3>Click on "Mobile Connect Log-in" to see MobileConnect UI</h3>
+        </div>
+        <div class="error" id="error"></div>
+        <iframe id="redirect-url" name="_name" scrolling="no" frameborder="1" src="mobileconnect.html" style="display:none;"
+                height="400" width="700">
+
+        </iframe>
+
+        <div id="logged-in" class="responsive logged-in hidden">
+            <div id="logged-in-message">Succesfully Logged In</div>
+            <table id="token-table" class="token-table hidden">
+                <tr>
+                    <td>
+                        <div class="display-id">Application name:</div>
+                    </td>
+                    <td>
+                        <div id="value-application-name" class="display-value"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="display-id">Access token:</div>
+                    </td>
+                    <td>
+                        <div id="value-access-token" class="display-value"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="display-id">Id token:</div>
+                    </td>
+                    <td>
+                        <div id="value-id-token" class="display-value"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: 2px solid black;">
+                        <div class="display-id">Time received:</div>
+                    </td>
+                    <td style="border-bottom: 2px solid black;">
+                        <div id="value-time-received" class="display-value"></div>
+                    </td>
+                </tr>
+            </table>
+            <div id="value-identity-prefetched" class="display-value pre-whitespace"></div>
+
+            <div id="user-info" class="responsive user-info hidden">
+                <p>User Info:</p>
+                <div id="value-user" class="display-value pre-whitespace"></div>
+            </div>
+            <div id="identity" class="responsive identity hidden">
+                <p>Identity:</p>
+                <div id="value-identity" class="display-value pre-whitespace"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>

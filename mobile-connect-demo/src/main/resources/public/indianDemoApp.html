@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <style>
+        .fakey {
+            border: solid 1px;
+            color: #ccc;
+            width:110px;
+        }
+        .fakey input {
+            border: none;
+            outline: none;
+        }
+        .text-black {
+            color: #000000;
+            background-color: #eee;
+        }
+        .frame-style {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <title>EXAMPLE APPLICATION</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/demoAppcss.css" rel="stylesheet">
+
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/applicationFunctions.js"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">Choose your application</a>
+        </div>
+
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="not" id="demoAppURL"><a href="/index.html">Demo applicaton</a></li>
+                <li class="not" id="withoutDiscoveryURL"><a href="/withoutDiscovery.html">Without Discovery</a></li>
+                <li class="active" id="indianDemoAppURL"><a href="#indianDemoApp.html;">Indian demo application</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="parent">
+    <div class="container">
+
+        <div class="jumbotron" >
+            <div  align="center" class="discovery-mode">
+                <table class="discovery-mode">
+					<tr>
+                        <td></td>
+                    </tr>
+					<tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Select discovery mode</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label id="authIndianMsisdn" class="radio-label" id="authIndianMsisdn">With MSISDN</label>
+                        </td>
+                        <td><input type="radio" id="authIndianMsisdn-toggle" value="authIndianMsisdn-toggle" name="discoveryType"  class="radioButtonCenter" /></td>
+                        <td>
+                            <div class="fakey" name="msisdnIndianContainer" id="msisdnIndianContainer" hidden>+91<input class="text-black" type="text" size="7" maxlength="10" id="msisdnIndian" name="msisdnIndian" placeholder="Your msisdn" hidden></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label id="authIndianMccMnc" class="radio-label">With MCC_MNC</label>
+                        </td>
+                        <td>
+                            <input type="radio" id="authIndianMccMnc-toggle" value="authIndianMccMnc-toggle" name="discoveryType" class="radioButtonCenter"/>
+                        </td>
+                        <td>
+                            <input type="text" id="mccIndian" name="mccIndian" placeholder="Your mcc" hidden><br>
+                        </td>
+                        <td>
+                            <input type="text" id="mncIndian" name="mncIndian" placeholder="Your mnc" hidden><br>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label id="authIndianNone" class="radio-label">None</label>
+                        </td>
+                        <td>
+                            <input type="radio" id="authIndianNone-toggle" value="authIndianNone-toggle" name="discoveryType"  class="radioButtonCenter" checked/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <form action="discoveryType">
+
+            </form>
+
+            <div id="configureContainer">
+
+                <div class="test">
+                    <div class="item">
+                        <a href="javascript:openRequestOptionsMenu()" id="open-menu-options">
+                            <img src="img/arrow.png" class="img-arrow">
+                            Request options
+                        </a>
+                    </div>
+                    <div id="requestOptionsMore" style="visibility: hidden;">
+                        <table class="testtable">
+                            <tr>
+                                <th>Scopes</th>
+                            </tr>
+                            <tr><td></td></tr>
+                            <tr>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="indian" name="indianScopeType" id = "openidIndian" value="openid+mc_identity_phonenumber_hashed" type="radio" data-scope="openid" checked>  openid<br>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="indian" name="indianScopeType" id = "mc_india_tc" value="mc_india_tc+mc_identity_phonenumber_hashed" type="radio" data-scope="mc_india_tc">  mc_india_tc<br>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="indian" name="indianScopeType" id = "mc_mnv_validate" value="mc_mnv_validate+mc_identity_phonenumber_hashed" type="radio" data-scope="mc_mnv_validate">  mc_mnv_validate<br>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="permissions-check">
+                                        <input class="indian" name="indianScopeType" id = "mc_mnv_validate_plus" value="mc_mnv_validate_plus+mc_identity_phonenumber_hashed" type="radio" data-scope="mc_mnv_validate_plus">  mc_mnv_validate_plus<br>
+                                    </label>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+                <!--configure request parameters-->
+                <div class="test">
+                    <div id="parameterContainer">
+                        <div class="item">
+                            <a href="javascript:openRequestParametersMenu()" id="open-menu-parameters">
+                                <img src="img/arrow.png" class="img-arrow">
+                                Request parameters
+                            </a>
+                        </div>
+                        <div id="requestParameters" style="visibility: hidden;" >
+                            <p class="request-parameter-info">Client ID</p>
+                            <input  type="text" id="clientIDIndian" placeholder="Your client ID"><br>
+                            <p class="request-parameter-info">Client Secret</p>
+                            <input type="text" id="clientSecretIndian" placeholder="Your client secret"><br>
+                            <p class="request-parameter-info">Discovery URL</p>
+                            <input type="text" id="discoveryURLIndian" placeholder="Your discovery URL"><br>
+                            <p class="request-parameter-info">Redirect URL</p>
+                            <input type="text" id="redirectURLIndian" placeholder="Your redirect URL"><br>
+                            <p></p>
+                            <input type="checkbox" id="xRedirectIndian" name="xRedirectIndian"> X-Redirect<br>
+                            <p></p>
+                            <input type="checkbox" id="includeRequestIPIndian" name="includeRequestIPIndian"> Include Request Ip<br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a id="getToken" href="javascript:startIndian()">
+                <img src="img/mc_button.png" id="getTokenButton" align="middle">
+            </a>
+
+            <div class="information hidden">
+                <a href="#" class="information hidden" id="identity-button">UserInfo</a>
+            </div>
+            <div class="additionally-buttons">
+                <a href="#" class="information hidden" id="user-info-button">UserInfo</a>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="configure-another-place" width="1000">
+        <div id="information">
+            <h2> Using the Application</h2>
+            <h5>
+                <p>The Application consists of two parts:
+                <p>1. Demo app.
+                <p>2. Without discovery app.
+                <p>3. Indian demo app</p>
+                <p>The default environment is a sandbox.
+                    <br>
+                    <br>
+                <p>Msisdn - phone number, used to identify your operator.
+                <p>MCC - Mobile Country Code.
+				<p>MNC - Mobile Network Code.
+                <p>Tap "Request options" button to configure your request scope.
+                <p>Tap "Request parameters" button to configure your request parameters.
+            </h5>
+            <h3>Click on "Mobile Connect Log-in" to see MobileConnect UI</h3>
+        </div>
+        <div class="error" id="error"></div>
+        <iframe  name="_name" scrolling="no" id="redirect-url"  frameborder="1" src="mobileconnect.html" style="width: 400px; overflow-y:hidden; display:none; "
+                height="500" width="600">
+
+        </iframe>
+        <div id="logged-in" class="responsive logged-in hidden">
+            <div id="logged-in-message">Succesfully Logged In</div>
+            <div id="value-application-name" class="display-value"></div>
+            <table id="token-table" class="token-table hidden">
+                <tr>
+                    <td>
+                        <div class="display-id">Access token:</div>
+                    </td>
+                    <td>
+                        <div id="value-access-token" class="display-value"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="display-id">Id token:</div>
+                    </td>
+                    <td>
+                        <div id="value-id-token" class="display-value"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: 2px solid black;">
+                        <div class="display-id">Time received:</div>
+                    </td>
+                    <td style="border-bottom: 2px solid black;">
+                        <div id="value-time-received" class="display-value"></div>
+                    </td>
+                </tr>
+            </table>
+            <div id="value-identity-prefetched" class="display-value pre-whitespace"></div>
+            <div id="user-info" class="responsive user-info hidden">
+                <p>User Info:</p>
+                <div id="value-user" class="display-value pre-whitespace"></div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>

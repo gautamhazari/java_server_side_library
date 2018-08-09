@@ -1,0 +1,11 @@
+{
+  "msisdn": "8291137981",
+  "mcc": "405",
+  "mnc": "755",
+  "clientID": "88ae3b5d-18f1-4fc5-a97e-a6c5eae9cd5a",
+  "clientSecret": "5d6c7979-7851-4b45-a81a-1acb12ba334d",
+  "discoveryURL": "https://india.discover.mobileconnect.io/gsma/v2/discovery",
+  "redirectURL": "http://localhost:8080/MCIndiaDummy/callback",
+  "xRedirect": "True",
+  "includeRequestIP": "False"
+}
