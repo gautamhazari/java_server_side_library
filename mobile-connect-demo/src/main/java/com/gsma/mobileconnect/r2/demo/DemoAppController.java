@@ -112,6 +112,8 @@ public class DemoAppController
         LOGGER.info("* Attempting discovery for msisdn={}, mcc={}, mnc={}",
                 LogUtils.mask(msisdn, LOGGER, Level.INFO), sourceIp);
 
+        this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.cache, this.discoveryCache);
+
         this.getParameters();
 
         MobileConnectRequestOptions requestOptions =

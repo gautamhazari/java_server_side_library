@@ -37,6 +37,7 @@ import java.util.List;
 public class MobileConnectStatus
 {
     public static final String INTERNAL_ERROR_CODE = "internal error";
+    public static final String DESCRIPTION = "";
     private static final String ARG_MESSAGE = "message";
     private static final String ARG_RESPONSE = "response";
 
@@ -85,7 +86,7 @@ public class MobileConnectStatus
     {
         return new Builder()
             .withErrorCode(ObjectUtils.defaultIfNull(error, INTERNAL_ERROR_CODE))
-            .withErrorMessage(StringUtils.requireNonEmpty(message, ARG_MESSAGE))
+            .withErrorMessage(ObjectUtils.defaultIfNull(message, DESCRIPTION))
             .withException(e)
             .withResponseType(ResponseType.ERROR)
             .build();
