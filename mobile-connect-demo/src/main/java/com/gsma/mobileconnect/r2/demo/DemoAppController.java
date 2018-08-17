@@ -157,7 +157,12 @@ public class DemoAppController
         else {
             //HttpResponse redirectUrl = getRedirectUrlWithMsgNew(status);
             //return getRedirectUrlWithMsg(status).getUrl();
-            return new RedirectView(status.getUrl(), true);
+            if (status.getUrl() != null) {
+                return new RedirectView(status.getUrl(), true);
+            }
+            else {
+                return startDiscovery(msisdn, mcc, mnc, null, request);
+            }
         }
 //        HttpResponse redirectUrl = getRedirectUrlWithMsgNew(status);
 //        //return getRedirectUrlWithMsgNew_2(status);
