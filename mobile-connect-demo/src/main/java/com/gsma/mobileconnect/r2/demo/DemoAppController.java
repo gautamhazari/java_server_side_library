@@ -151,6 +151,10 @@ public class DemoAppController
                     request,
                     msisdn, mcc, mnc);
 
+            if (url == null) {
+                return startDiscovery(null, null, null, null, request);
+            }
+
             return new RedirectView(url);
         }
 
@@ -330,7 +334,8 @@ public class DemoAppController
                         null, null, options);
 
         if (status.getErrorMessage() != null) {
-            return String.format("Authentication was failed: '{0}' , with code: {1}", status.getErrorMessage(), status.getErrorCode());
+//            return String.format("Authentication was failed: '{0}' , with code: {1}", status.getErrorMessage(), status.getErrorCode());
+            return null;
         }
         cachedParameters.setNonce(status.getNonce());
         if (msisdn != null) {
