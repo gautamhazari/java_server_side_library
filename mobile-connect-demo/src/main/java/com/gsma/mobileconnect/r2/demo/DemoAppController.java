@@ -116,62 +116,55 @@ public class DemoAppController
 
         this.getParameters();
 
+        DiscoveryResponse discoveryResponse = getCacheByRequest(msisdn, mcc, mnc, sourceIp);
+        MobileConnectStatus status;
+
+        if (discoveryResponse == null) {
+            status = attemptDiscovery(msisdn, mcc, mnc, sourceIp, request);
+            discoveryResponse = status.getDiscoveryResponse();
+
+            if (discoveryResponse == null  || discoveryResponse.getResponseCode() !=
+                    org.apache.http.HttpStatus.SC_OK) {
+                if (status.getUrl() != null) {
+                    return new RedirectView(status.getUrl(), true);
+                }
+                else {
+                    return startDiscovery(msisdn, mcc, mnc, null, request);
+                }
+            }
+        }
+
+        setCacheByRequest(msisdn, mcc, mnc, sourceIp, discoveryResponse);
+
+        String url = startAuthentication(
+                discoveryResponse,
+                discoveryResponse.getResponseData().getSubscriberId(),
+                request,
+                msisdn, mcc, mnc, sourceIp);
+
+        if (url == null) {
+            return startDiscovery(null, null, null, null, request);
+        }
+
+        return new RedirectView(url);
+
+    }
+
+    private MobileConnectStatus attemptDiscovery(String msisdn, String mcc, String mnc, String sourceIp, HttpServletRequest request) {
         MobileConnectRequestOptions requestOptions =
                 new MobileConnectRequestOptions.Builder()
                         .withDiscoveryOptions(new DiscoveryOptions.Builder()
-                            .withClientIp(sourceIp).build())
+                                .withClientIp(sourceIp).build())
                         .build();
         MobileConnectStatus status =
-                this.mobileConnectWebInterface.attemptDiscovery(request, msisdn, mcc, mnc, true, mobileConnectConfig.getIncludeRequestIp(), requestOptions);
+                this.mobileConnectWebInterface.attemptDiscovery(request, msisdn, mcc, mnc, true,
+                        mobileConnectConfig.getIncludeRequestIp(), requestOptions);
 
-        //cachedParameters.setSdkSession(status.getSdkSession());
-        // 1
-
-        if (handleErrorMsg(status)) {
-            status = this.mobileConnectWebInterface.attemptDiscovery(request, null, null, null, false, includeRequestIP, requestOptions);
+        if (status.getErrorMessage() != null) {
+            status = this.mobileConnectWebInterface.attemptDiscovery(request, null, null, null,
+                    false, includeRequestIP, requestOptions);
         }
-
-//        if (status.getDiscoveryResponse() != null && status.getDiscoveryResponse().getResponseCode() == Constants.ResponseOk)
-//        {
-//            String url = startAuthentication(
-//                    cachedParameters.getSdkSession(),
-//                    status.getDiscoveryResponse().getResponseData().getSubscriberId(),
-//                    request);
-//            return new RedirectView(url);
-//
-//        }
-
-        if (status.getDiscoveryResponse() != null && status.getDiscoveryResponse().getResponseCode() == Constants.ResponseOk)
-        {
-            setCacheByRequest(msisdn, mcc, mnc, sourceIp, status.getDiscoveryResponse());
-
-            String url = startAuthentication(
-                    status.getSdkSession(),
-                    status.getDiscoveryResponse().getResponseData().getSubscriberId(),
-                    request,
-                    msisdn, mcc, mnc);
-
-            if (url == null) {
-                return startDiscovery(null, null, null, null, request);
-            }
-
-            return new RedirectView(url);
-        }
-
-        else {
-            //HttpResponse redirectUrl = getRedirectUrlWithMsgNew(status);
-            //return getRedirectUrlWithMsg(status).getUrl();
-            if (status.getUrl() != null) {
-                return new RedirectView(status.getUrl(), true);
-            }
-            else {
-                return startDiscovery(msisdn, mcc, mnc, null, request);
-            }
-        }
-//        HttpResponse redirectUrl = getRedirectUrlWithMsgNew(status);
-//        //return getRedirectUrlWithMsgNew_2(status);
-//        return new RedirectView(status.getUrl(), true);
-//        //return redirectUrl;
+        return status;
     }
 
     private void setCacheByRequest (final String msisdn, final String mcc, final String mnc, final String sourceIp,
@@ -179,17 +172,28 @@ public class DemoAppController
         try {
             if (msisdn != null) {
                 discoveryCache.add(msisdn, discoveryResponse);
-            }
-            if (mcc != null && mnc != null) {
+            } else if (mcc != null && mnc != null) {
                 discoveryCache.add(String.format("%s_%s", mcc, mnc), discoveryResponse);
-            }
-            if (sourceIp!= null) {
+            } else if (sourceIp!= null) {
                 discoveryCache.add(sourceIp, discoveryResponse);
             }
         } catch (CacheAccessException e) {
             LOGGER.error("Unable to access cache");
             e.printStackTrace();
         }
+    }
+
+    private DiscoveryResponse getCacheByRequest(String msisdn, String mcc, String mnc, String sourceIp) {
+        if (discoveryCache.get(msisdn) != null) {
+            return discoveryCache.get(msisdn);
+        }
+        if (discoveryCache.get(String.format("%s_%s", mcc, mnc)) != null) {
+            return discoveryCache.get(String.format("%s_%s", mcc, mnc));
+        }
+        if (discoveryCache.get(sourceIp) != null) {
+            return discoveryCache.get(sourceIp);
+        }
+        return null;
     }
 
 
@@ -308,29 +312,30 @@ public class DemoAppController
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
     public String startAuthentication(
-            @RequestParam(required = false) final String sdkSession,
-            @RequestParam(required = false) final String subscriberId, final HttpServletRequest request, final String msisdn, final String mcc, final String mnc)
+            @RequestParam(required = false) final DiscoveryResponse discoveryResponse,
+            @RequestParam(required = false) final String subscriberId, final HttpServletRequest request, final String msisdn,
+            final String mcc, final String mnc, final String sourceIp)
     {
-        LOGGER.info("* Starting authentication for sdkSession={}, subscriberId={}, scope={}",
-                sdkSession, LogUtils.mask(subscriberId, LOGGER, Level.INFO));
+        LOGGER.info("* Starting authentication for discoveryResponse={}, subscriberId={}, scope={}",
+                discoveryResponse, LogUtils.mask(subscriberId, LOGGER, Level.INFO));
 
         String scope = operatorParams.getScope();
-        if (scope == null && operatorUrls.getProviderMetadataUri() == null) {
-            apiVersion = Constants.Version1;
-        } else if (scope == null){
-            apiVersion = Constants.Version2;
-        }
+//        if (operatorUrls.getProviderMetadataUri() == null) {
+//            apiVersion = Constants.Version1_1;
+//        } else {
+//            apiVersion = Constants.Version2_0;
+//        }
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
                         .withScope(scope)
-                        .withContext(apiVersion.equals(Constants.Version2) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage(apiVersion.equals(Constants.Version2) ? Constants.ContextBindingMsg : null)
+                        .withContext(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
+                        .withBindingMessage(apiVersion.equals(Constants.Version2_0) ? Constants.BindingMsg : null)
                         .withClientName(clientName)
                         .build())
                 .build();
         final MobileConnectStatus status =
-                this.mobileConnectWebInterface.startAuthentication(request, sdkSession, subscriberId,
+                this.mobileConnectWebInterface.startAuthentication(request, discoveryResponse, subscriberId,
                         null, null, options);
 
         if (status.getErrorMessage() != null) {
@@ -344,11 +349,15 @@ public class DemoAppController
             } catch (CacheAccessException e) {
                 e.printStackTrace();
             }
-        }
-
-        if (mcc != null) {
+        } else if (mcc != null) {
             try {
                 discoveryCache.add(status.getState(), discoveryCache.get(String.format("%s_%s", mcc, mnc)));
+            } catch (CacheAccessException e) {
+                e.printStackTrace();
+            }
+        } else if (sourceIp != null) {
+            try {
+                discoveryCache.add(status.getState(), discoveryCache.get(sourceIp));
             } catch (CacheAccessException e) {
                 e.printStackTrace();
             }
@@ -465,30 +474,6 @@ public class DemoAppController
         return new MobileConnectWebResponse(status);
     }
 
-//    @GetMapping("")
-//    @ResponseBody
-//    public MobileConnectWebResponse handleRedirect(
-//            @RequestParam(required = false) final String sdkSession,
-//            @RequestParam(required = false, value = "mcc_mnc") final String mccMnc,
-//            @RequestParam(required = false) final String code,
-//            @RequestParam(required = false) final String expectedState,
-//            @RequestParam(required = false) final String expectedNonce,
-//            @RequestParam(required = false) final String subscriberId, final HttpServletRequest request)
-//    {
-//        LOGGER.info(
-//                "* Handling redirect for sdkSession={}, mccMnc={}, code={}, expectedState={}, expectedNonce={}, subscriberId={}",
-//                sdkSession, mccMnc, code, expectedState, expectedNonce,
-//                LogUtils.mask(subscriberId, LOGGER, Level.INFO));
-//
-//        final URI requestUri = HttpUtils.extractCompleteUrl(request);
-//
-//        final MobileConnectStatus status =
-//                this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri, sdkSession,
-//                        expectedState, expectedNonce, null);
-//
-//        return new MobileConnectWebResponse(status);
-//    }
-
     @GetMapping("")
     @ResponseBody
     public MobileConnectWebResponse handleRedirect(
@@ -536,52 +521,6 @@ public class DemoAppController
         return value;
     }
 
-//    @GetMapping("discovery_callback")
-//    @ResponseBody
-//    @ResponseStatus(HttpStatus.FOUND)
-//    public RedirectView DiscoveryCallback(@RequestParam(required = false) final String state,
-//                                                      @RequestParam(required = false) final String error,
-//                                                      @RequestParam(required = false) final String description,
-//                                                      @RequestParam(required = false) final String mcc_mnc,
-//                                                      @RequestParam(required = false) final String subscriber_id,
-//                                                      final HttpServletRequest request)
-//    {
-//        if (state != null || error!= null || description!= null ){
-//            RedirectView view = new RedirectView();
-//            view.setStatusCode(HttpStatus.OK);
-//          //  MobileConnectWebResponse resp = StateDiscoveryCallback(state, error, description, request);
-//            view.setEncodingScheme(StateDiscoveryCallback(state, error, description, request).toString());
-//            //return new RedirectView().setStatusCode(HttpStatus.OK); new MobileConnectWebResponse(StateDiscoveryCallback(state, error, description, request));
-//            return view;
-//        }
-//        else
-//            return  mccMncDiscoveryCallback(mcc_mnc, subscriber_id, request);
-//    }
-
-
-
-
-
-//    @GetMapping("discovery_callback")
-//    @ResponseBody
-//    @ResponseStatus(HttpStatus.FOUND)
-//    public MobileConnectWebResponse DiscoveryCallbackOld(@RequestParam(required = false) final String state, final HttpServletRequest request)
-//    {
-//        final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
-//                .withAuthenticationOptions(new AuthenticationOptions.Builder()
-//                        .withContext(apiVersion.equals(Constants.Version2) ? Constants.ContextBindingMsg : null)
-//                        .withBindingMessage(apiVersion.equals(Constants.Version2) ? Constants.ContextBindingMsg : null)
-//                        .withClientName(clientName)
-//                        .build())
-//                .build();
-//
-//        final URI requestUri = HttpUtils.extractCompleteUrl(request);
-//        MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri, cachedParameters.getSdkSession(), state, cachedParameters.getNonce(), options);
-//
-//        cachedParameters.setAccessToken(status.getRequestTokenResponse().getResponseData().getAccessToken());
-//        return new MobileConnectWebResponse(status);
-//    }
-
     @GetMapping(value = "discovery_callback", params = "mcc_mnc")
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
@@ -593,8 +532,8 @@ public class DemoAppController
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext(apiVersion.equals(Constants.Version2) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage(apiVersion.equals(Constants.Version2) ? Constants.ContextBindingMsg : null)
+                        .withContext(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
+                        .withBindingMessage(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
                         .withClientName(clientName)
                         .build())
                 .build();
@@ -607,11 +546,11 @@ public class DemoAppController
 
         if (status.getDiscoveryResponse() != null) {
             setCacheByRequest(null, mcc, mnc, null, status.getDiscoveryResponse());
-            //MobileConnectStatus authResponse = startAuthentication( request, status.getDiscoveryResponse(), subscriber_id);
+            //MobileConnectStatus authResponse = startAuthentication( request, status.getCacheByRequest(), subscriber_id);
             String url = startAuthentication(
-                    status.getSdkSession(),
+                    status.getDiscoveryResponse(),
                     subscriber_id,
-                    request, null, mcc, mnc);
+                    request, null, mcc, mnc, null);
             return new RedirectView(url);
             //return url;
         }
@@ -637,8 +576,8 @@ public class DemoAppController
         }
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext(apiVersion.equals(Constants.Version2) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage(apiVersion.equals(Constants.Version2) ? Constants.ContextBindingMsg : null)
+                        .withContext(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
+                        .withBindingMessage(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
                         .withClientName(clientName)
                         .build())
                 .build();
@@ -676,49 +615,4 @@ public class DemoAppController
             e.printStackTrace();
         }
     }
-
-//    private MobileConnectStatus getRedirectUrlWithMsg(MobileConnectStatus status) {
-//        HttpResponseFactory factory = new DefaultHttpResponseFactory();
-//        HttpResponse response = factory.newHttpResponse(new BasicStatusLine(HTTP_1_1, HttpStatus.FOUND.value(), null), null);
-//        response.addHeader("Location", status.getUrl());
-//
-//        String statusUrl = status.getUrl();
-//        if (statusUrl != null)
-//        {
-//           // MobileConnectWebResponse ddd = new MobileConnectWebResponse(status);
-//            return MobileConnectStatus.operatorSelection(statusUrl);
-//        }
-//        // String authResponse = MobileConnectStatus.
-//        // HttpHeaders headers = new HttpHeaders();
-//        // headers.add(HttpHeaders.LOCATION, statusUrl);
-//        return MobileConnectStatus.error(Constants.InvalidArgument, status.getErrorMessage(), new Exception());
-//    }
-
-//    private HttpResponse getRedirectUrlWithMsgNew(MobileConnectStatus status) {
-//        HttpResponseFactory factory = new DefaultHttpResponseFactory();
-//        HttpResponse response = factory.newHttpResponse(new BasicStatusLine(HTTP_1_1, HttpStatus.FOUND.value(), null), null);
-//       // MobileConnectWebResponse response = new MobileConnectWebResponse(status);
-////        HttpServletResponse
-////
-//        response.addHeader("Location", status.getUrl());
-//        return response;
-////        String statusUrl = status.getUrl();
-////        if (statusUrl != null)
-////        {
-////            MobileConnectWebResponse ddd = new MobileConnectWebResponse(status);
-////            return MobileConnectStatus.operatorSelection(statusUrl);
-////        }
-////        // String authResponse = MobileConnectStatus.
-////        // HttpHeaders headers = new HttpHeaders();
-////        // headers.add(HttpHeaders.LOCATION, statusUrl);
-////        return MobileConnectStatus.error(Constants.InvalidArgument, status.getErrorMessage(), new Exception());
-//    }
-//
-//    private ModelAndView getRedirectUrlWithMsgNew_2(MobileConnectStatus status) {
-//        ModelMap model = new ModelMap();
-//        model.addAttribute("Location", status.getUrl());
-//        ModelAndView view = new ModelAndView("redirection", model);
-//        view.setStatus(HttpStatus.FOUND);
-//        return view;
-//    }
 }

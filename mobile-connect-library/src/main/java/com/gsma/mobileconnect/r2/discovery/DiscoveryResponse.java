@@ -228,7 +228,7 @@ public class DiscoveryResponse extends AbstractCacheable
     @Override
     protected void cached()
     {
-        this.responseData.clearSubscriberId();
+//        this.responseData.clearSubscriberId();
     }
 
     public static final class Builder implements IBuilder<DiscoveryResponse>

@@ -1,5 +1,6 @@
 package com.gsma.mobileconnect.r2.demo.objects;
 import com.gsma.mobileconnect.r2.cache.ICacheable;
+import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
 
 public class CachedParameters implements ICacheable {
 
@@ -8,6 +9,7 @@ public class CachedParameters implements ICacheable {
     private String nonce;
     private String sdkSession;
     private String accessToken;
+    private DiscoveryOptions discoveryOptions;
 
 
     @Override
@@ -50,5 +52,13 @@ public class CachedParameters implements ICacheable {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public DiscoveryOptions getDiscoveryOptions() {
+        return discoveryOptions;
+    }
+
+    public void setDiscoveryOptions(DiscoveryOptions discoveryOptions) {
+        this.discoveryOptions = discoveryOptions;
     }
 }

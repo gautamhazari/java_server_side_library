@@ -200,6 +200,9 @@ public class ConcurrentCache extends AbstractCache
 
     public DiscoveryResponse get(String key) {
         DiscoveryResponse discoveryResp = null;
+        if (!hasKey(key)) {
+            return null;
+        }
         try {
             discoveryResp = this.get(key, DiscoveryResponse.class);
         } catch (CacheAccessException e) {
@@ -211,5 +214,14 @@ public class ConcurrentCache extends AbstractCache
             return null;
         }
         return discoveryResp;
+    }
+
+    private boolean hasKey(String key) {
+        try {
+            return this.get(key, DiscoveryResponse.class) != null;
+        } catch (CacheAccessException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
