@@ -30,6 +30,7 @@ import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
+import com.gsma.mobileconnect.r2.discovery.SessionData;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.json.JacksonJsonService;
@@ -101,7 +102,6 @@ public class DemoAppController
     @GetMapping("start_discovery")
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
-    //public String startDiscovery(
     public RedirectView startDiscovery(
             @RequestParam(required = false) final String msisdn,
             @RequestParam(required = false) final String mcc,
@@ -190,7 +190,7 @@ public class DemoAppController
         if (discoveryCache.get(String.format("%s_%s", mcc, mnc)) != null) {
             return discoveryCache.get(String.format("%s_%s", mcc, mnc));
         }
-        if (discoveryCache.get(sourceIp) != null) {
+        if (msisdn == null & mcc == null & mnc == null & discoveryCache.get(sourceIp) != null) {
             return discoveryCache.get(sourceIp);
         }
         return null;
@@ -320,11 +320,6 @@ public class DemoAppController
                 discoveryResponse, LogUtils.mask(subscriberId, LOGGER, Level.INFO));
 
         String scope = operatorParams.getScope();
-//        if (operatorUrls.getProviderMetadataUri() == null) {
-//            apiVersion = Constants.Version1_1;
-//        } else {
-//            apiVersion = Constants.Version2_0;
-//        }
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
@@ -339,29 +334,47 @@ public class DemoAppController
                         null, null, options);
 
         if (status.getErrorMessage() != null) {
-//            return String.format("Authentication was failed: '{0}' , with code: {1}", status.getErrorMessage(), status.getErrorCode());
             return null;
         }
-        cachedParameters.setNonce(status.getNonce());
         if (msisdn != null) {
             try {
-                discoveryCache.add(status.getState(), discoveryCache.get(msisdn));
+                cache.add(status.getState(), discoveryCache.get(msisdn));
             } catch (CacheAccessException e) {
                 e.printStackTrace();
             }
         } else if (mcc != null) {
             try {
-                discoveryCache.add(status.getState(), discoveryCache.get(String.format("%s_%s", mcc, mnc)));
+                cache.add(status.getState(), discoveryCache.get(String.format("%s_%s", mcc, mnc)));
             } catch (CacheAccessException e) {
                 e.printStackTrace();
             }
         } else if (sourceIp != null) {
             try {
-                discoveryCache.add(status.getState(), discoveryCache.get(sourceIp));
+                cache.add(status.getState(), discoveryCache.get(sourceIp));
             } catch (CacheAccessException e) {
                 e.printStackTrace();
             }
         }
+
+//        if (msisdn != null) {
+//            try {
+//                cache.add(status.getState(), new SessionData(discoveryCache.get(msisdn), status.getNonce()));
+//            } catch (CacheAccessException e) {
+//                e.printStackTrace();
+//            }
+//        } else if (mcc != null) {
+//            try {
+//                cache.add(status.getState(), new SessionData(discoveryCache.get(String.format("%s_%s", mcc, mnc)), status.getNonce()));
+//            } catch (CacheAccessException e) {
+//                e.printStackTrace();
+//            }
+//        } else if (sourceIp != null) {
+//            try {
+//                cache.add(status.getState(), new SessionData(discoveryCache.get(sourceIp), status.getNonce()));
+//            } catch (CacheAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
         return status.getUrl();
     }
 
@@ -492,17 +505,12 @@ public class DemoAppController
         final URI requestUri = HttpUtils.extractCompleteUrl(request);
         DiscoveryResponse discoveryResponse = null;
         if (!code.isEmpty()) {
-            discoveryResponse = this.discoveryCache.get(expectedState);
+            discoveryResponse = this.cache.get(expectedState);
         }
         final MobileConnectStatus status =
                 this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri, discoveryResponse,
                         expectedState, expectedNonce, null);
         return new MobileConnectWebResponse(status);
-    }
-
-    private boolean handleErrorMsg(MobileConnectStatus status)
-    {
-        return status.getErrorMessage() != null;
     }
 
 //    TODO move to the utility functions
@@ -525,7 +533,6 @@ public class DemoAppController
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
     public RedirectView mccMncDiscoveryCallback(@RequestParam(required = false) final String mcc_mnc,
-                                                // public String mccMncDiscoveryCallback(@RequestParam(required = false) final String mcc_mnc,
                                                 @RequestParam(required = false) final String subscriber_id,
                                                 final HttpServletRequest request)
     {
@@ -546,17 +553,14 @@ public class DemoAppController
 
         if (status.getDiscoveryResponse() != null) {
             setCacheByRequest(null, mcc, mnc, null, status.getDiscoveryResponse());
-            //MobileConnectStatus authResponse = startAuthentication( request, status.getCacheByRequest(), subscriber_id);
             String url = startAuthentication(
                     status.getDiscoveryResponse(),
                     subscriber_id,
                     request, null, mcc, mnc, null);
             return new RedirectView(url);
-            //return url;
         }
         else {
             return new RedirectView(status.getUrl(), true);
-            //return status.getUrl();
         }
     }
 
@@ -564,7 +568,6 @@ public class DemoAppController
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
     public MobileConnectWebResponse StateDiscoveryCallback(@RequestParam(required = false) String state,
-    //public RedirectView StateDiscoveryCallback(@RequestParam(required = false) final String state,
                                           @RequestParam(required = false) final String error,
                                           @RequestParam(required = false) final String description,
                                           final HttpServletRequest request)
@@ -572,7 +575,6 @@ public class DemoAppController
         if (error != null)
         {
             return new MobileConnectWebResponse(MobileConnectStatus.error(error, description, new Exception()));
-            //return new RedirectView(MobileConnectStatus.error(Constants.InvalidArgument, description, new Exception()).getUrl());
         }
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
@@ -583,13 +585,11 @@ public class DemoAppController
                 .build();
 
         URI requestUri = HttpUtils.extractCompleteUrl(request);
-        //MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri, cachedParameters.getSdkSession(), state, cachedParameters.getNonce(), options);
-        MobileConnectStatus status = null;
-        status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri, discoveryCache.get(state), state, cachedParameters.getNonce(), options);
+        MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri,
+                cache.get(state), state, cachedParameters.getNonce(), options);
 
         cachedParameters.setAccessToken(status.getRequestTokenResponse().getResponseData().getAccessToken());
         return new MobileConnectWebResponse(status);
-        //return new RedirectView(status.getUrl());
     }
 
     private void getParameters() {

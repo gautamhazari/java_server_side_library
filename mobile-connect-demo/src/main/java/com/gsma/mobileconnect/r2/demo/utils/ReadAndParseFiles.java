@@ -11,7 +11,6 @@ public class ReadAndParseFiles {
     public static OperatorParameters ReadFile(String filePath)
     {
         OperatorParameters operatorParameters = null;
-        JSONObject config = null;
         try {
             operatorParameters = new Gson().fromJson(new FileReader(filePath), OperatorParameters.class);
         } catch (IOException e) {
