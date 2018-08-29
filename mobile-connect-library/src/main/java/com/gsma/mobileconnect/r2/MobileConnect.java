@@ -18,6 +18,7 @@ package com.gsma.mobileconnect.r2;
 
 import com.gsma.mobileconnect.r2.authentication.AuthenticationService;
 import com.gsma.mobileconnect.r2.authentication.IAuthenticationService;
+import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.validation.IJWKeysetService;
 import com.gsma.mobileconnect.r2.validation.JWKeysetService;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
@@ -387,7 +388,7 @@ public final class MobileConnect
             {
                 LOGGER.info("Building default instance of ConcurrentCache");
                 this.cache =
-                    new ConcurrentCache.Builder().withJsonService(this.jsonService).build();
+                    new DiscoveryCache.Builder().withJsonService(this.jsonService).build();
             }
 
             return new MobileConnect(this);

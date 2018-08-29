@@ -19,6 +19,7 @@ package com.gsma.mobileconnect.r2.discovery;
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
+import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
@@ -65,7 +66,7 @@ public class DiscoveryServiceTest
             .withRedirectUrl(REDIRECT_URL)
             .build();
 
-        discoveryCache = new ConcurrentCache.Builder().withJsonService(jsonService).build();
+        discoveryCache = new DiscoveryCache.Builder().withJsonService(jsonService).build();
 
         discoveryService = new DiscoveryService.Builder()
             .withJsonService(jsonService)

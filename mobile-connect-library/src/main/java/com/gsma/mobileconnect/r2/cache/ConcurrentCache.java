@@ -43,14 +43,14 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @since 2.0
  */
-public class ConcurrentCache extends AbstractCache
+public abstract class ConcurrentCache extends AbstractCache
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConcurrentCache.class);
     private static final ConcurrentHashMap<String, CacheEntry> internalCache = new ConcurrentHashMap<String, CacheEntry>();
     private long maxCacheSize = -1;
     private long cacheSize = internalCache.size();
 
-    private ConcurrentCache(final Builder builder)
+    protected ConcurrentCache(final Builder builder)
     {
         super(builder.jsonService, builder.cacheExpiryLimits);
         maxCacheSize = builder.maxCacheSize;
@@ -161,9 +161,10 @@ public class ConcurrentCache extends AbstractCache
             }
         });
     }
-    public static final class Builder implements IBuilder<ICache>
+
+    public abstract static class Builder implements IBuilder<ICache>
     {
-        private IJsonService jsonService;
+        protected IJsonService jsonService;
         private Map<Class<? extends AbstractCacheable>, Tuple<Long, Long>> cacheExpiryLimits =
             DEFAULT_CACHE_EXPIRY_LIMITS;
         private long maxCacheSize;
@@ -190,32 +191,28 @@ public class ConcurrentCache extends AbstractCache
             return this;
         }
 
-        @Override
-        public ConcurrentCache build()
-        {
-            ObjectUtils.requireNonNull(this.jsonService, "jsonService");
-
-            return new ConcurrentCache(this);
-        }
+        public abstract ConcurrentCache build();
     }
 
-    public DiscoveryResponse get(String key) {
-        DiscoveryResponse discoveryResp = null;
-        if (!hasKey(key)) {
-            return null;
-        }
-        try {
-            discoveryResp = this.get(key, DiscoveryResponse.class);
-        } catch (CacheAccessException e) {
-            e.printStackTrace();
-        }
+    public abstract <T extends AbstractCacheable> T get(String key);
 
-        if (discoveryResp.hasExpired()) {
-            this.remove(key);
-            return null;
-        }
-        return discoveryResp;
-    }
+//    public DiscoveryResponse get(String key) {
+//        DiscoveryResponse discoveryResp = null;
+//        if (!hasKey(key)) {
+//            return null;
+//        }
+//        try {
+//            discoveryResp = this.get(key, DiscoveryResponse.class);
+//        } catch (CacheAccessException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if (discoveryResp.hasExpired()) {
+//            this.remove(key);
+//            return null;
+//        }
+//        return discoveryResp;
+//    }
 
 
 //    private SessionData get(String key) {
@@ -256,7 +253,7 @@ public class ConcurrentCache extends AbstractCache
 //        return sessionData.getNonce();
 //    }
 
-    private boolean hasKey(String key) {
+    protected boolean hasKey(String key) {
         try {
             return this.get(key, DiscoveryResponse.class) != null;
         } catch (CacheAccessException e) {

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gsma.mobileconnect.r2.ErrorResponse;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
+import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.constants.Scope;
@@ -471,7 +472,7 @@ public class AuthenticationService implements IAuthenticationService
         ObjectUtils.requireNonNull(name, "appName");
         ObjectUtils.requireNonNull(operatorUrls, "operator urls");
 
-        discoveryCache = new ConcurrentCache.Builder().withJsonService(jsonService).build();
+        discoveryCache = new DiscoveryCache.Builder().withJsonService(jsonService).build();
         discoveryService = new DiscoveryService.Builder()
                 .withJsonService(jsonService)
                 .withCache(discoveryCache)

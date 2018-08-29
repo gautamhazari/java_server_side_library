@@ -19,6 +19,7 @@ package com.gsma.mobileconnect.r2;
 import com.gsma.mobileconnect.r2.authentication.*;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
+import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.discovery.*;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
@@ -67,7 +68,7 @@ public class MobileConnectWebInterfaceTest
         .build();
     private final MockRestClient restClient = new MockRestClient();
     private final MobileConnect mobileConnect = MobileConnect
-        .builder(this.config, new DefaultEncodeDecoder(), new ConcurrentCache.Builder().withMaxCacheSize(999999999).build(),new ConcurrentCache.Builder().withMaxCacheSize(999999999).build())
+        .builder(this.config, new DefaultEncodeDecoder(), new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(),new DiscoveryCache.Builder().withMaxCacheSize(999999999).build())
         .withRestClient(this.restClient)
         .build();
 
@@ -250,8 +251,8 @@ public class MobileConnectWebInterfaceTest
             .build();
 
         final MobileConnectWebInterface mcWebInterface =
-            MobileConnect.buildWebInterface(config, new DefaultEncodeDecoder(), new ConcurrentCache.Builder().withMaxCacheSize(999999999).build(),
-                    new ConcurrentCache.Builder().withMaxCacheSize(999999999).build());
+            MobileConnect.buildWebInterface(config, new DefaultEncodeDecoder(), new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(),
+                    new DiscoveryCache.Builder().withMaxCacheSize(999999999).build());
 
         final MobileConnectStatus status =
             mcWebInterface.requestToken(this.request, "invalidid", URI.create("http://test"),
@@ -500,8 +501,8 @@ public class MobileConnectWebInterfaceTest
         IRestClient restClientLocal = Mockito.mock(RestClient.class);
 
         MobileConnect mobileConnectLocal = MobileConnect
-                .builder(this.config, new DefaultEncodeDecoder(), new ConcurrentCache.Builder().withMaxCacheSize(999999999).build(),
-                        new ConcurrentCache.Builder().withMaxCacheSize(999999999).build())
+                .builder(this.config, new DefaultEncodeDecoder(), new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(),
+                        new DiscoveryCache.Builder().withMaxCacheSize(999999999).build())
                 .withRestClient(restClientLocal)
                 .build();
 

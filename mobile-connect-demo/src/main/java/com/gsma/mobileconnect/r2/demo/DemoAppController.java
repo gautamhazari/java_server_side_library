@@ -20,6 +20,7 @@ import com.gsma.mobileconnect.r2.*;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
+import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.constants.Scopes;
@@ -170,11 +171,37 @@ public class DemoAppController
     private void setCacheByRequest (final String msisdn, final String mcc, final String mnc, final String sourceIp,
                                     final DiscoveryResponse discoveryResponse) {
         try {
-            if (msisdn != null) {
-                discoveryCache.add(msisdn, discoveryResponse);
+//            if (msisdn != null) {
+//                discoveryCache.add(msisdn, discoveryResponse);
+//            } else if (mcc != null && mnc != null) {
+//                discoveryCache.add(String.format("%s_%s", mcc, mnc), discoveryResponse);
+//            } else if (sourceIp!= null) {
+//                discoveryCache.add(sourceIp, discoveryResponse);
+//            }
+            if(msisdn != null) {
+                if (mcc != null && mnc != null) {
+                    if (sourceIp != null) {
+                        discoveryCache.add(String.format("%s_%s_%s_%s", msisdn, mcc, mnc, sourceIp), discoveryResponse);
+                    }
+                    else {
+                        discoveryCache.add(String.format("%s_%s_%s", msisdn, mcc, mnc), discoveryResponse);
+                    }
+                }
+                else {
+                    if (sourceIp != null) {
+                        discoveryCache.add(String.format("%s_%s", msisdn, sourceIp), discoveryResponse);
+                    } else {
+                        discoveryCache.add(msisdn, discoveryResponse);
+                    }
+                }
             } else if (mcc != null && mnc != null) {
-                discoveryCache.add(String.format("%s_%s", mcc, mnc), discoveryResponse);
-            } else if (sourceIp!= null) {
+                if (sourceIp != null) {
+                    discoveryCache.add(String.format("%s_%s_%s", mcc, mnc, sourceIp), discoveryResponse);
+                }
+                else {
+                    discoveryCache.add(String.format("%s_%s", mcc, mnc), discoveryResponse);
+                }
+            } else if (sourceIp != null) {
                 discoveryCache.add(sourceIp, discoveryResponse);
             }
         } catch (CacheAccessException e) {
@@ -184,13 +211,38 @@ public class DemoAppController
     }
 
     private DiscoveryResponse getCacheByRequest(String msisdn, String mcc, String mnc, String sourceIp) {
-        if (discoveryCache.get(msisdn) != null) {
-            return discoveryCache.get(msisdn);
+//        if (discoveryCache.get(msisdn) != null) {
+//            return discoveryCache.get(msisdn);
+//        }
+//        if (discoveryCache.get(String.format("%s_%s", mcc, mnc)) != null) {
+//            return discoveryCache.get(String.format("%s_%s", mcc, mnc));
+//        }
+//        if (msisdn == null & mcc == null & mnc == null & discoveryCache.get(sourceIp) != null) {
+//            return discoveryCache.get(sourceIp);
+//        }
+        if (msisdn != null) {
+            if (mcc != null && mnc != null) {
+                if (sourceIp != null) {
+                    return discoveryCache.get(String.format("%s_%s_%s_%s", msisdn, mcc, mnc, sourceIp));
+                } else {
+                    return discoveryCache.get(String.format("%s_%s_%s", msisdn, mcc, mnc));
+                }
+            } else {
+                if (sourceIp != null) {
+                    return discoveryCache.get(String.format("%s_%s", msisdn, sourceIp));
+                } else {
+                    return discoveryCache.get(msisdn);
+                }
+            }
         }
-        if (discoveryCache.get(String.format("%s_%s", mcc, mnc)) != null) {
-            return discoveryCache.get(String.format("%s_%s", mcc, mnc));
+        if (mcc != null && mnc != null) {
+            if (sourceIp != null) {
+                return discoveryCache.get(String.format("%s_%s_%s", mcc, mnc, sourceIp));
+            } else {
+                return discoveryCache.get(String.format("%s_%s", mcc, mnc));
+            }
         }
-        if (msisdn == null & mcc == null & mnc == null & discoveryCache.get(sourceIp) != null) {
+        if (sourceIp != null) {
             return discoveryCache.get(sourceIp);
         }
         return null;
@@ -272,8 +324,8 @@ public class DemoAppController
         this.mobileConnectWebInterface = MobileConnect.buildWebInterface(
                 mobileConnectConfig,
                 new DefaultEncodeDecoder(),
-                new ConcurrentCache.Builder().withJsonService(this.jsonService).build(),
-                new ConcurrentCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
+                new DiscoveryCache.Builder().withJsonService(this.jsonService).build(),
+                new DiscoveryCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
     }
 
     @GetMapping("endpoints")
@@ -303,8 +355,8 @@ public class DemoAppController
         this.mobileConnectWebInterface = MobileConnect.buildWebInterface(
                 connectConfig,
                 new DefaultEncodeDecoder(),
-                new ConcurrentCache.Builder().withJsonService(this.jsonService).build(),
-                new ConcurrentCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
+                new DiscoveryCache.Builder().withJsonService(this.jsonService).build(),
+                new DiscoveryCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
 
     }
 
@@ -336,6 +388,7 @@ public class DemoAppController
         if (status.getErrorMessage() != null) {
             return null;
         }
+        cachedParameters.setNonce(status.getNonce());
         if (msisdn != null) {
             try {
                 cache.add(status.getState(), discoveryCache.get(msisdn));
@@ -596,12 +649,12 @@ public class DemoAppController
         operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath);
         apiVersion = operatorParams.getApiVersion();
         includeRequestIP = operatorParams.getIncludeRequestIP().equals("True");
-        cache = new ConcurrentCache.Builder()
+        cache = new DiscoveryCache.Builder()
                 .withJsonService(this.jsonService)
                 .withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize())
                 .build();
 
-        discoveryCache = new ConcurrentCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build();
+        discoveryCache = new DiscoveryCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build();
         try {
             mobileConnectConfig = new MobileConnectConfig.Builder()
                     .withClientId(operatorParams.getClientID())

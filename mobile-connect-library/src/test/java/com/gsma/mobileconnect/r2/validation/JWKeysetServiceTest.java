@@ -18,6 +18,7 @@ package com.gsma.mobileconnect.r2.validation;
 
 import com.google.common.collect.ImmutableMap;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
+import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.json.JacksonJsonService;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.rest.RestAuthentication;
@@ -68,7 +69,7 @@ public class JWKeysetServiceTest
         this.jwKeysetServiceWithCache = new JWKeysetService.Builder()
             .withRestClient(this.mockRestClient)
             .withICache(
-                new ConcurrentCache.Builder().withJsonService(new JacksonJsonService()).build())
+                new DiscoveryCache.Builder().withJsonService(new JacksonJsonService()).build())
             .build();
 
         this.jwKeysetServiceWithoutCache = new JWKeysetService.Builder()

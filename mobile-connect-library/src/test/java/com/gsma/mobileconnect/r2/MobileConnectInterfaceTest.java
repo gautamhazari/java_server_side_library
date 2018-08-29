@@ -18,6 +18,7 @@ package com.gsma.mobileconnect.r2;
 
 import com.gsma.mobileconnect.r2.authentication.AuthenticationService;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
+import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryService;
@@ -54,7 +55,7 @@ public class MobileConnectInterfaceTest
     private final IJsonService jsonService = new JacksonJsonService();
 
     private final MobileConnectInterface mobileConnectInterface = MobileConnect
-        .builder(this.config, new DefaultEncodeDecoder(),new ConcurrentCache.Builder().withMaxCacheSize(999999999).build(), new ConcurrentCache.Builder().withMaxCacheSize(999999999).build())
+        .builder(this.config, new DefaultEncodeDecoder(),new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(), new DiscoveryCache.Builder().withMaxCacheSize(999999999).build())
         .withRestClient(this.restClient)
         .build()
         .getMobileConnectInterface();

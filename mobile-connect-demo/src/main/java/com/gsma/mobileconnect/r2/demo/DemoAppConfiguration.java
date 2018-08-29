@@ -25,6 +25,7 @@ import com.gsma.mobileconnect.r2.MobileConnect;
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectWebInterface;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
+import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
@@ -88,8 +89,8 @@ public class DemoAppConfiguration
     {
         OperatorParameters operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath);
         return MobileConnect.buildWebInterface(config, new DefaultEncodeDecoder(),
-                new ConcurrentCache.Builder().withJsonService(new JacksonJsonService()).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build(),
-                new ConcurrentCache.Builder().withJsonService(new JacksonJsonService()).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
+                new DiscoveryCache.Builder().withJsonService(new JacksonJsonService()).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build(),
+                new DiscoveryCache.Builder().withJsonService(new JacksonJsonService()).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
     }
 
     @Bean

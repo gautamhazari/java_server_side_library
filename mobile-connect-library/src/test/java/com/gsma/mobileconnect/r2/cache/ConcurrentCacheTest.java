@@ -55,7 +55,7 @@ public class ConcurrentCacheTest
             cacheLimitsMapBuilder.add(ProviderMetadata.class, new Tuple<Long, Long>(lower, upper));
         }
 
-        return new ConcurrentCache.Builder()
+        return new DiscoveryCache.Builder()
             .withJsonService(this.jsonService)
             .withCacheExpiryLimits(cacheLimitsMapBuilder.build())
             .build();
@@ -64,7 +64,7 @@ public class ConcurrentCacheTest
     @BeforeMethod
     public void beforeMethod()
     {
-        this.cache = new ConcurrentCache.Builder().withJsonService(this.jsonService).build();
+        this.cache = new DiscoveryCache.Builder().withJsonService(this.jsonService).build();
     }
 
     @Test
