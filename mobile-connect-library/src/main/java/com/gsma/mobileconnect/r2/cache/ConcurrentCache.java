@@ -253,12 +253,5 @@ public abstract class ConcurrentCache extends AbstractCache
 //        return sessionData.getNonce();
 //    }
 
-    protected boolean hasKey(String key) {
-        try {
-            return this.get(key, DiscoveryResponse.class) != null;
-        } catch (CacheAccessException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+    protected abstract boolean hasKey(String key);
 }

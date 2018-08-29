@@ -21,10 +21,10 @@ import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
+import com.gsma.mobileconnect.r2.cache.SessionCache;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.constants.Scopes;
-import com.gsma.mobileconnect.r2.demo.objects.CachedParameters;
 import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
@@ -73,10 +73,9 @@ public class DemoAppController
     private MobileConnectConfig mobileConnectConfig;
     private OperatorUrls operatorUrls;
     private boolean includeRequestIP;
-    private ConcurrentCache cache;
+    private ConcurrentCache sessionCache;
     private ConcurrentCache discoveryCache;
     private RestClient restClient;
-    private CachedParameters cachedParameters = new CachedParameters();
     private OperatorParameters operatorParams = new OperatorParameters();
 
     public DemoAppController(@Autowired final MobileConnectWebInterface mobileConnectWebInterface) {
@@ -91,13 +90,8 @@ public class DemoAppController
         this.getParameters();
 
         if (this.mobileConnectWebInterface == null) {
-            this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.cache, this.discoveryCache);
+            this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.sessionCache, this.discoveryCache);
         }
-    }
-
-
-    public RedirectView startDiscovery(final HttpServletRequest request) {
-        return startDiscovery("","","","", request);
     }
 
     @GetMapping("start_discovery")
@@ -113,11 +107,11 @@ public class DemoAppController
         LOGGER.info("* Attempting discovery for msisdn={}, mcc={}, mnc={}",
                 LogUtils.mask(msisdn, LOGGER, Level.INFO), sourceIp);
 
-        this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.cache, this.discoveryCache);
+        this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.sessionCache, this.discoveryCache);
 
         this.getParameters();
 
-        DiscoveryResponse discoveryResponse = getCacheByRequest(msisdn, mcc, mnc, sourceIp);
+        DiscoveryResponse discoveryResponse = getDiscoveryCache(msisdn, mcc, mnc, sourceIp);
         MobileConnectStatus status;
 
         if (discoveryResponse == null) {
@@ -135,7 +129,7 @@ public class DemoAppController
             }
         }
 
-        setCacheByRequest(msisdn, mcc, mnc, sourceIp, discoveryResponse);
+        setDiscoveryCache(msisdn, mcc, mnc, sourceIp, discoveryResponse);
 
         String url = startAuthentication(
                 discoveryResponse,
@@ -168,86 +162,36 @@ public class DemoAppController
         return status;
     }
 
-    private void setCacheByRequest (final String msisdn, final String mcc, final String mnc, final String sourceIp,
-                                    final DiscoveryResponse discoveryResponse) {
-        try {
-//            if (msisdn != null) {
-//                discoveryCache.add(msisdn, discoveryResponse);
-//            } else if (mcc != null && mnc != null) {
-//                discoveryCache.add(String.format("%s_%s", mcc, mnc), discoveryResponse);
-//            } else if (sourceIp!= null) {
-//                discoveryCache.add(sourceIp, discoveryResponse);
-//            }
-            if(msisdn != null) {
-                if (mcc != null && mnc != null) {
-                    if (sourceIp != null) {
-                        discoveryCache.add(String.format("%s_%s_%s_%s", msisdn, mcc, mnc, sourceIp), discoveryResponse);
-                    }
-                    else {
-                        discoveryCache.add(String.format("%s_%s_%s", msisdn, mcc, mnc), discoveryResponse);
-                    }
-                }
-                else {
-                    if (sourceIp != null) {
-                        discoveryCache.add(String.format("%s_%s", msisdn, sourceIp), discoveryResponse);
-                    } else {
-                        discoveryCache.add(msisdn, discoveryResponse);
-                    }
-                }
-            } else if (mcc != null && mnc != null) {
-                if (sourceIp != null) {
-                    discoveryCache.add(String.format("%s_%s_%s", mcc, mnc, sourceIp), discoveryResponse);
-                }
-                else {
-                    discoveryCache.add(String.format("%s_%s", mcc, mnc), discoveryResponse);
-                }
-            } else if (sourceIp != null) {
-                discoveryCache.add(sourceIp, discoveryResponse);
+    //    TODO move to the utility functions
+    private String formatKey(String... keys) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String appender = "_";
+        for (String key : keys) {
+            if (key != null) {
+                stringBuilder.append(key);
+                stringBuilder.append(appender);
             }
+        }
+        if (stringBuilder.length() == 0) {
+            return null;
+        } else {
+            return stringBuilder.toString() ;
+        }
+    }
+
+    private void setDiscoveryCache(final String msisdn, final String mcc, final String mnc, final String sourceIp,
+                                   final DiscoveryResponse discoveryResponse) {
+        try {
+            discoveryCache.add(formatKey(msisdn, mcc, mnc, sourceIp), discoveryResponse);
         } catch (CacheAccessException e) {
             LOGGER.error("Unable to access cache");
             e.printStackTrace();
         }
     }
 
-    private DiscoveryResponse getCacheByRequest(String msisdn, String mcc, String mnc, String sourceIp) {
-//        if (discoveryCache.get(msisdn) != null) {
-//            return discoveryCache.get(msisdn);
-//        }
-//        if (discoveryCache.get(String.format("%s_%s", mcc, mnc)) != null) {
-//            return discoveryCache.get(String.format("%s_%s", mcc, mnc));
-//        }
-//        if (msisdn == null & mcc == null & mnc == null & discoveryCache.get(sourceIp) != null) {
-//            return discoveryCache.get(sourceIp);
-//        }
-        if (msisdn != null) {
-            if (mcc != null && mnc != null) {
-                if (sourceIp != null) {
-                    return discoveryCache.get(String.format("%s_%s_%s_%s", msisdn, mcc, mnc, sourceIp));
-                } else {
-                    return discoveryCache.get(String.format("%s_%s_%s", msisdn, mcc, mnc));
-                }
-            } else {
-                if (sourceIp != null) {
-                    return discoveryCache.get(String.format("%s_%s", msisdn, sourceIp));
-                } else {
-                    return discoveryCache.get(msisdn);
-                }
-            }
-        }
-        if (mcc != null && mnc != null) {
-            if (sourceIp != null) {
-                return discoveryCache.get(String.format("%s_%s_%s", mcc, mnc, sourceIp));
-            } else {
-                return discoveryCache.get(String.format("%s_%s", mcc, mnc));
-            }
-        }
-        if (sourceIp != null) {
-            return discoveryCache.get(sourceIp);
-        }
-        return null;
+    private DiscoveryResponse getDiscoveryCache(String msisdn, String mcc, String mnc, String sourceIp) {
+        return discoveryCache.get(formatKey(msisdn, mcc, mnc, sourceIp));
     }
-
 
     @GetMapping("start_manual_discovery")
     @ResponseBody
@@ -388,47 +332,18 @@ public class DemoAppController
         if (status.getErrorMessage() != null) {
             return null;
         }
-        cachedParameters.setNonce(status.getNonce());
-        if (msisdn != null) {
-            try {
-                cache.add(status.getState(), discoveryCache.get(msisdn));
-            } catch (CacheAccessException e) {
-                e.printStackTrace();
-            }
-        } else if (mcc != null) {
-            try {
-                cache.add(status.getState(), discoveryCache.get(String.format("%s_%s", mcc, mnc)));
-            } catch (CacheAccessException e) {
-                e.printStackTrace();
-            }
-        } else if (sourceIp != null) {
-            try {
-                cache.add(status.getState(), discoveryCache.get(sourceIp));
-            } catch (CacheAccessException e) {
-                e.printStackTrace();
-            }
-        }
+        setSessionCache(status, msisdn, mcc, mnc, sourceIp);
 
-//        if (msisdn != null) {
-//            try {
-//                cache.add(status.getState(), new SessionData(discoveryCache.get(msisdn), status.getNonce()));
-//            } catch (CacheAccessException e) {
-//                e.printStackTrace();
-//            }
-//        } else if (mcc != null) {
-//            try {
-//                cache.add(status.getState(), new SessionData(discoveryCache.get(String.format("%s_%s", mcc, mnc)), status.getNonce()));
-//            } catch (CacheAccessException e) {
-//                e.printStackTrace();
-//            }
-//        } else if (sourceIp != null) {
-//            try {
-//                cache.add(status.getState(), new SessionData(discoveryCache.get(sourceIp), status.getNonce()));
-//            } catch (CacheAccessException e) {
-//                e.printStackTrace();
-//            }
-//        }
         return status.getUrl();
+    }
+
+    private void setSessionCache(MobileConnectStatus status, String msisdn, String mcc, String mnc, String sourceIp) {
+        try {
+            sessionCache.add(status.getState(), new SessionData(discoveryCache.get(formatKey(msisdn, mcc, mnc, sourceIp)),
+                    status.getNonce()));
+        } catch (CacheAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @GetMapping("start_authentication_r1")
@@ -482,35 +397,6 @@ public class DemoAppController
         return new MobileConnectWebResponse(status);
     }
 
-    @GetMapping("user_info")
-    @ResponseBody
-    public MobileConnectWebResponse requestUserInfo(
-            @RequestParam(required = false) final String state,
-            @RequestParam(required = false) final String accessToken, final HttpServletRequest request)
-    {
-        LOGGER.info("* Requesting user info for state={}, accessToken={}", state,
-                LogUtils.mask(accessToken, LOGGER, Level.INFO));
-
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.requestUserInfo(request, cachedParameters.getSdkSession(), accessToken == null ? cachedParameters.getAccessToken() : accessToken);
-
-        return new MobileConnectWebResponse(status);
-    }
-
-    @GetMapping("identity")
-    @ResponseBody
-    public MobileConnectWebResponse requestIdentity(
-            @RequestParam(required = false) final String state,
-            @RequestParam(required = false) final String accessToken, final HttpServletRequest request) {
-        LOGGER.info("* Requesting identity info for state={}, accessToken={}", state,
-                LogUtils.mask(accessToken, LOGGER, Level.INFO));
-
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.requestIdentity(request, cachedParameters.getSdkSession(), accessToken == null ? cachedParameters.getAccessToken() : accessToken);
-
-        return new MobileConnectWebResponse(status);
-    }
-
     @GetMapping("refresh_token")
     @ResponseBody
     public MobileConnectWebResponse refreshToken(
@@ -537,32 +423,6 @@ public class DemoAppController
                 this.mobileConnectWebInterface.revokeToken(request, accessToken,
                         Parameters.ACCESS_TOKEN_HINT, sdkSession);
 
-        return new MobileConnectWebResponse(status);
-    }
-
-    @GetMapping("")
-    @ResponseBody
-    public MobileConnectWebResponse handleRedirect(
-            @RequestParam(required = false) final String sdkSession,
-            @RequestParam(required = false, value = "mcc_mnc") final String mccMnc,
-            @RequestParam(required = false) final String code,
-            @RequestParam(required = false) final String expectedState,
-            @RequestParam(required = false) final String expectedNonce,
-            @RequestParam(required = false) final String subscriberId, final HttpServletRequest request)
-    {
-        LOGGER.info(
-                "* Handling redirect for sdkSession={}, mccMnc={}, code={}, expectedState={}, expectedNonce={}, subscriberId={}",
-                sdkSession, mccMnc, code, expectedState, expectedNonce,
-                LogUtils.mask(subscriberId, LOGGER, Level.INFO));
-
-        final URI requestUri = HttpUtils.extractCompleteUrl(request);
-        DiscoveryResponse discoveryResponse = null;
-        if (!code.isEmpty()) {
-            discoveryResponse = this.cache.get(expectedState);
-        }
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri, discoveryResponse,
-                        expectedState, expectedNonce, null);
         return new MobileConnectWebResponse(status);
     }
 
@@ -605,7 +465,7 @@ public class DemoAppController
         MobileConnectStatus status = this.mobileConnectWebInterface.attemptDiscovery(request, null, mcc, mnc, true, mobileConnectConfig.getIncludeRequestIp(), options);
 
         if (status.getDiscoveryResponse() != null) {
-            setCacheByRequest(null, mcc, mnc, null, status.getDiscoveryResponse());
+            setDiscoveryCache(null, mcc, mnc, null, status.getDiscoveryResponse());
             String url = startAuthentication(
                     status.getDiscoveryResponse(),
                     subscriber_id,
@@ -638,10 +498,10 @@ public class DemoAppController
                 .build();
 
         URI requestUri = HttpUtils.extractCompleteUrl(request);
+        SessionData sessionData = sessionCache.get(state);
         MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri,
-                cache.get(state), state, cachedParameters.getNonce(), options);
+                sessionData.getDiscoveryResponse(), state, sessionData.getNonce(), options);
 
-        cachedParameters.setAccessToken(status.getRequestTokenResponse().getResponseData().getAccessToken());
         return new MobileConnectWebResponse(status);
     }
 
@@ -649,7 +509,7 @@ public class DemoAppController
         operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath);
         apiVersion = operatorParams.getApiVersion();
         includeRequestIP = operatorParams.getIncludeRequestIP().equals("True");
-        cache = new DiscoveryCache.Builder()
+        sessionCache = new SessionCache.Builder()
                 .withJsonService(this.jsonService)
                 .withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize())
                 .build();

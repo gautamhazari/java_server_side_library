@@ -27,6 +27,16 @@ public class SessionCache extends ConcurrentCache {
         return sessionData;
     }
 
+    @Override
+    protected boolean hasKey(String key) {
+        try {
+            return this.get(key, SessionData.class) != null;
+        } catch (CacheAccessException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static final class Builder extends ConcurrentCache.Builder {
 
         @Override

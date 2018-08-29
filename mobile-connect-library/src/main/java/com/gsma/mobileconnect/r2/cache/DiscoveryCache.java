@@ -26,6 +26,16 @@ public class DiscoveryCache extends ConcurrentCache {
         return discoveryResp;
     }
 
+    @Override
+    protected boolean hasKey(String key) {
+        try {
+            return this.get(key, DiscoveryResponse.class) != null;
+        } catch (CacheAccessException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static final class Builder extends ConcurrentCache.Builder {
 
         @Override
