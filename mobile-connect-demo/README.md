@@ -17,13 +17,13 @@ You should set your application redirectUrl to http://localhost:8080/mobileconne
 Ensure you have build the [mobile-connect-sdk](../mobile-connect-sdk) jar using [Maven](https://maven.apache.org/) repository.
 
 ```posh
-cd java-sdk-v2
+cd java-server-side-sdk
 mvn clean install
 ```
 Run the MobileConnect demo.
 
 ```posh
-cd java-sdk-v2
+cd java-server-side-sdk
 mvn spring-boot:run -pl mobile-connect-demo
 ```
 
