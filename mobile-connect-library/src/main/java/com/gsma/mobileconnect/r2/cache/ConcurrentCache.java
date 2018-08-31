@@ -17,7 +17,6 @@
 package com.gsma.mobileconnect.r2.cache;
 
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.SessionData;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
@@ -195,63 +194,6 @@ public abstract class ConcurrentCache extends AbstractCache
     }
 
     public abstract <T extends AbstractCacheable> T get(String key);
-
-//    public DiscoveryResponse get(String key) {
-//        DiscoveryResponse discoveryResp = null;
-//        if (!hasKey(key)) {
-//            return null;
-//        }
-//        try {
-//            discoveryResp = this.get(key, DiscoveryResponse.class);
-//        } catch (CacheAccessException e) {
-//            e.printStackTrace();
-//        }
-//
-//        if (discoveryResp.hasExpired()) {
-//            this.remove(key);
-//            return null;
-//        }
-//        return discoveryResp;
-//    }
-
-
-//    private SessionData get(String key) {
-//        SessionData sessionData = null;
-//        if (!hasKey(key)) {
-//            return null;
-//        }
-//        try {
-//            sessionData = this.get(key, SessionData.class);
-//        } catch (CacheAccessException e) {
-//            e.printStackTrace();
-//        }
-//
-////        if (sessionData.getDiscoveryResponse().hasExpired()) {
-////            this.remove(key);
-////            return null;
-////        }
-//        return sessionData;
-//    }
-//
-//    public DiscoveryResponse getDiscoveryResponse(String key) {
-//        try {
-//            DiscoveryResponse discoveryResponse = get(key).getDiscoveryResponse();
-//            if (discoveryResponse.hasExpired()) {
-//                this.remove(key);
-//                return null;
-//            }  else {
-//                return discoveryResponse;
-//            }
-//        } catch (NullPointerException e) {
-//            return null;
-//        }
-//    }
-//
-//    public String getNonce(String key) {
-//        SessionData sessionData = get(key);
-//        remove(key);
-//        return sessionData.getNonce();
-//    }
 
     protected abstract boolean hasKey(String key);
 }
