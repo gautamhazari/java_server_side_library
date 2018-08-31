@@ -20,6 +20,7 @@ import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.util.Iterator;
 
 /**
@@ -130,4 +131,53 @@ public final class StringUtils
 
         return retval;
     }
+
+    /**
+     * Convert key array into string
+     *
+     * @param keys to convert.
+     * @return string that contains all keys.
+     */
+    public static String formatKey(String... keys) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String appender = "_";
+        for (String key : keys) {
+            if (key != null) {
+                stringBuilder.append(key);
+                stringBuilder.append(appender);
+            }
+        }
+        if (stringBuilder.length() == 0) {
+            return null;
+        } else {
+            return stringBuilder.toString() ;
+        }
+    }
+
+    /**
+     * Set value to null if it is empty
+     *
+     * @param value to check.
+     * @return value or null if it is empty.
+     */
+    public static String setValueToNullIfIsEmpty (String value) {
+        if (isNullOrEmpty(value)) {
+            return null;
+        }
+        return value;
+    }
+
+    /**
+     * Set value to null if it is empty
+     *
+     * @param value to check.
+     * @return value or null if it is empty.
+     */
+    public static URI setValueToNullIfIsEmpty (URI value) {
+        if (value == null || value.toString().equals("")) {
+            return null;
+        }
+        return value;
+    }
+
 }

@@ -62,9 +62,9 @@ import java.net.URISyntaxException;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping(path = "server_side_api"/*, produces = MediaType.APPLICATION_JSON_UTF8_VALUE*/)
-public class DemoAppController
+public class AppController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DemoAppController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppController.class);
 
     private MobileConnectWebInterface mobileConnectWebInterface;
     private final IJsonService jsonService;
@@ -78,12 +78,12 @@ public class DemoAppController
     private RestClient restClient;
     private OperatorParameters operatorParams = new OperatorParameters();
 
-    public DemoAppController(@Autowired final MobileConnectWebInterface mobileConnectWebInterface) {
+    public AppController(@Autowired final MobileConnectWebInterface mobileConnectWebInterface) {
         this.mobileConnectWebInterface = mobileConnectWebInterface;
         this.jsonService = new JacksonJsonService();
     }
 
-    public DemoAppController() {
+    public AppController() {
         this.jsonService = new JacksonJsonService();
 
         restClient = new RestClient.Builder().withJsonService(jsonService).withHttpClient(HttpClientBuilder.create().build()).build();
@@ -106,9 +106,7 @@ public class DemoAppController
     {
         LOGGER.info("* Attempting discovery for msisdn={}, mcc={}, mnc={}",
                 LogUtils.mask(msisdn, LOGGER, Level.INFO), sourceIp);
-
         this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.sessionCache, this.discoveryCache);
-
         this.getParameters();
 
         DiscoveryResponse discoveryResponse = getDiscoveryCache(msisdn, mcc, mnc, sourceIp);
@@ -142,7 +140,6 @@ public class DemoAppController
         }
 
         return new RedirectView(url);
-
     }
 
     private MobileConnectStatus attemptDiscovery(String msisdn, String mcc, String mnc, String sourceIp, HttpServletRequest request) {
@@ -162,27 +159,10 @@ public class DemoAppController
         return status;
     }
 
-    //    TODO move to the utility functions
-    private String formatKey(String... keys) {
-        StringBuilder stringBuilder = new StringBuilder();
-        String appender = "_";
-        for (String key : keys) {
-            if (key != null) {
-                stringBuilder.append(key);
-                stringBuilder.append(appender);
-            }
-        }
-        if (stringBuilder.length() == 0) {
-            return null;
-        } else {
-            return stringBuilder.toString() ;
-        }
-    }
-
     private void setDiscoveryCache(final String msisdn, final String mcc, final String mnc, final String sourceIp,
                                    final DiscoveryResponse discoveryResponse) {
         try {
-            discoveryCache.add(formatKey(msisdn, mcc, mnc, sourceIp), discoveryResponse);
+            discoveryCache.add(StringUtils.formatKey(msisdn, mcc, mnc, sourceIp), discoveryResponse);
         } catch (CacheAccessException e) {
             LOGGER.error("Unable to access cache");
             e.printStackTrace();
@@ -190,7 +170,7 @@ public class DemoAppController
     }
 
     private DiscoveryResponse getDiscoveryCache(String msisdn, String mcc, String mnc, String sourceIp) {
-        return discoveryCache.get(formatKey(msisdn, mcc, mnc, sourceIp));
+        return discoveryCache.get(StringUtils.formatKey(msisdn, mcc, mnc, sourceIp));
     }
 
     @GetMapping("start_manual_discovery")
@@ -257,11 +237,11 @@ public class DemoAppController
                 clientID, clientSecret, discoveryURL, redirectURL, xRedirect, includeRequestIP, apiVersion);
         this.apiVersion = apiVersion;
         mobileConnectConfig = new MobileConnectConfig.Builder()
-                .withClientId(setValueToNullIfIsEmpty(clientID))
-                .withClientSecret(setValueToNullIfIsEmpty(clientSecret))
-                .withDiscoveryUrl(setValueToNullIfIsEmpty(discoveryURL))
-                .withRedirectUrl(setValueToNullIfIsEmpty(redirectURL))
-                .withXRedirect(setValueToNullIfIsEmpty(xRedirect.equals("True") ? "APP" : "True"))
+                .withClientId(StringUtils.setValueToNullIfIsEmpty(clientID))
+                .withClientSecret(StringUtils.setValueToNullIfIsEmpty(clientSecret))
+                .withDiscoveryUrl(StringUtils.setValueToNullIfIsEmpty(discoveryURL))
+                .withRedirectUrl(StringUtils.setValueToNullIfIsEmpty(redirectURL))
+                .withXRedirect(StringUtils.setValueToNullIfIsEmpty(xRedirect.equals("True") ? "APP" : "True"))
                 .withIncludeRequestIP(includeRequestIP.equals("True"))
                 .build();
 
@@ -285,15 +265,15 @@ public class DemoAppController
         LOGGER.info("* Getting endpoints: authorizationUrl={}, tokenUrl={}, userInfoUrl={}, metadataUrl{}, discoveryUrl={}, redirectUrl={}",
                 authURL, tokenURL, userInfoURl, metadata, discoveryURL, redirectURL);
         operatorUrls = new OperatorUrls.Builder()
-                .withAuthorizationUrl(setValueToNullIfIsEmpty(authURL))
-                .withRequestTokenUrl(setValueToNullIfIsEmpty(tokenURL))
-                .withUserInfoUrl(setValueToNullIfIsEmpty(userInfoURl))
-                .withProviderMetadataUri(setValueToNullIfIsEmpty(metadata))
+                .withAuthorizationUrl(StringUtils.setValueToNullIfIsEmpty(authURL))
+                .withRequestTokenUrl(StringUtils.setValueToNullIfIsEmpty(tokenURL))
+                .withUserInfoUrl(StringUtils.setValueToNullIfIsEmpty(userInfoURl))
+                .withProviderMetadataUri(StringUtils.setValueToNullIfIsEmpty(metadata))
                 .build();
 
         MobileConnectConfig connectConfig = new MobileConnectConfig.Builder()
-                .withDiscoveryUrl(setValueToNullIfIsEmpty(discoveryURL))
-                .withRedirectUrl(setValueToNullIfIsEmpty(redirectURL))
+                .withDiscoveryUrl(StringUtils.setValueToNullIfIsEmpty(discoveryURL))
+                .withRedirectUrl(StringUtils.setValueToNullIfIsEmpty(redirectURL))
                 .build();
 
         this.mobileConnectWebInterface = MobileConnect.buildWebInterface(
@@ -339,7 +319,7 @@ public class DemoAppController
 
     private void setSessionCache(MobileConnectStatus status, String msisdn, String mcc, String mnc, String sourceIp) {
         try {
-            sessionCache.add(status.getState(), new SessionData(discoveryCache.get(formatKey(msisdn, mcc, mnc, sourceIp)),
+            sessionCache.add(status.getState(), new SessionData(discoveryCache.get(StringUtils.formatKey(msisdn, mcc, mnc, sourceIp)),
                     status.getNonce()));
         } catch (CacheAccessException e) {
             e.printStackTrace();
@@ -424,22 +404,6 @@ public class DemoAppController
                         Parameters.ACCESS_TOKEN_HINT, sdkSession);
 
         return new MobileConnectWebResponse(status);
-    }
-
-//    TODO move to the utility functions
-    private String setValueToNullIfIsEmpty (String value) {
-        if (StringUtils.isNullOrEmpty(value)) {
-            return null;
-        }
-        return value;
-    }
-
-//    TODO move to the utility functions
-    private URI setValueToNullIfIsEmpty (URI value) {
-        if (value == null || value.toString().equals("")) {
-            return null;
-        }
-        return value;
     }
 
     @GetMapping(value = "discovery_callback", params = "mcc_mnc")

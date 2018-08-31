@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2.0
  */
 @SpringBootApplication
-public class DemoApp
+public class App
 {
     /**
      * Run from the command line.
@@ -34,6 +34,6 @@ public class DemoApp
      */
     public static void main(final String[] args)
     {
-        SpringApplication.run(DemoApp.class, args);
+        SpringApplication.run(App.class, args);
     }
 }

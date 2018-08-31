@@ -1,9 +1,0 @@
-{
-	"msisdn": "+447700900907",
-	"clientID": "ab3870a4-a118-4295-a6e8-1259186818e6",
-	"clientSecret": "8e72fc86-dda0-4d0c-abd0-980816da6279",
-	"discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
-	"redirectURL": "http://localhost:8080/mobileconnect.html",
-	"xRedirect": "True",
-	"includeRequestIP": "False"
-}
