@@ -33,9 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-//import org.json.simple.JSONObject;
-//import org.json.simple.parser.JSONParser;
-
 /**
  * Concrete implementation of {@link ICache} using a ConcurrentHashMap as the internal
  * caching mechanism.
