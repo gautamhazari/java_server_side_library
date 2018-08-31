@@ -1,4 +1,4 @@
-GSMA MobileConnect Java SDK Demo
+GSMA MobileConnect Java Server Side
 ==============================================================================================================
 
 - This demo provides a complete code example for completing the authorization flow of MobileConnect.
@@ -26,85 +26,6 @@ Run the MobileConnect demo.
 cd java-sdk-v2
 mvn spring-boot:run -pl mobile-connect-demo
 ```
-
-Then navigate to http://localhost:8080 in your browser.
-
-`DemoAppConfiguration` shows how to configure and start the MobileConnect interface.  `DemoAppController` shows the interaction with the MobileConnect interface.
-
-## Using Application
-
-The Application consists of three parts:
-1. Demo application (default).
-2. Without discovery.
-3. Indian demo application.
-
-## Using the Demo Application
-Configure the MobileConnectConfig instance with your credentials from the [MobileConnect Developer Site](https://developer.mobileconnect.io) portal. 
-Required parameters:
-
-Click "Request parameters" button to see your Discovery configuration.
-Choose API version which you want to use.
-Default values are in `/local-path/mobile-connect-demo/src/main/resources/public/data/defaultData.json` file.
-
-```posh
-{
-    "msisdn": "<provide msisdn here>",
-    "clientID": "<provide client id here>",
-    "clientSecret": "<provide client secret here>",
-    "discoveryURL": "<provide discovery URL here>",
-    "redirectURL": "http://localhost:8080/mobileconnect.html",
-    "xRedirect": "True",
-    "includeRequestIP": "False"
-}
-```
-You can edit them in the UI while application is running.
-
-## Using the Without Discovery Application
-Configure the MobileConnectConfig instance with your credentials from the [MobileConnect Developer Site](https://developer.mobileconnect.io) portal.
-Required parameters:
-
-Default values are in `/local-path/mobile-connect-demo/src/main/resources/public/data/defaultDataWD.json` file.
-
-```posh
-{
-	"clientID": "<provide client id>",
-	"clientSecret": "<provide client secret>",
-	"subscriberID": "<provide subsriber id>",
-	"clientName": "<provide client name>",
-	"authorizationURL": "<provide authorize endpoint>",
-	"tokenURL": "<provide token endpoint>",
-	"userInfoURL": "<provide user info endpoint>",
-	"metadataURL": "<provide metadata endpoint>",
-	"discoveryURL": "<provide discovery endpoint>",
-	"redirectURL": "http://localhost:8080/mobileconnect.html"
-}
-```
-You can edit them in the UI while application is running.
-
-## Using the Indian Demo Application
-Configure the MobileConnectConfig instance with your credentials from the [MobileConnect Developer Site](https://developer.mobileconnect.io) portal.  
-Required parameters:   
-
-Click "Request parameters" button to see your Discovery configuration.
-Choose API version which you want to use.
-
-Default values are in `/local-path/mobile-connect-demo/src/main/resources/public/data/defaultDataIndian.json` file.
-
-```posh
-{
-    "msisdn": "<provide msisdn here>",
-    "mcc": "<provide mcc>",
-    "mnc": "<provide mnc>",
-    "clientID": "<provide client id here>",
-    "clientSecret": "<provide client secret here>",
-    "discoveryURL": "<provide discovery URL here>",
-    "redirectURL": "http://localhost:8080/mobileconnect.html",
-    "xRedirect": "True",
-    "includeRequestIP": "False"
-}
-```
-You can edit them in the UI while application is running.
-
 
 ## Support
 
