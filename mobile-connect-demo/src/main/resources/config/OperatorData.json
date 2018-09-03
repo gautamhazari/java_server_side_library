@@ -7,8 +7,6 @@
   "includeRequestIP": "True",
   "apiVersion": "mc_v1.1",
   "scope": "openid",
-  "acrValues":  "2",
-  "UseInfo": "True",
-  "Identity": "True",
+  "acrValues": "2",
   "MaxDiscoveryCacheSize": 104857600
 }

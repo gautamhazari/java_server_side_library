@@ -1,7 +1,6 @@
 package com.gsma.mobileconnect.r2.demo.objects;
 
 public class OperatorParameters {
-    private String msisdn;
     private String clientID;
     private String clientSecret;
     private String discoveryURL;
@@ -10,15 +9,8 @@ public class OperatorParameters {
     private String includeRequestIP;
     private String apiVersion;
     private String scope;
+    private String arcValues;
     private long MaxDiscoveryCacheSize;
-
-    public String getMsisdn() {
-        return msisdn;
-    }
-
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
 
     public String getClientID() {
         return clientID;
@@ -92,6 +84,13 @@ public class OperatorParameters {
         this.MaxDiscoveryCacheSize = MaxDiscoveryCacheSize;
     }
 
+    public String getArcValues() {
+        return arcValues;
+    }
+
+    public void setArcValues(String arcValues) {
+        this.arcValues = arcValues;
+    }
 }
 
 
