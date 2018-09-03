@@ -21,7 +21,6 @@ import com.gsma.mobileconnect.r2.json.JacksonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.json.JsonSerializationException;
 import com.gsma.mobileconnect.r2.rest.RestResponse;
-import com.gsma.mobileconnect.r2.utils.TestUtils;
 import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.DataProvider;
@@ -39,19 +38,19 @@ public class DiscoveryResponseTest
 {
     private final IJsonService jsonService = new JacksonJsonService();
 
-    @Test
-    public void cachedDiscoveryResponseShouldClearSubscriberId() throws JsonDeserializationException
-    {
-        final DiscoveryResponse discoveryResponse =
-            DiscoveryResponse.fromRestResponse(TestUtils.DISCOVERY_REQUEST_RESPONSE,
-                this.jsonService);
-
-        assertNotNull(discoveryResponse.getResponseData().getSubscriberId());
-
-        discoveryResponse.cached();
-
-        assertNull(discoveryResponse.getResponseData().getSubscriberId());
-    }
+//    @Test
+//    public void cachedDiscoveryResponseShouldClearSubscriberId() throws JsonDeserializationException
+//    {
+//        final DiscoveryResponse discoveryResponse =
+//            DiscoveryResponse.fromRestResponse(TestUtils.DISCOVERY_REQUEST_RESPONSE,
+//                this.jsonService);
+//
+//        assertNotNull(discoveryResponse.getResponseData().getSubscriberId());
+//
+//        discoveryResponse.cached();
+//
+//        assertNull(discoveryResponse.getResponseData().getSubscriberId());
+//    }
 
     @Test
     public void operatorUrlsShouldBeOverridenByProviderMetadataOnSet()

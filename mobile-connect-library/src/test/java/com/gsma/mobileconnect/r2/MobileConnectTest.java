@@ -1,7 +1,6 @@
 package com.gsma.mobileconnect.r2;
 
 import com.gsma.mobileconnect.r2.authentication.IAuthenticationService;
-import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.ICache;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
@@ -10,6 +9,7 @@ import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.identity.IIdentityService;
 import com.gsma.mobileconnect.r2.json.IJsonService;
+import com.gsma.mobileconnect.r2.json.JacksonJsonService;
 import com.gsma.mobileconnect.r2.rest.IRestClient;
 import com.gsma.mobileconnect.r2.validation.IJWKeysetService;
 import org.apache.http.client.HttpClient;
@@ -23,7 +23,7 @@ import java.net.URI;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
 
 public class MobileConnectTest
 {
@@ -56,7 +56,7 @@ public class MobileConnectTest
     private IRestClient restClient;
 
     @Mock
-    private IJsonService jsonService;
+    private IJsonService jsonService = new JacksonJsonService();
 
     private TimeUnit timeoutTimeUnit = TimeUnit.MILLISECONDS;
     private Long timeoutDuration = DefaultOptions.TIMEOUT_MS;
@@ -75,8 +75,8 @@ public class MobileConnectTest
             .build();
         encodeDecoder = new DefaultEncodeDecoder();
 
-        mobileConnect = new MobileConnect.Builder(mobileConnectConfig, encodeDecoder, new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(),
-                new DiscoveryCache.Builder().withMaxCacheSize(999999999).build())
+        mobileConnect = new MobileConnect.Builder(mobileConnectConfig, encodeDecoder, new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build(),
+                new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build())
             .withCache(cacheMock)
             .withHttpClient(httpClientMock)
             .withHttpTimeout(timeoutDuration, timeoutTimeUnit)
@@ -97,36 +97,36 @@ public class MobileConnectTest
     @Test
     public void testBuildWithconfigAndEncoderDecoder() throws Exception
     {
-        assertNotNull(MobileConnect.build(mobileConnectConfig, encodeDecoder, new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(),
-                new DiscoveryCache.Builder().withMaxCacheSize(999999999).build()));
+        assertNotNull(MobileConnect.build(mobileConnectConfig, encodeDecoder, new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build(),
+                new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build()));
     }
 
     @Test
     public void testBuildWithconfig() throws Exception
     {
-        assertNotNull(MobileConnect.build(mobileConnectConfig,new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(),
-                new DiscoveryCache.Builder().withMaxCacheSize(999999999).build()));
+        assertNotNull(MobileConnect.build(mobileConnectConfig,new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build(),
+                new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build()));
     }
 
     @Test
     public void testBuildInterface() throws Exception
     {
-        assertNotNull(MobileConnect.buildInterface(mobileConnectConfig, encodeDecoder, new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(),
-                new DiscoveryCache.Builder().withMaxCacheSize(999999999).build()));
+        assertNotNull(MobileConnect.buildInterface(mobileConnectConfig, encodeDecoder, new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build(),
+                new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build()));
     }
 
     @Test
     public void testBuildWebInterface() throws Exception
     {
         assertNotNull(MobileConnect.buildWebInterface(mobileConnectConfig, encodeDecoder,
-                new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(), new DiscoveryCache.Builder().withMaxCacheSize(999999999).build()));
+                new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build(), new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build()));
     }
 
     @Test
     public void testBuilder() throws Exception
     {
         assertNotNull(MobileConnect.builder(mobileConnectConfig, encodeDecoder,
-                new DiscoveryCache.Builder().withMaxCacheSize(999999999).build(), new DiscoveryCache.Builder().withMaxCacheSize(999999999).build()));
+                new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build(), new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build()));
     }
 
     @Test
