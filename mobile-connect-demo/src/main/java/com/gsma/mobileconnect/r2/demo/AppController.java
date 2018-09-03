@@ -45,7 +45,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -78,10 +77,10 @@ public class AppController
     private RestClient restClient;
     private OperatorParameters operatorParams = new OperatorParameters();
 
-    public AppController(@Autowired final MobileConnectWebInterface mobileConnectWebInterface) {
-        this.mobileConnectWebInterface = mobileConnectWebInterface;
-        this.jsonService = new JacksonJsonService();
-    }
+//    public AppController(@Autowired final MobileConnectWebInterface mobileConnectWebInterface) {
+//        this.mobileConnectWebInterface = mobileConnectWebInterface;
+//        this.jsonService = new JacksonJsonService();
+//    }
 
     public AppController() {
         this.jsonService = new JacksonJsonService();
