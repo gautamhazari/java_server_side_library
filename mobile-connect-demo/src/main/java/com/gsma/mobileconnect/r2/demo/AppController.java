@@ -469,7 +469,13 @@ public class AppController
     }
 
     private void getParameters() {
+        System.out.println(Constants.ConfigFilePath);
         operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath);
+        if(operatorParams==null)
+            operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath.replace("file:/", ""));
+        if(operatorParams==null)
+            operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath.replace("file:", ""));
+
         apiVersion = operatorParams.getApiVersion();
         includeRequestIP = operatorParams.getIncludeRequestIP().equals("True");
         sessionCache = new SessionCache.Builder()
