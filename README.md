@@ -7,8 +7,11 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
 
 ## Quick Start
 
-- Build the [library](./mobile-connect-library/)
-- Build and run the [demo](./mobile-connect-demo/)
+```posh
+cd java-server-side-sdk/mobile-connect-demo
+mvn clean package
+```
+Deploy mobile-connect.war
 
 ## Support
 
