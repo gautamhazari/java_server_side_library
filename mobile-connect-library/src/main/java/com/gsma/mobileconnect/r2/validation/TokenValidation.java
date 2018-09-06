@@ -266,8 +266,25 @@ public class TokenValidation
     private static boolean doesAudOrAzpClaimMatchClientId(final Claims claims,
         final String clientId)
     {
-        return clientId.equals(claims.get(ClaimsConstants.AUD).getValue()) || clientId.equals(
-            claims.get(ClaimsConstants.AZP).getValue());
+        Object aud = claims.get(ClaimsConstants.AUD).getValue();
+        Object azp = claims.get(ClaimsConstants.AZP).getValue();
+        if (aud == null) {
+            return false;
+        }
+        if (aud.getClass().isArray()) {
+            Object[] audArray = (Object[]) aud;
+            if (audArray.length == 1) {
+                return clientId.equals(audArray[0]) || clientId.equals(azp);
+            } else if (audArray.length > 1) {
+                for (Object audElement : audArray) {
+                    if (audElement.equals(clientId)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        return clientId.equals(aud) || clientId.equals(azp);
     }
 
     private static TokenValidationResult validateTokenExpiry(Claims claims, long maxAge)
