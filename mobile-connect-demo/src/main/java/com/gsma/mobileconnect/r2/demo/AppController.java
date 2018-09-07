@@ -24,6 +24,7 @@ import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
+import com.gsma.mobileconnect.r2.constants.Scope;
 import com.gsma.mobileconnect.r2.constants.Scopes;
 import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
@@ -128,11 +129,20 @@ public class AppController
 
         setDiscoveryCache(msisdn, mcc, mnc, sourceIp, discoveryResponse);
 
-        String url = startAuthentication(
-                discoveryResponse,
-                discoveryResponse.getResponseData().getSubscriberId(),
-                request,
-                msisdn, mcc, mnc, sourceIp);
+        String url;
+        if (operatorParams.getScope().contains(Scope.AUTHZ)) {
+            url = startAuthorize(
+                    discoveryResponse,
+                    discoveryResponse.getResponseData().getSubscriberId(),
+                    request,
+                    msisdn, mcc, mnc, sourceIp);
+        } else {
+            url = startAuthentication(
+                    discoveryResponse,
+                    discoveryResponse.getResponseData().getSubscriberId(),
+                    request,
+                    msisdn, mcc, mnc, sourceIp);
+        }
 
         if (url == null) {
             return startDiscovery(null, null, null, null, request);
@@ -283,7 +293,7 @@ public class AppController
 
     }
 
-    @GetMapping({"start_authentication", "start_authorization"})
+    @GetMapping({"start_authentication"})
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
     public String startAuthentication(
@@ -294,6 +304,31 @@ public class AppController
         LOGGER.info("* Starting authentication for discoveryResponse={}, subscriberId={}, scope={}",
                 discoveryResponse, LogUtils.mask(subscriberId, LOGGER, Level.INFO));
 
+        return startAuth(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
+    }
+
+    @GetMapping({"start_authorization"})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.FOUND)
+    public String startAuthorize(
+            @RequestParam(required = false) final DiscoveryResponse discoveryResponse,
+            @RequestParam(required = false) final String subscriberId, final HttpServletRequest request, final String msisdn,
+            final String mcc, final String mnc, final String sourceIp)
+    {
+        LOGGER.info("* Starting authorization for discoveryResponse={}, subscriberId={}, scope={}",
+                discoveryResponse, LogUtils.mask(subscriberId, LOGGER, Level.INFO));
+
+        return startAuth(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
+    }
+
+    @GetMapping({"start_authentication", "start_authorization"})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.FOUND)
+    public String startAuth(
+            @RequestParam(required = false) final DiscoveryResponse discoveryResponse,
+            @RequestParam(required = false) final String subscriberId, final HttpServletRequest request, final String msisdn,
+            final String mcc, final String mnc, final String sourceIp)
+    {
         String scope = operatorParams.getScope();
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
@@ -343,7 +378,7 @@ public class AppController
 //                .build();
 //
 //        final MobileConnectStatus status =
-//                this.mobileConnectWebInterface.startAuthentication(request, sdkSession, subscriberId,
+//                this.mobileConnectWebInterface.startAuth(request, sdkSession, subscriberId,
 //                        null, null, options);
 //
 //        return new MobileConnectWebResponse(status);
@@ -429,10 +464,18 @@ public class AppController
 
         if (status.getDiscoveryResponse() != null) {
             setDiscoveryCache(null, mcc, mnc, null, status.getDiscoveryResponse());
-            String url = startAuthentication(
-                    status.getDiscoveryResponse(),
-                    subscriber_id,
-                    request, null, mcc, mnc, null);
+            String url;
+            if (operatorParams.getScope().contains(Scope.AUTHZ)) {
+                url = startAuthorize(
+                        status.getDiscoveryResponse(),
+                        subscriber_id,
+                        request, null, mcc, mnc, null);
+            } else {
+                url = startAuthentication(
+                        status.getDiscoveryResponse(),
+                        subscriber_id,
+                        request, null, mcc, mnc, null);
+            }
             return new RedirectView(url);
         }
         else {

@@ -21,7 +21,7 @@ cd mobile-connect-sdk
 mvn clean install
 ```
 
-Import the generated mobile-connect-sdk-2.4.5.jar into your java project.
+Import the generated mobile-connect-sdk-2.4.7.jar into your java project.
 
 To enable logging import an appropriate binding to your project, see [SLF4J](http://www.slf4j.org/) for more information.
 
