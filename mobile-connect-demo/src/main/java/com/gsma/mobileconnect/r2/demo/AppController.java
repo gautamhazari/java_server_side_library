@@ -78,11 +78,6 @@ public class AppController
     private RestClient restClient;
     private OperatorParameters operatorParams = new OperatorParameters();
 
-//    public AppController(@Autowired final MobileConnectWebInterface mobileConnectWebInterface) {
-//        this.mobileConnectWebInterface = mobileConnectWebInterface;
-//        this.jsonService = new JacksonJsonService();
-//    }
-
     public AppController() {
         this.jsonService = new JacksonJsonService();
 
@@ -359,30 +354,6 @@ public class AppController
             e.printStackTrace();
         }
     }
-
-//    @GetMapping("start_authentication_r1")
-//    @ResponseBody
-//    @ResponseStatus(HttpStatus.FOUND)
-//    public MobileConnectWebResponse startAuthenticationR1(
-//            @RequestParam(required = false) final String sdkSession,
-//            @RequestParam(required = false) final String subscriberId,
-//            final HttpServletRequest request) {
-//
-//        LOGGER.info("* Starting authentication for sdkSession={}, subscriberId={}, scope={}",
-//                sdkSession, LogUtils.mask(subscriberId, LOGGER, Level.INFO), Scopes.MOBILECONNECT);
-//
-//        final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
-//                .withAuthenticationOptions(new AuthenticationOptions.Builder()
-//                        .withScope(Scopes.MOBILECONNECT)
-//                        .build())
-//                .build();
-//
-//        final MobileConnectStatus status =
-//                this.mobileConnectWebInterface.startAuth(request, sdkSession, subscriberId,
-//                        null, null, options);
-//
-//        return new MobileConnectWebResponse(status);
-//    }
 
     @GetMapping("headless_authentication")
     @ResponseBody
