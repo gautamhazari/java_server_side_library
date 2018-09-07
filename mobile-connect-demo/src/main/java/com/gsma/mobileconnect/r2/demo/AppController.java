@@ -325,29 +325,29 @@ public class AppController
         }
     }
 
-    @GetMapping("start_authentication_r1")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.FOUND)
-    public MobileConnectWebResponse startAuthenticationR1(
-            @RequestParam(required = false) final String sdkSession,
-            @RequestParam(required = false) final String subscriberId,
-            final HttpServletRequest request) {
-
-        LOGGER.info("* Starting authentication for sdkSession={}, subscriberId={}, scope={}",
-                sdkSession, LogUtils.mask(subscriberId, LOGGER, Level.INFO), Scopes.MOBILECONNECT);
-
-        final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
-                .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withScope(Scopes.MOBILECONNECT)
-                        .build())
-                .build();
-
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.startAuthentication(request, sdkSession, subscriberId,
-                        null, null, options);
-
-        return new MobileConnectWebResponse(status);
-    }
+//    @GetMapping("start_authentication_r1")
+//    @ResponseBody
+//    @ResponseStatus(HttpStatus.FOUND)
+//    public MobileConnectWebResponse startAuthenticationR1(
+//            @RequestParam(required = false) final String sdkSession,
+//            @RequestParam(required = false) final String subscriberId,
+//            final HttpServletRequest request) {
+//
+//        LOGGER.info("* Starting authentication for sdkSession={}, subscriberId={}, scope={}",
+//                sdkSession, LogUtils.mask(subscriberId, LOGGER, Level.INFO), Scopes.MOBILECONNECT);
+//
+//        final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
+//                .withAuthenticationOptions(new AuthenticationOptions.Builder()
+//                        .withScope(Scopes.MOBILECONNECT)
+//                        .build())
+//                .build();
+//
+//        final MobileConnectStatus status =
+//                this.mobileConnectWebInterface.startAuthentication(request, sdkSession, subscriberId,
+//                        null, null, options);
+//
+//        return new MobileConnectWebResponse(status);
+//    }
 
     @GetMapping("headless_authentication")
     @ResponseBody
@@ -469,7 +469,6 @@ public class AppController
     }
 
     private void getParameters() {
-        System.out.println(Constants.ConfigFilePath);
         operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath);
         if(operatorParams==null)
             operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath.replace("file:/", ""));
