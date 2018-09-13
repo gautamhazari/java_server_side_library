@@ -53,6 +53,8 @@ public class AuthenticationOptions
     private final String claimsJson;
     private final ClaimsParameter claims;
     private final String correlationId;
+    private final String sectorIdentifierUri;
+    private final String version;
     private final boolean isUsingCorrelationId;
 
     private AuthenticationOptions(final Builder builder)
@@ -79,6 +81,8 @@ public class AuthenticationOptions
         this.claims = builder.claims;
         this.correlationId = builder.correlationId;
         this.isUsingCorrelationId = builder.isUsingCorrelationId;
+        this.sectorIdentifierUri = builder.sectorIdentifierUri;
+        this.version = builder.version;
     }
 
     public String getClientId()
@@ -186,6 +190,10 @@ public class AuthenticationOptions
 
     public boolean getUsingCorrelationId() { return this.isUsingCorrelationId; }
 
+    public String getSectorIdentifierUri() { return this.sectorIdentifierUri; }
+
+    public String getVersion() { return this.version; }
+
     @SuppressWarnings("WeakerAccess")
     public static final class Builder implements IBuilder<AuthenticationOptions>
     {
@@ -211,6 +219,8 @@ public class AuthenticationOptions
         private ClaimsParameter claims;
         private String correlationId;
         private boolean isUsingCorrelationId;
+        private String sectorIdentifierUri;
+        private String version;
 
         public Builder()
         {
@@ -243,6 +253,8 @@ public class AuthenticationOptions
                 this.claims = options.claims;
                 this.correlationId = options.correlationId;
                 this.isUsingCorrelationId = options.isUsingCorrelationId;
+                this.sectorIdentifierUri = options.sectorIdentifierUri;
+                this.version = options.version;
             }
         }
 
@@ -376,6 +388,15 @@ public class AuthenticationOptions
             return this;
         }
 
+        public Builder withSectorIdentifierUri(final String val) {
+            this.sectorIdentifierUri = val;
+            return this;
+        }
+
+        public Builder withVersion(final String val) {
+            this.version = val;
+            return this;
+        }
 
 
         @Override

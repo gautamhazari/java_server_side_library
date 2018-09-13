@@ -61,6 +61,7 @@ public final class Parameters
     public static final String LOGIN_HINT_TOKEN = "login_hint_token";
     public static final String DTBS = "dtbs";
     public static final String CLAIMS = "claims";
+    public static final String SECTOR_IDENTIFIER_URI = "claims";
 
     // Required params for authorization
     public static final String CLIENT_NAME = "client_name";
