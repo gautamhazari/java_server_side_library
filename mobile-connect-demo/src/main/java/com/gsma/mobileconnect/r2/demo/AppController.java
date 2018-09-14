@@ -477,7 +477,7 @@ public class AppController
         URI requestUri = HttpUtils.extractCompleteUrl(request);
         SessionData sessionData = sessionCache.get(state);
         MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri,
-                sessionData.getDiscoveryResponse(), state, sessionData.getNonce(), options);
+                sessionData.getDiscoveryResponse(), state, sessionData.getNonce(), options, apiVersion);
 
         return new MobileConnectWebResponse(status);
     }

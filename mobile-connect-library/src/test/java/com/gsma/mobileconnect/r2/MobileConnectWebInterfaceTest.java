@@ -231,7 +231,7 @@ public class MobileConnectWebInterfaceTest
     {
         final MobileConnectStatus status =
             this.mcWebInterface.requestToken(this.request, "invalidid", URI.create("http://test"),
-                "state", "nonce", null);
+                "state", "nonce", null, "mc_v1.1");
 
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.ERROR);
         assertEquals(status.getErrorCode(), "sdksession_not_found");
@@ -254,7 +254,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             mcWebInterface.requestToken(this.request, "invalidid", URI.create("http://test"),
-                "state", "nonce", null);
+                "state", "nonce", null, "mc_v1.1");
 
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.ERROR);
         assertEquals(status.getErrorCode(), "cache_disabled");

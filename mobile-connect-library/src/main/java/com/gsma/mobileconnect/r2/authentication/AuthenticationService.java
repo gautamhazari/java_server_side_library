@@ -130,13 +130,16 @@ public class AuthenticationService implements IAuthenticationService
 
         try
         {
-            if (versions.isVersionSupported(DefaultOptions.MC_V2_3)) {
+            if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
                 StringUtils.requireNonEmpty(options.getSectorIdentifierUri(), "sector_identifier_uri");
                 StringUtils.requireNonEmpty(options.getVersion(), "version");
-            } else if(versions.isVersionSupported(DefaultOptions.AUTHENTICATION_DEFAULT_VERSION)) {
-                StringUtils.requireNonEmpty(options.getPrompt(), "promt");
-                ObjectUtils.requireNonNull(options.getMaxAge(), "max_age");
             }
+            //todo: check recommended
+//            else if(currentVersion.equals(DefaultOptions.AUTHENTICATION_DEFAULT_VERSION)) {
+////
+////                StringUtils.requireNonEmpty(options.getPrompt(), "promt");
+////                ObjectUtils.requireNonNull(options.getMaxAge(), "max_age");
+////            }
             final URI uri = new URIBuilder(ObjectUtils.requireNonNull(authorizeUrl, "authorizeUrl"))
                     .addParameters(
                             this.getAuthenticationQueryParams(optionsBuilder.build(), useAuthorize,

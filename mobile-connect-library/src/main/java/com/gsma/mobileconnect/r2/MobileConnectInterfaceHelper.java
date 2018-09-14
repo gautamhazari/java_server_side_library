@@ -260,15 +260,19 @@ class MobileConnectInterfaceHelper
     }
 
 
-    static MobileConnectStatus requestToken(final IAuthenticationService authnService, //NOSONAR
+    static MobileConnectStatus requestToken(final IAuthenticationService authnService,
         final IJWKeysetService jwKeysetService, final DiscoveryResponse discoveryResponse,
         final URI redirectedUrl, final String expectedState, final String expectedNonce,
         final MobileConnectConfig config, final MobileConnectRequestOptions options,
         final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder)
+        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion)
     {
         ObjectUtils.requireNonNull(discoveryResponse, DISCOVERY_RESPONSE);
         StringUtils.requireNonEmpty(expectedState, "expectedState");
+
+        if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
+            StringUtils.requireNonEmpty(options.getClientSecret(), "client_secret");
+        }
 
         long maxAge = extractMaxAge(options);
 
@@ -449,7 +453,7 @@ class MobileConnectInterfaceHelper
         final URI redirectedUrl, final DiscoveryResponse discoveryResponse,
         final String expectedState, final String expectedNonce, final MobileConnectConfig config,
         final MobileConnectRequestOptions options, final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder)
+        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion)
     {
         ObjectUtils.requireNonNull(redirectedUrl, "redirectedUrl");
 
@@ -462,7 +466,7 @@ class MobileConnectInterfaceHelper
 
             MobileConnectStatus tokenStatus = requestToken(authnService, jwKeysetService, discoveryResponse, redirectedUrl,
                     expectedState, expectedNonce, config, options, jsonService,
-                    iMobileConnectEncodeDecoder);
+                    iMobileConnectEncodeDecoder, currentVersion);
             return tokenStatus;
 
         }
@@ -475,7 +479,7 @@ class MobileConnectInterfaceHelper
 
             MobileConnectStatus tokenStatus = requestToken(authnService, jwKeysetService, discoveryResponse, redirectedUrl,
                     expectedState, expectedNonce, config, options, jsonService,
-                    iMobileConnectEncodeDecoder);
+                    iMobileConnectEncodeDecoder, currentVersion);
             return tokenStatus;
 
 

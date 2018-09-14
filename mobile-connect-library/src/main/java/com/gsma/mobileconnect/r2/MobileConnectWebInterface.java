@@ -336,7 +336,7 @@ public class MobileConnectWebInterface
     public MobileConnectStatus requestToken(final HttpServletRequest request,
         final DiscoveryResponse discoveryResponse, final URI redirectedUrl,
         final String expectedState, final String expectedNonce,
-        final MobileConnectRequestOptions options)
+        final MobileConnectRequestOptions options, final String currentVersion)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -347,7 +347,7 @@ public class MobileConnectWebInterface
 
         return MobileConnectInterfaceHelper.requestToken(this.authnService, this.jwKeysetService,
             discoveryResponse, redirectedUrl, expectedState, expectedNonce, this.config, options,
-            this.jsonService, this.iMobileConnectEncodeDecoder);
+            this.jsonService, this.iMobileConnectEncodeDecoder, currentVersion);
     }
 
     /**
@@ -369,7 +369,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus requestToken(final HttpServletRequest request,
         final String sdkSession, final URI redirectedUrl, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -386,7 +386,7 @@ public class MobileConnectWebInterface
             public MobileConnectStatus apply(final DiscoveryResponse cached)
             {
                 return MobileConnectWebInterface.this.requestToken(request, cached, redirectedUrl,
-                    expectedState, expectedNonce, options);
+                    expectedState, expectedNonce, options, currentVersion);
             }
         });
     }
@@ -516,7 +516,7 @@ public class MobileConnectWebInterface
     public MobileConnectStatus handleUrlRedirect(final HttpServletRequest request,
         final URI redirectedUrl, final DiscoveryResponse discoveryResponse,
         final String expectedState, final String expectedNonce,
-        final MobileConnectRequestOptions options)
+        final MobileConnectRequestOptions options, final String currentVersion)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -529,7 +529,7 @@ public class MobileConnectWebInterface
             MobileConnectInterfaceHelper.handleUrlRedirect(this.discoveryService,
                 this.jwKeysetService, this.authnService, redirectedUrl, discoveryResponse,
                 expectedState, expectedNonce, this.config, options, this.jsonService,
-                this.iMobileConnectEncodeDecoder);
+                this.iMobileConnectEncodeDecoder, currentVersion);
 
 
         return this.cacheIfRequired(status);
@@ -557,7 +557,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus handleUrlRedirect(final HttpServletRequest request,
         final URI redirectedUrl, final String sdkSession, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -577,7 +577,7 @@ public class MobileConnectWebInterface
                                 MobileConnectWebInterface.this.authnService, redirectedUrl, cached,
                                 expectedState, expectedNonce, MobileConnectWebInterface.this.config,
                                 options, MobileConnectWebInterface.this.jsonService,
-                                MobileConnectWebInterface.this.iMobileConnectEncodeDecoder));
+                                MobileConnectWebInterface.this.iMobileConnectEncodeDecoder, currentVersion));
             }
         });
     }

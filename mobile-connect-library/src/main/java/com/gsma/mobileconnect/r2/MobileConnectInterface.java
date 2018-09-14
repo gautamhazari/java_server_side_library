@@ -208,7 +208,7 @@ public class MobileConnectInterface
      */
     public Future<MobileConnectStatus> requestTokenAsync(final DiscoveryResponse discoveryResponse,
         final URI redirectedUrl, final String expectedState, final String expectedNonce,
-        final MobileConnectRequestOptions options)
+        final MobileConnectRequestOptions options, final String currentVersion)
     {
         LOGGER.debug(
             "Queuing requestToken async for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -221,7 +221,7 @@ public class MobileConnectInterface
             public MobileConnectStatus call() throws Exception
             {
                 return MobileConnectInterface.this.requestToken(discoveryResponse, redirectedUrl,
-                    expectedState, expectedNonce, options);
+                    expectedState, expectedNonce, options, currentVersion);
             }
         });
         executorService.shutdownNow();
@@ -230,7 +230,7 @@ public class MobileConnectInterface
 
     /**
      * Synchronous wrapper for {@link MobileConnectInterface#requestToken(DiscoveryResponse,
-     * URI, String, String, MobileConnectRequestOptions)}/>
+     * URI, String, String, MobileConnectRequestOptions, String)}/>
      *
      * @param discoveryResponse The response returned by the discovery process
      * @param redirectedUrl     URI redirected to by the completion of the authorization UI
@@ -246,7 +246,7 @@ public class MobileConnectInterface
      */
     public MobileConnectStatus requestToken(final DiscoveryResponse discoveryResponse,
         final URI redirectedUrl, final String expectedState, final String expectedNonce,
-        final MobileConnectRequestOptions options)
+        final MobileConnectRequestOptions options, final String currentVersion)
     {
         LOGGER.debug(
             "Running requestToken for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -255,7 +255,7 @@ public class MobileConnectInterface
 
         return MobileConnectInterfaceHelper.requestToken(this.authnService, jwKeysetService,
             discoveryResponse, redirectedUrl, expectedState, expectedNonce, this.config, options,
-            this.jsonService, this.iMobileConnectEncodeDecoder);
+            this.jsonService, this.iMobileConnectEncodeDecoder, currentVersion);
     }
 
 
@@ -311,7 +311,7 @@ public class MobileConnectInterface
      */
     public Future<MobileConnectStatus> handleUrlRedirectAsync(final URI redirectedUrl,
         final DiscoveryResponse discoveryResponse, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
     {
         LOGGER.debug(
             "Queuing handleUrlRedirect async for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -324,7 +324,7 @@ public class MobileConnectInterface
             public MobileConnectStatus call() throws Exception
             {
                 return MobileConnectInterface.this.handleUrlRedirect(redirectedUrl,
-                    discoveryResponse, expectedState, expectedNonce, options);
+                    discoveryResponse, expectedState, expectedNonce, options, currentVersion);
             }
         });
         executorService.shutdownNow();
@@ -333,7 +333,7 @@ public class MobileConnectInterface
 
     /**
      * Synchronous wrapper for {@link MobileConnectInterface#handleUrlRedirectAsync(URI,
-     * DiscoveryResponse, String, String, MobileConnectRequestOptions)}
+     * DiscoveryResponse, String, String, MobileConnectRequestOptions, String)}
      *
      * @param redirectedUrl     Url redirected to by the completion of the previous step
      * @param discoveryResponse The response returned by the discovery process
@@ -349,7 +349,7 @@ public class MobileConnectInterface
      */
     public MobileConnectStatus handleUrlRedirect(final URI redirectedUrl,
         final DiscoveryResponse discoveryResponse, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
     {
         LOGGER.debug(
             "Running handleUrlRedirect for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -359,13 +359,13 @@ public class MobileConnectInterface
         return MobileConnectInterfaceHelper.handleUrlRedirect(this.discoveryService,
             this.jwKeysetService, this.authnService, redirectedUrl, discoveryResponse,
             expectedState, expectedNonce, this.config, options, this.jsonService,
-            this.iMobileConnectEncodeDecoder);
+            this.iMobileConnectEncodeDecoder, currentVersion);
     }
 
     /**
      * Request user info using the access token returned by
      * {@link MobileConnectInterface#requestToken(DiscoveryResponse, URI, String, String,
-     * MobileConnectRequestOptions)}
+     * MobileConnectRequestOptions, String)}
      *
      * @param discoveryResponse The response returned by the discovery process
      * @param accessToken       Access token from requestToken stage
@@ -408,7 +408,7 @@ public class MobileConnectInterface
 
     /**
      * Request user info using the access token returned by {@link MobileConnectInterface#requestToken(DiscoveryResponse,
-     * URI, String, String, MobileConnectRequestOptions)}
+     * URI, String, String, MobileConnectRequestOptions, String)}
      *
      * @param discoveryResponse The response returned by the discovery process
      * @param accessToken       Access token from requestToken stage
