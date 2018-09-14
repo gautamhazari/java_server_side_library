@@ -336,7 +336,7 @@ public class AppController
                 .build();
         final MobileConnectStatus status =
                 this.mobileConnectWebInterface.startAuthentication(request, discoveryResponse, subscriberId,
-                        null, null, options);
+                        null, null, options, apiVersion);
 
         if (status.getErrorMessage() != null) {
             return null;
@@ -377,7 +377,7 @@ public class AppController
 
         final MobileConnectStatus status =
                 this.mobileConnectWebInterface.requestHeadlessAuthentication(request, sdkSession,
-                        subscriberId, null, null, options);
+                        subscriberId, null, null, options, apiVersion);
 
         return new MobileConnectWebResponse(status);
     }

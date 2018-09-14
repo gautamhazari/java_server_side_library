@@ -136,7 +136,7 @@ class MobileConnectInterfaceHelper
     static MobileConnectStatus startAuthentication(final IAuthenticationService authnService,
         final DiscoveryResponse discoveryResponse, final String encryptedMsisdn, final String state,
         final String nonce, final MobileConnectConfig config,
-        final AuthenticationOptions.Builder authnOptionsBuilder)
+        final AuthenticationOptions.Builder authnOptionsBuilder, final String currentVersion)
     {
         ObjectUtils.requireNonNull(discoveryResponse, DISCOVERY_RESPONSE);
 
@@ -156,7 +156,7 @@ class MobileConnectInterfaceHelper
             final StartAuthenticationResponse startAuthenticationResponse =
                 authnService.startAuthentication(clientId, correlationId, authorizationUrl,
                     config.getRedirectUrl(), state, nonce, encryptedMsisdn, supportedVersions,
-                    authnOptionsBuilder.build());
+                    authnOptionsBuilder.build(), currentVersion);
 
             LOGGER.debug(
                 "Responding with responseType={} for startAuthentication for encryptedMsisdn={}, state={}, nonce={}, startAuthenticationResponseUrl={}",
@@ -183,7 +183,7 @@ class MobileConnectInterfaceHelper
         final String expectedState, final String expectedNonce, final MobileConnectConfig config,
         final MobileConnectRequestOptions options,
         final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder,
-        final IJWKeysetService jwKeysetService, final IJsonService jsonService)
+        final IJWKeysetService jwKeysetService, final IJsonService jsonService, final String currentVersion)
     {
         ObjectUtils.requireNonNull(discoveryResponse, DISCOVERY_RESPONSE);
 
@@ -217,7 +217,7 @@ class MobileConnectInterfaceHelper
             final Future<RequestTokenResponse> requestTokenResponseAsync =
                 authnService.requestHeadlessAuthentication(clientId, clientSecret, correlationId, authorizationUrl,
                     tokenUrl, config.getRedirectUrl(), expectedState, expectedNonce,
-                    encryptedMsisdn, supportedVersions, authenticationOptions);
+                    encryptedMsisdn, supportedVersions, authenticationOptions, currentVersion);
 
             final RequestTokenResponse requestTokenResponse = requestTokenResponseAsync.get();
 

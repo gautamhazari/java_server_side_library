@@ -86,7 +86,7 @@ public class AuthenticationServiceTest
     {
         final StartAuthenticationResponse response =
             this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                REDIRECT_URL, "state", "nonce", null, null, null);
+                REDIRECT_URL, "state", "nonce", null, null, null, "mc_v1.1");
 
         assertNotNull(response);
         assertTrue(response.getUrl().toString().contains(AUTHORIZE_URL.toString()));
@@ -117,7 +117,7 @@ public class AuthenticationServiceTest
 
         final StartAuthenticationResponse response =
             this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                REDIRECT_URL, "state", "nonce", null, versions, options);
+                REDIRECT_URL, "state", "nonce", null, versions, options, "mc_v1.1");
         final String actualScope = HttpUtils.extractQueryValue(response.getUrl(), "scope");
 
         assertNotNull(actualScope);
@@ -136,7 +136,7 @@ public class AuthenticationServiceTest
 
         final StartAuthenticationResponse response =
             this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options);
+                REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options, "mc_v1.1");
 
         assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "context"), "context-val");
         assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "client_name"), "test");
@@ -157,7 +157,7 @@ public class AuthenticationServiceTest
 
         final StartAuthenticationResponse response =
             this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options);
+                REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options, "mc_v1.1");
 
         assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "scope"), expectedScope);
     }
@@ -170,7 +170,7 @@ public class AuthenticationServiceTest
             new AuthenticationOptions.Builder().withScope(initialScope).build();
 
         this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-            REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options);
+            REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options, "mc_v1.1");
     }
 
     @Test
@@ -188,7 +188,7 @@ public class AuthenticationServiceTest
 
         final StartAuthenticationResponse response =
             this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options);
+                REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options, "mc_v1.1");
 
         assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "claims"), expectedClaims);
     }
@@ -202,7 +202,7 @@ public class AuthenticationServiceTest
 
         final StartAuthenticationResponse response =
                 this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                        REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options);
+                        REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options, "mc_v1.1");
 
         assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "claims"), claims);
     }
@@ -276,7 +276,7 @@ public class AuthenticationServiceTest
         final URI authorizeUrl, final URI redirectUrl, final String state, final String nonce)
     {
         this.authentication.startAuthentication(clientId, null, authorizeUrl, redirectUrl, state, nonce,
-            null, null, null);
+            null, null, null, "mc_v1.1");
     }
 
     @DataProvider
@@ -292,7 +292,7 @@ public class AuthenticationServiceTest
         final AuthenticationOptions options =
             new AuthenticationOptions.Builder().withContext(context).withClientId(clientId).build();
         this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-            REDIRECT_URL, "state", null, null, null, options);
+            REDIRECT_URL, "state", null, null, null, options, "mc_v1.1");
     }
 
     @DataProvider
@@ -335,7 +335,7 @@ public class AuthenticationServiceTest
         final Future<RequestTokenResponse> response =
             this.authentication.requestHeadlessAuthentication(this.config.getClientId(),
                 this.config.getClientSecret(), null, AUTHORIZE_URL, REDIRECT_URL, TOKEN_URL, "state",
-                "nonce", null, null, null);
+                "nonce", null, null, null, "mc_v1.1");
 
         // Then
         assertNotNull(response);
@@ -374,7 +374,7 @@ public class AuthenticationServiceTest
         final Future<RequestTokenResponse> response =
             this.authentication.requestHeadlessAuthentication(this.config.getClientId(),
                 this.config.getClientSecret(), null, AUTHORIZE_URL, REDIRECT_URL, TOKEN_URL, "state",
-                "nonce", null, null, options);
+                "nonce", null, null, options, "mc_v1.1");
 
 
         // Then

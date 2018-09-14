@@ -84,7 +84,7 @@ public class AuthenticationService implements IAuthenticationService
     public StartAuthenticationResponse startAuthentication(final String clientId, String correlationId,
                                                            final URI authorizeUrl, final URI redirectUrl, final String state, final String nonce,
                                                            final String encryptedMSISDN, final SupportedVersions versions,
-                                                           final AuthenticationOptions options)
+                                                           final AuthenticationOptions options, final String currentVersion)
     {
 
         final String loginHint = extractLoginHint(options, encryptedMSISDN);
@@ -285,7 +285,7 @@ public class AuthenticationService implements IAuthenticationService
     public Future<RequestTokenResponse> requestHeadlessAuthentication(final String clientId, final String clientSecret,
                                                                       final String correlationId, final URI authorizationUrl, final URI requestTokenUrl,
                                                                       final URI redirectUrl, final String state, final String nonce, final String encryptedMsisdn,
-                                                                      final SupportedVersions versions, final AuthenticationOptions options)
+                                                                      final SupportedVersions versions, final AuthenticationOptions options, final String currentVersion)
             throws RequestFailedException
     {
         final String scope;
@@ -311,7 +311,7 @@ public class AuthenticationService implements IAuthenticationService
 
         StartAuthenticationResponse startAuthenticationResponse =
                 startAuthentication(clientId, correlationId, authorizationUrl, redirectUrl, state, nonce,
-                        encryptedMsisdn, versions, optionsBuilder.build());
+                        encryptedMsisdn, versions, optionsBuilder.build(), currentVersion);
         final RestAuthentication authentication =
                 RestAuthentication.basic(clientId, clientSecret, iMobileConnectEncodeDecoder);
 

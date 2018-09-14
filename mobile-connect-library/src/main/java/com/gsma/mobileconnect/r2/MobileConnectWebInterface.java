@@ -176,7 +176,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus startAuthentication(final HttpServletRequest request,
         final DiscoveryResponse discoveryResponse, final String encryptedMsisdn, final String state,
-        final String nonce, final MobileConnectRequestOptions options)
+        final String nonce, final MobileConnectRequestOptions options, final String currentVersion)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -195,7 +195,7 @@ public class MobileConnectWebInterface
             LogUtils.mask(rNonce, LOGGER, Level.DEBUG), HttpUtils.extractClientIp(request));
 
         return MobileConnectInterfaceHelper.startAuthentication(this.authnService,
-            discoveryResponse, encryptedMsisdn, rState, rNonce, this.config, builder);
+            discoveryResponse, encryptedMsisdn, rState, rNonce, this.config, builder, currentVersion);
     }
 
     /**
@@ -217,7 +217,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus startAuthentication(final HttpServletRequest request,
         final String sdkSession, final String encryptedMsisdn, final String state,
-        final String nonce, final MobileConnectRequestOptions options)
+        final String nonce, final MobileConnectRequestOptions options, final String currentVersion)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -232,7 +232,7 @@ public class MobileConnectWebInterface
             public MobileConnectStatus apply(final DiscoveryResponse cached)
             {
                 return MobileConnectWebInterface.this.startAuthentication(request, cached,
-                    encryptedMsisdn, state, nonce, options);
+                    encryptedMsisdn, state, nonce, options, currentVersion);
             }
         });
     }
@@ -257,7 +257,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus requestHeadlessAuthentication(final HttpServletRequest request,
         final DiscoveryResponse discoveryResponse, final String encryptedMsisdn, final String state,
-        final String nonce, final MobileConnectRequestOptions options)
+        final String nonce, final MobileConnectRequestOptions options, final String currentVersion)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -273,7 +273,7 @@ public class MobileConnectWebInterface
 
         return MobileConnectInterfaceHelper.requestHeadlessAuthentication(this.authnService,
             this.identityService, discoveryResponse, encryptedMsisdn, rState, rNonce, this.config,
-            options, iMobileConnectEncodeDecoder, this.jwKeysetService, this.jsonService);
+            options, iMobileConnectEncodeDecoder, this.jwKeysetService, this.jsonService, currentVersion);
     }
 
     /**
@@ -297,7 +297,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus requestHeadlessAuthentication(final HttpServletRequest request,
         final String sdkSession, final String encryptedMsisdn, final String state,
-        final String nonce, final MobileConnectRequestOptions options)
+        final String nonce, final MobileConnectRequestOptions options, final String currentVersion)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -312,7 +312,7 @@ public class MobileConnectWebInterface
             public MobileConnectStatus apply(final DiscoveryResponse cached)
             {
                 return MobileConnectWebInterface.this.requestHeadlessAuthentication(request, cached,
-                    encryptedMsisdn, state, nonce, options);
+                    encryptedMsisdn, state, nonce, options, currentVersion);
             }
         });
     }

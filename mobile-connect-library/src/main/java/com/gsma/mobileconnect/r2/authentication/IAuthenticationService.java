@@ -52,7 +52,7 @@ public interface IAuthenticationService
     StartAuthenticationResponse startAuthentication(final String clientId,  //NOSONAR
                                                     final String correlationId, final URI authorizeUrl, final URI redirectUrl, final String state, final String nonce,
                                                     final String encryptedMSISDN, final SupportedVersions versions,
-                                                    final AuthenticationOptions options);
+                                                    final AuthenticationOptions options, final String currentVersion);
 
     /**
      * Synchronous wrapper for
@@ -114,7 +114,7 @@ public interface IAuthenticationService
     Future<RequestTokenResponse> requestHeadlessAuthentication(final String clientId, //NOSONAR
                                                                final String clientSecret, final String correlationId, final URI authorizationUrl, final URI requestTokenUrl,
                                                                final URI redirectUrl, final String state, final String nonce, final String encryptedMsisdn,
-                                                               final SupportedVersions versions, final AuthenticationOptions options)
+                                                               final SupportedVersions versions, final AuthenticationOptions options, final String currentVersion)
         throws RequestFailedException, HeadlessOperationFailedException;
 
     /**

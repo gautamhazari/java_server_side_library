@@ -137,7 +137,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.startAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "nonce", options);
+                "1111222233334444", "state", "nonce", options, "mc_v1.1");
 
         assertNotNull(status);
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.AUTHENTICATION);
@@ -168,7 +168,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.startAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "nonce", options);
+                "1111222233334444", "state", "nonce", options, "mc_v1.1");
 
         final String clientName =
             HttpUtils.extractQueryValue(URI.create(status.getUrl()), "client_name");
@@ -277,7 +277,7 @@ public class MobileConnectWebInterfaceTest
 
          final MobileConnectStatus status =
          this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
-         "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options);
+         "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options, "mc_v1.1");
 
         assertNotNull(status);
 
@@ -315,7 +315,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options);
+                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options, "mc_v1.1");
 
         assertNotNull(status);
 
@@ -351,7 +351,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a7", options);
+                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a7", options, "mc_v1.1");
 
         assertNotNull(status);
 
@@ -388,7 +388,7 @@ public class MobileConnectWebInterfaceTest
         final MobileConnectStatus status =
             this.mcWebInterface.requestHeadlessAuthentication(this.request,
                 "111_11",
-                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options);
+                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options, "mc_v1.1");
 
         assertNotNull(status);
 

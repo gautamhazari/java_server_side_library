@@ -180,7 +180,7 @@ public class MobileConnectInterface
      */
     public MobileConnectStatus startAuthentication(final DiscoveryResponse discoveryResponse,
         final String encryptedMsisdn, final String state, final String nonce,
-        final MobileConnectRequestOptions options)
+        final MobileConnectRequestOptions options, final String currentVersion)
     {
         LOGGER.debug("Running startAuthentication for encryptedMsisdn={}, state={}, nonce={}",
             LogUtils.mask(encryptedMsisdn, LOGGER, Level.DEBUG), state,
@@ -188,7 +188,7 @@ public class MobileConnectInterface
 
         return MobileConnectInterfaceHelper.startAuthentication(this.authnService,
             discoveryResponse, encryptedMsisdn, state, nonce, this.config,
-            options.getAuthenticationOptionsBuilder());
+            options.getAuthenticationOptionsBuilder(), currentVersion);
     }
 
     /**
