@@ -112,6 +112,26 @@ public enum TokenValidationResult
     INVALID_NONCE,
 
     /**
+     * The at_hash in the id token claims does not match the nonce specified in the auth stage
+     */
+    INVALID_AT_HASH,
+
+    /**
+     * The acr in the id token claims does not match the nonce specified in the auth stage
+     */
+    INVALID_ACR,
+
+    /**
+     * The amr in the id token claims does not match the nonce specified in the auth stage
+     */
+    INVALID_AMR,
+
+    /**
+     * The hashed_login_hint in the id token claims does not match the nonce specified in the auth stage
+     */
+    INVALID_HASHED_LOGIN_HINT,
+
+    /**
      * The token response is null or missing required data
      */
     INCOMPLETE_TOKEN_RESPONSE

@@ -19,14 +19,12 @@ package com.gsma.mobileconnect.r2.validation;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
 import com.gsma.mobileconnect.r2.claims.Claims;
 import com.gsma.mobileconnect.r2.claims.ClaimsConstants;
+import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.MobileConnectInvalidJWKException;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.utils.JsonWebTokens;
-import com.gsma.mobileconnect.r2.utils.ListUtils;
-import com.gsma.mobileconnect.r2.utils.Predicate;
-import com.gsma.mobileconnect.r2.utils.StringUtils;
+import com.gsma.mobileconnect.r2.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,10 +63,10 @@ public class TokenValidation
      * @return TokenValidationResult that specifies if the token is valid, or if not why it is not
      * valid
      */
-    public static TokenValidationResult validateIdToken(final String idToken, //NOSONAR
+    public static TokenValidationResult validateIdToken(final String idToken,
         final String clientId, final String issuer, final String nonce, final long maxAge,
         final JWKeyset keyset, final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder mobileConnectEncodeDecoder)
+        final IMobileConnectEncodeDecoder mobileConnectEncodeDecoder, final String currentVersion)
         throws JsonDeserializationException
     {
         if (StringUtils.isNullOrEmpty(idToken))
@@ -79,7 +77,7 @@ public class TokenValidation
 
         TokenValidationResult result =
             validateIdTokenClaims(idToken, clientId, issuer, nonce, maxAge, jsonService,
-                mobileConnectEncodeDecoder);
+                mobileConnectEncodeDecoder, currentVersion);
         if (result != TokenValidationResult.VALID)
         {
             return result;
@@ -218,10 +216,29 @@ public class TokenValidation
     public static TokenValidationResult validateIdTokenClaims(final String idToken,
         final String clientId, final String issuer, final String expectedNonce, final long maxAge,
         final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder mobileConnectEncodeDecoder)
+        final IMobileConnectEncodeDecoder mobileConnectEncodeDecoder, final String currentVersion)
         throws JsonDeserializationException
     {
         final Claims claims = extractClaims(idToken, jsonService, mobileConnectEncodeDecoder);
+
+        if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
+            if (!isAtHashPresent(claims)) {
+                LOGGER.warn("Invalid at_hash");
+                return TokenValidationResult.INVALID_AT_HASH;
+            }
+            if (!isAcrPresent(claims)) {
+                LOGGER.warn("Invalid acr");
+                return TokenValidationResult.INVALID_ACR;
+            }
+            if (!isAmrPresent(claims)) {
+                LOGGER.warn("Invalid amr");
+                return TokenValidationResult.INVALID_AMR;
+            }
+            if (!isAcrPresent(claims)) {
+                LOGGER.warn("Invalid hashed_login_hint");
+                return TokenValidationResult.INVALID_HASHED_LOGIN_HINT;
+            }
+        }
 
         if (isNonceInvalid(claims, expectedNonce))
         {
@@ -250,6 +267,22 @@ public class TokenValidation
     {
         String claimsJson = JsonWebTokens.Part.CLAIMS.decode(idToken, mobileConnectEncodeDecoder);
         return jsonService.deserialize(claimsJson, Claims.class);
+    }
+
+    private static boolean isAtHashPresent(Claims claims) {
+        return claims.get(ClaimsConstants.AT_HASH) != null;
+    }
+
+    private static boolean isAcrPresent(Claims claims) {
+        return claims.get(ClaimsConstants.ACR) != null;
+    }
+
+    private static boolean isAmrPresent(Claims claims) {
+        return claims.get(ClaimsConstants.AMR) != null;
+    }
+
+    private static boolean isHashedLoginHintPresent(Claims claims) {
+        return claims.get(ClaimsConstants.HASHED_LOGIN_HINT) != null;
     }
 
     private static boolean isNonceInvalid(final Claims claims, final String expectedNonce)

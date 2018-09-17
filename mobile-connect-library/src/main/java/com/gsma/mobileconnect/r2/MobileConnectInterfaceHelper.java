@@ -177,7 +177,7 @@ class MobileConnectInterfaceHelper
         }
     }
 
-    static MobileConnectStatus requestHeadlessAuthentication( //NOSONAR
+    static MobileConnectStatus requestHeadlessAuthentication(
         final IAuthenticationService authnService, final IIdentityService identityService,
         final DiscoveryResponse discoveryResponse, final String encryptedMsisdn,
         final String expectedState, final String expectedNonce, final MobileConnectConfig config,
@@ -225,7 +225,7 @@ class MobileConnectInterfaceHelper
                 processRequestTokenResponse(requestTokenResponse, expectedState, expectedNonce,
                     config.getRedirectUrl(), iMobileConnectEncodeDecoder, jwKeysetService,
                     discoveryResponse, clientId, issuer, maxAge, jsonService,
-                    discoveryResponse.getProviderMetadata().getVersion());
+                    discoveryResponse.getProviderMetadata().getVersion(), currentVersion);
 
             if (!StringUtils.isNull(status.getRequestTokenResponse().getResponseData().getCorrelationId()) &&
                     !status.getDiscoveryResponse().getResponseData().getCorrelationId().equals(correlationId))
@@ -318,7 +318,7 @@ class MobileConnectInterfaceHelper
                 MobileConnectStatus status = processRequestTokenResponse(requestTokenResponse, expectedState,
                         expectedNonce, redirectedUrl, iMobileConnectEncodeDecoder, jwKeysetService,
                         discoveryResponse, clientId, issuer, maxAge, jsonService,
-                        discoveryResponse.getProviderMetadata().getVersion());
+                        discoveryResponse.getProviderMetadata().getVersion(), currentVersion);
                 return status;
             }
             catch (final Exception e)
@@ -348,7 +348,7 @@ class MobileConnectInterfaceHelper
         final String expectedNonce, final URI redirectedUrl,
         final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final IJWKeysetService jwks,
         final DiscoveryResponse discoveryResponse, final String clientId, final String issuer,
-        final long maxAge, final IJsonService jsonService, final String version)
+        final long maxAge, final IJsonService jsonService, final String version, final String currentVersion)
             throws Exception {
         final ErrorResponse errorResponse = requestTokenResponse.getErrorResponse();
         if (errorResponse != null)
@@ -415,7 +415,7 @@ class MobileConnectInterfaceHelper
 
                 final TokenValidationResult tokenValidationResult = TokenValidation.validateIdToken(
                     requestTokenResponse.getResponseData().getIdToken(), clientId, issuer,
-                    expectedNonce, maxAge, jwKeyset, jsonService, iMobileConnectEncodeDecoder);
+                    expectedNonce, maxAge, jwKeyset, jsonService, iMobileConnectEncodeDecoder, currentVersion);
 
                 if (TokenValidationResult.VALID.equals(tokenValidationResult))
                 {

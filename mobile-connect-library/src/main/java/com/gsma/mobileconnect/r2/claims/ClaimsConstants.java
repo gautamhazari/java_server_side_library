@@ -39,6 +39,26 @@ public class ClaimsConstants
     public static final String AZP = "azp";
 
     /**
+     * Key for at_hash
+     */
+    public static final String AT_HASH = "at_hash";
+
+    /**
+     * Key for acr
+     */
+    public static final String ACR = "acr";
+
+    /**
+     * Key for amr
+     */
+    public static final String AMR = "amr";
+
+    /**
+     * Key for hashed_login_hint
+     */
+    public static final String HASHED_LOGIN_HINT = "hashed_login_hint";
+
+    /**
      * Key for Issuer
      */
     public static final String ISSUER = "iss";
