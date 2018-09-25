@@ -125,25 +125,12 @@ public class AuthenticationService implements IAuthenticationService
                     "clientName");
         }
 
-        final String version =
-                this.coerceAuthenticationScope(scope, optionsBuilder, versions, useAuthorize);
-
         try
         {
-            if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
-                StringUtils.requireNonEmpty(options.getSectorIdentifierUri(), "sector_identifier_uri");
-                StringUtils.requireNonEmpty(options.getVersion(), "version");
-            }
-            //todo: check recommended
-//            else if(currentVersion.equals(DefaultOptions.AUTHENTICATION_DEFAULT_VERSION)) {
-////
-////                StringUtils.requireNonEmpty(options.getPrompt(), "promt");
-////                ObjectUtils.requireNonNull(options.getMaxAge(), "max_age");
-////            }
             final URI uri = new URIBuilder(ObjectUtils.requireNonNull(authorizeUrl, "authorizeUrl"))
                     .addParameters(
                             this.getAuthenticationQueryParams(optionsBuilder.build(), useAuthorize,
-                                    version, loginHint))
+                                    currentVersion, loginHint))
                     .build();
 
             return new StartAuthenticationResponse(uri);
@@ -257,7 +244,6 @@ public class AuthenticationService implements IAuthenticationService
                 .addIfNotEmpty(Parameters.ID_TOKEN_HINT, options.getIdTokenHint())
                 .addIfNotEmpty(Parameters.DTBS, options.getDbts())
                 .addIfNotEmpty(Parameters.CLAIMS, claimsJson)
-                .addIfNotEmpty(Parameters.SECTOR_IDENTIFIER_URI, options.getSectorIdentifierUri())
                 .addIfNotEmpty(Parameters.VERSION, version);
 
         if (!StringUtils.isNullOrEmpty(options.getLoginHint()) && !StringUtils.isNullOrEmpty(options.getLoginHintToken()))

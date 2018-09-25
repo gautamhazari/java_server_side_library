@@ -36,6 +36,7 @@ public class MobileConnectConfig implements IPreferences
     // required
     private final String clientId;
     private final String clientSecret;
+    private final String clientName;
     private final String xRedirect;
     private final URI discoveryUrl;
     private final URI redirectUrl;
@@ -48,6 +49,7 @@ public class MobileConnectConfig implements IPreferences
     {
         this.clientId = builder.clientId;
         this.clientSecret = builder.clientSecret;
+        this.clientName = builder.clientName;
         this.xRedirect = builder.xRedirect;
         this.discoveryUrl = builder.discoveryUrl;
         this.redirectUrl = builder.redirectUrl;
@@ -113,6 +115,7 @@ public class MobileConnectConfig implements IPreferences
     {
         private String clientId;
         private String clientSecret;
+        private String clientName;
         private String xRedirect;
         private URI discoveryUrl;
         private URI redirectUrl;
@@ -128,6 +131,12 @@ public class MobileConnectConfig implements IPreferences
         public Builder withClientSecret(String val)
         {
             this.clientSecret = val;
+            return this;
+        }
+
+        public Builder withClientName(String val)
+        {
+            this.clientName = val;
             return this;
         }
 

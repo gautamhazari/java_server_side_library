@@ -141,6 +141,14 @@ public class Claims
                 }
                 builder.withValues(objects.toArray());
             }
+
+            if (value.isArray()) {
+                final List<Object> objects = new ArrayList<Object>();
+                for (final JsonNode v : value) {
+                    objects.add(v.textValue());
+                }
+                builder.withValues(objects.toArray());
+            }
             return builder.build();
         }
     }

@@ -366,6 +366,17 @@ public class MobileConnectStatus
     }
 
     /**
+     * Create a copy of this status with identityResponse.
+     *
+     * @param identityResponse to set.
+     * @return copy of this status with identityResponse.
+     */
+    public MobileConnectStatus withIdentityResponse(final IdentityResponse identityResponse)
+    {
+        return new Builder(this).withIdentityResponse(identityResponse).build();
+    }
+
+    /**
      * Enum of possible response types for {@link MobileConnectStatus}
      */
     public enum ResponseType

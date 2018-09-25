@@ -77,6 +77,10 @@ public class AppController
     private ConcurrentCache discoveryCache;
     private RestClient restClient;
     private OperatorParameters operatorParams = new OperatorParameters();
+    private final String[] IDENTITY_SCOPES = {Scope.IDENTITY_PHONE, Scope.IDENTITY_SIGNUP,
+            Scope.IDENTITY_NATIONALID, Scope.IDENTITY_SIGNUPPLUS};
+    private final String[] USERINFO_SCOPES = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
+            Scope.PHONE, Scope.OFFLINE_ACCESS};
 
     public AppController() {
         this.jsonService = new JacksonJsonService();
@@ -479,6 +483,29 @@ public class AppController
         MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri,
                 sessionData.getDiscoveryResponse(), state, sessionData.getNonce(), options, apiVersion);
 
+        if (!StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getUserInfoUrl())) {
+            for (String userInfoScope : USERINFO_SCOPES) {
+                if (operatorParams.getScope().contains(userInfoScope)) {
+                    final MobileConnectStatus statusUserInfo =
+                            this.mobileConnectWebInterface.requestUserInfo(request, sessionData.getDiscoveryResponse(),
+                                    status.getRequestTokenResponse().getResponseData().getAccessToken());
+                    status = status.withIdentityResponse(statusUserInfo.getIdentityResponse());
+                    System.out.println("userinfo");
+                }
+            }
+
+        } else if (!StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getPremiumInfoUri())) {
+            for (String identityScope : IDENTITY_SCOPES) {
+                if (operatorParams.getScope().contains(identityScope)) {
+                    final MobileConnectStatus statusIdentity =
+                            this.mobileConnectWebInterface.requestIdentity(request, sessionData.getDiscoveryResponse(),
+                                    status.getRequestTokenResponse().getResponseData().getAccessToken());
+                    status = status.withIdentityResponse(statusIdentity.getIdentityResponse());
+                    System.out.println("identity");
+                }
+            }
+        }
+
         return new MobileConnectWebResponse(status);
     }
 
@@ -495,12 +522,14 @@ public class AppController
                 .withJsonService(this.jsonService)
                 .withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize())
                 .build();
+        clientName = operatorParams.getClientName();
 
         discoveryCache = new DiscoveryCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build();
         try {
             mobileConnectConfig = new MobileConnectConfig.Builder()
                     .withClientId(operatorParams.getClientID())
                     .withClientSecret(operatorParams.getClientSecret())
+                    .withClientName(operatorParams.getClientName())
                     .withDiscoveryUrl(new URI(operatorParams.getDiscoveryURL()))
                     .withRedirectUrl(new URI(operatorParams.getRedirectURL()))
                     .withXRedirect(operatorParams.getXRedirect().equals("True") ? "APP" : "False")

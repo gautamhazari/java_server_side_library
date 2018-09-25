@@ -48,12 +48,12 @@ public class AuthenticationOptions
     private final String loginHintToken;
     private final String dbts;
     private final String clientName;
+    private final String clientSecret;
     private final String context;
     private final String bindingMessage;
     private final String claimsJson;
     private final ClaimsParameter claims;
     private final String correlationId;
-    private final String sectorIdentifierUri;
     private final String version;
     private final boolean isUsingCorrelationId;
 
@@ -75,13 +75,13 @@ public class AuthenticationOptions
         this.loginHintToken = builder.loginHintToken;
         this.dbts = builder.dbts;
         this.clientName = builder.clientName;
+        this.clientSecret = builder.clientSecret;
         this.context = builder.context;
         this.bindingMessage = builder.bindingMessage;
         this.claimsJson = builder.claimsJson;
         this.claims = builder.claims;
         this.correlationId = builder.correlationId;
         this.isUsingCorrelationId = builder.isUsingCorrelationId;
-        this.sectorIdentifierUri = builder.sectorIdentifierUri;
         this.version = builder.version;
     }
 
@@ -164,6 +164,11 @@ public class AuthenticationOptions
         return this.clientName;
     }
 
+    public String getClientSecret()
+    {
+        return this.clientSecret;
+    }
+
     public String getContext()
     {
         return this.context;
@@ -190,8 +195,6 @@ public class AuthenticationOptions
 
     public boolean getUsingCorrelationId() { return this.isUsingCorrelationId; }
 
-    public String getSectorIdentifierUri() { return this.sectorIdentifierUri; }
-
     public String getVersion() { return this.version; }
 
     @SuppressWarnings("WeakerAccess")
@@ -213,13 +216,13 @@ public class AuthenticationOptions
         private String loginHintToken;
         private String dbts;
         private String clientName;
+        private String clientSecret;
         private String context;
         private String bindingMessage;
         private String claimsJson;
         private ClaimsParameter claims;
         private String correlationId;
         private boolean isUsingCorrelationId;
-        private String sectorIdentifierUri;
         private String version;
 
         public Builder()
@@ -247,13 +250,14 @@ public class AuthenticationOptions
                 this.loginHintToken = options.loginHintToken;
                 this.dbts = options.dbts;
                 this.clientName = options.clientName;
+                this.clientSecret = options.clientSecret;
                 this.context = options.context;
                 this.bindingMessage = options.bindingMessage;
                 this.claimsJson = options.claimsJson;
                 this.claims = options.claims;
                 this.correlationId = options.correlationId;
                 this.isUsingCorrelationId = options.isUsingCorrelationId;
-                this.sectorIdentifierUri = options.sectorIdentifierUri;
+
                 this.version = options.version;
             }
         }
@@ -354,6 +358,12 @@ public class AuthenticationOptions
             return this;
         }
 
+        public Builder withClientSecret(final String val)
+        {
+            this.clientSecret = val;
+            return this;
+        }
+
         public Builder withContext(final String val)
         {
             this.context = val;
@@ -388,10 +398,6 @@ public class AuthenticationOptions
             return this;
         }
 
-        public Builder withSectorIdentifierUri(final String val) {
-            this.sectorIdentifierUri = val;
-            return this;
-        }
 
         public Builder withVersion(final String val) {
             this.version = val;

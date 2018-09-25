@@ -270,9 +270,17 @@ class MobileConnectInterfaceHelper
         ObjectUtils.requireNonNull(discoveryResponse, DISCOVERY_RESPONSE);
         StringUtils.requireNonEmpty(expectedState, "expectedState");
 
-        if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
-            StringUtils.requireNonEmpty(options.getClientSecret(), "client_secret");
-        }
+        final AuthenticationOptions.Builder builder = options != null
+                ? options.getAuthenticationOptionsBuilder()
+                : new AuthenticationOptions.Builder();
+
+//        options = options.Builder.
+
+//        options = builder.withClientSecret(discoveryResponse.getResponseData().getResponse().getClientSecret()).build();
+
+//        if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
+//            StringUtils.requireNonEmpty(options.getClientSecret(), "client_secret");
+//        }
 
         long maxAge = extractMaxAge(options);
 
@@ -296,12 +304,18 @@ class MobileConnectInterfaceHelper
         else
         {
             final String code = HttpUtils.extractQueryValue(redirectedUrl, "code");
+
+
             final String clientId = ObjectUtils.defaultIfNull(
                 discoveryResponse.getResponseData().getResponse().getClientId(),
                 config.getClientId());
             final String clientSecret = ObjectUtils.defaultIfNull(
                 discoveryResponse.getResponseData().getResponse().getClientSecret(),
                 config.getClientSecret());
+
+            if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
+                StringUtils.requireNonEmpty(clientSecret, "client_secret");
+            }
             final String correlationId =
                     discoveryResponse.getResponseData().getCorrelationId();
             final String requestTokenUrl = discoveryResponse.getOperatorUrls().getRequestTokenUrl();

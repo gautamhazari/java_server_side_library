@@ -25,13 +25,19 @@ public class Scope
     public static final String AUTHN = "mc_authn";
     public static final String AUTHZ = "mc_authz";
 
-    public static final String MCPREFIX = "mc_";
+    public static final String MC_PREFIX = "mc_";
+
+    public static final String PROFILE = "profile";
+    public static final String EMAIL = "email";
+    public static final String ADDRESS = "address";
+    public static final String PHONE = "phone";
+    public static final String OFFLINE_ACCESS = "offline_access";
 
     public static final String IDENTITY = "mc_identity";
-    public static final String IDENTITYPHONE = "mc_identity_phonenumber";
-    public static final String IDENTITYSIGNUP = "mc_identity_signup";
-    public static final String IDENTITYSIGNUPPLUS = "mc_identity_signupplus";
-    public static final String IDENTITYNATIONALID = "mc_identity_nationalid";
+    public static final String IDENTITY_PHONE = "mc_identity_phonenumber";
+    public static final String IDENTITY_SIGNUP = "mc_identity_signup";
+    public static final String IDENTITY_SIGNUPPLUS = "mc_identity_signupplus";
+    public static final String IDENTITY_NATIONALID = "mc_identity_nationalid";
 
     private Scope()
     {

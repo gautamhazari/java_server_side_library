@@ -300,12 +300,12 @@ public class TokenValidation
         final String clientId)
     {
         Object aud = claims.get(ClaimsConstants.AUD).getValue();
+        Object[] audArray = claims.get(ClaimsConstants.AUD).getValues();
         Object azp = claims.get(ClaimsConstants.AZP).getValue();
-        if (aud == null) {
+        if (aud == null & audArray == null) {
             return false;
         }
-        if (aud.getClass().isArray()) {
-            Object[] audArray = (Object[]) aud;
+        if (audArray != null) {
             if (audArray.length == 1) {
                 return clientId.equals(audArray[0]) || clientId.equals(azp);
             } else if (audArray.length > 1) {

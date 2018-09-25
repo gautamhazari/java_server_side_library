@@ -3,6 +3,7 @@ package com.gsma.mobileconnect.r2.demo.objects;
 public class OperatorParameters {
     private String clientID;
     private String clientSecret;
+    private String clientName;
     private String discoveryURL;
     private String redirectURL;
     private String xRedirect;
@@ -90,6 +91,14 @@ public class OperatorParameters {
 
     public void setArcValues(String arcValues) {
         this.arcValues = arcValues;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 }
 
