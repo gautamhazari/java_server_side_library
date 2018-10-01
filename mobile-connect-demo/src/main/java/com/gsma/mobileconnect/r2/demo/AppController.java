@@ -40,6 +40,7 @@ import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.rest.RestClient;
 import com.gsma.mobileconnect.r2.utils.HttpUtils;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
+import com.gsma.mobileconnect.r2.utils.ObjectUtils;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
 import com.gsma.mobileconnect.r2.web.MobileConnectWebResponse;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -463,12 +464,13 @@ public class AppController
     @ResponseStatus(HttpStatus.FOUND)
     public MobileConnectWebResponse StateDiscoveryCallback(@RequestParam(required = false) String state,
                                           @RequestParam(required = false) final String error,
+                                          @RequestParam(required = false) final String error_description,
                                           @RequestParam(required = false) final String description,
                                           final HttpServletRequest request)
     {
         if (error != null)
         {
-            return new MobileConnectWebResponse(MobileConnectStatus.error(error, description, new Exception()));
+            return new MobileConnectWebResponse(MobileConnectStatus.error(error, ObjectUtils.defaultIfNull(description, error_description), new Exception()));
         }
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
@@ -483,25 +485,23 @@ public class AppController
         MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri,
                 sessionData.getDiscoveryResponse(), state, sessionData.getNonce(), options, apiVersion);
 
-        if (!StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getUserInfoUrl())) {
+        if (apiVersion.equals(DefaultOptions.VERSION_MOBILECONNECT) & !StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getUserInfoUrl())) {
             for (String userInfoScope : USERINFO_SCOPES) {
                 if (operatorParams.getScope().contains(userInfoScope)) {
                     final MobileConnectStatus statusUserInfo =
                             this.mobileConnectWebInterface.requestUserInfo(request, sessionData.getDiscoveryResponse(),
                                     status.getRequestTokenResponse().getResponseData().getAccessToken());
                     status = status.withIdentityResponse(statusUserInfo.getIdentityResponse());
-                    System.out.println("userinfo");
                 }
             }
 
-        } else if (!StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getPremiumInfoUri())) {
+        } else if (apiVersion.equals(DefaultOptions.MC_V2_3) & !StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getPremiumInfoUri())) {
             for (String identityScope : IDENTITY_SCOPES) {
                 if (operatorParams.getScope().contains(identityScope)) {
                     final MobileConnectStatus statusIdentity =
                             this.mobileConnectWebInterface.requestIdentity(request, sessionData.getDiscoveryResponse(),
                                     status.getRequestTokenResponse().getResponseData().getAccessToken());
                     status = status.withIdentityResponse(statusIdentity.getIdentityResponse());
-                    System.out.println("identity");
                 }
             }
         }
