@@ -44,6 +44,10 @@ import com.gsma.mobileconnect.r2.utils.ObjectUtils;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
 import com.gsma.mobileconnect.r2.web.MobileConnectWebResponse;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -54,6 +58,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -508,6 +514,14 @@ public class AppController
 
         return new MobileConnectWebResponse(status);
     }
+
+    @GetMapping({"sector_identifier_uri", "sector_identifier_uri.json"})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.FOUND)
+    public JSONArray getSectorIdentifierUri()   {
+        return ReadAndParseFiles.readJsonArray("D:\\gitlab\\java_server_side_library\\mobile-connect-demo\\src\\main\\resources\\config\\sector_identifier_uri.json");
+    }
+
 
     private void getParameters() {
         operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath);
