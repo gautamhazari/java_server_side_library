@@ -40,16 +40,16 @@ public final class MobileConnectVersions
     static
     {
         final Map<String, String> versions = new HashMap<String, String>();
-        versions.put(Scopes.MOBILECONNECT, DefaultOptions.VERSION_MOBILECONNECT);
-        versions.put(Scopes.MOBILECONNECTAUTHENTICATION, DefaultOptions.VERSION_MOBILECONNECTAUTHN);
-        versions.put(Scopes.MOBILECONNECTAUTHORIZATION, DefaultOptions.VERSION_MOBILECONNECTAUTHZ);
-        versions.put(Scopes.MOBILECONNECTIDENTITYNATIONALID,
+        versions.put(Scopes.MOBILE_CONNECT, DefaultOptions.VERSION_MOBILECONNECT);
+        versions.put(Scopes.MOBILE_CONNECT_AUTHENTICATION, DefaultOptions.VERSION_MOBILECONNECTAUTHN);
+        versions.put(Scopes.MOBILE_CONNECT_AUTHORIZATION, DefaultOptions.VERSION_MOBILECONNECTAUTHZ);
+        versions.put(Scopes.MOBILE_CONNECT_IDENTITY_NATIONALID,
             DefaultOptions.VERSION_MOBILECONNECTIDENTITY);
-        versions.put(Scopes.MOBILECONNECTIDENTITYPHONE,
+        versions.put(Scopes.MOBILE_CONNECT_IDENTITY_PHONE,
             DefaultOptions.VERSION_MOBILECONNECTIDENTITY);
-        versions.put(Scopes.MOBILECONNECTIDENTITYSIGNUP,
+        versions.put(Scopes.MOBILE_CONNECT_IDENTITY_SIGNUP,
             DefaultOptions.VERSION_MOBILECONNECTIDENTITY);
-        versions.put(Scopes.MOBILECONNECTIDENTITYSIGNUPPLUS,
+        versions.put(Scopes.MOBILE_CONNECT_IDENTITY_SIGNUP_PLUS,
             DefaultOptions.VERSION_MOBILECONNECTIDENTITY);
 
         DEFAULT_SUPPORTED_VERSIONS = Collections.unmodifiableMap(versions);
@@ -75,7 +75,7 @@ public final class MobileConnectVersions
         if (StringUtils.isNullOrEmpty(version))
         {
             retval = ObjectUtils.defaultIfNull(DEFAULT_SUPPORTED_VERSIONS.get(scope),
-                DEFAULT_SUPPORTED_VERSIONS.get(Scopes.MOBILECONNECT));
+                DEFAULT_SUPPORTED_VERSIONS.get(Scopes.MOBILE_CONNECT));
         }
 
         return retval;

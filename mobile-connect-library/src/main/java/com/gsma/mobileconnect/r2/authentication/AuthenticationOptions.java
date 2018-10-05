@@ -17,6 +17,7 @@
 package com.gsma.mobileconnect.r2.authentication;
 
 import com.gsma.mobileconnect.r2.claims.ClaimsParameter;
+import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.discovery.SupportedVersions;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
@@ -25,7 +26,7 @@ import java.net.URI;
 
 /**
  * Holds required and optional options for {@link IAuthenticationService#startAuthentication(
- *String, String, URI, URI, String, String, String, SupportedVersions, AuthenticationOptions)}.
+ *String, String, URI, URI, String, String, String, SupportedVersions, AuthenticationOptions, String)}.
  *
  * @since 2.0
  */
@@ -53,6 +54,7 @@ public class AuthenticationOptions
     private final String bindingMessage;
     private final String claimsJson;
     private final ClaimsParameter claims;
+    private final KYCClaimsParameter kycClaims;
     private final String correlationId;
     private final String version;
     private final boolean isUsingCorrelationId;
@@ -80,6 +82,7 @@ public class AuthenticationOptions
         this.bindingMessage = builder.bindingMessage;
         this.claimsJson = builder.claimsJson;
         this.claims = builder.claims;
+        this.kycClaims = builder.kycClaims;
         this.correlationId = builder.correlationId;
         this.isUsingCorrelationId = builder.isUsingCorrelationId;
         this.version = builder.version;
@@ -189,6 +192,11 @@ public class AuthenticationOptions
         return this.claims;
     }
 
+    public KYCClaimsParameter getKycClaims()
+    {
+        return this.kycClaims;
+    }
+
     public String getCorrelationId () {
         return this.correlationId;
     }
@@ -221,6 +229,7 @@ public class AuthenticationOptions
         private String bindingMessage;
         private String claimsJson;
         private ClaimsParameter claims;
+        private KYCClaimsParameter kycClaims;
         private String correlationId;
         private boolean isUsingCorrelationId;
         private String version;
@@ -255,6 +264,7 @@ public class AuthenticationOptions
                 this.bindingMessage = options.bindingMessage;
                 this.claimsJson = options.claimsJson;
                 this.claims = options.claims;
+                this.kycClaims = options.kycClaims;
                 this.correlationId = options.correlationId;
                 this.isUsingCorrelationId = options.isUsingCorrelationId;
 
@@ -385,6 +395,12 @@ public class AuthenticationOptions
         public Builder withClaims(final ClaimsParameter val)
         {
             this.claims = val;
+            return this;
+        }
+
+        public Builder withKycClaims(final KYCClaimsParameter val)
+        {
+            this.kycClaims = val;
             return this;
         }
 

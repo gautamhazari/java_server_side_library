@@ -30,31 +30,51 @@ public final class Scopes
     /**
      * Default required scope value
      */
-    public static final String MOBILECONNECT = "openid";
+    public static final String MOBILE_CONNECT = "openid";
     /**
      * Scope value for Authentication
      */
-    public static final String MOBILECONNECTAUTHENTICATION = "openid mc_authn";
+    public static final String MOBILE_CONNECT_AUTHENTICATION = "openid mc_authn";
     /**
      * Scope value for Authorization
      */
-    public static final String MOBILECONNECTAUTHORIZATION = "openid mc_authz";
+    public static final String MOBILE_CONNECT_AUTHORIZATION = "openid mc_authz";
     /**
      * Scope value for Identity Phone Number
      */
-    public static final String MOBILECONNECTIDENTITYPHONE = "openid mc_identity_phonenumber";
+    public static final String MOBILE_CONNECT_IDENTITY_PHONE = "openid mc_identity_phonenumber";
     /**
      * Scope value for Identity Signup
      */
-    public static final String MOBILECONNECTIDENTITYSIGNUP = "openid mc_identity_signup";
+    public static final String MOBILE_CONNECT_IDENTITY_SIGNUP = "openid mc_identity_signup";
     /**
      * Scope value for Identity Signup Plus
      */
-    public static final String MOBILECONNECTIDENTITYSIGNUPPLUS = "openid mc_identity_signupplus";
+    public static final String MOBILE_CONNECT_IDENTITY_SIGNUP_PLUS = "openid mc_identity_signupplus";
     /**
      * Scope value for Identity National ID
      */
-    public static final String MOBILECONNECTIDENTITYNATIONALID = "openid mc_identity_nationalid";
+    public static final String MOBILE_CONNECT_IDENTITY_NATIONALID = "openid mc_identity_nationalid";
+    /**
+     * Scope value for KYC PLAIN
+     */
+    public static final String MOBILE_CONNECT_KYC_PLAIN = "openid mc_kyc_plain";
+    /**
+     * Scope value for KYC HASHED
+     */
+    public static final String MOBILE_CONNECT_KYC_HASHED = "openid mc_kyc_hashed";
+    /**
+     * Scope value for VM SHARE
+     */
+    public static final String MOBILE_CONNECT_ATTR_VM_SHARE = "openid mc_attr_vm_share";
+    /**
+     * Scope value for VM MATCH
+     */
+    public static final String MOBILE_CONNECT_ATTR_VM_MATCH = "openid mc_attr_vm_match";
+    /**
+     * Scope value for VM MATCH HASH
+     */
+    public static final String MOBILE_CONNECT_ATTR_VM_MATCH_HASH = "openid mc_attr_vm_match_hash";
 
     private Scopes()
     {

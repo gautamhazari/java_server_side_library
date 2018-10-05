@@ -45,9 +45,6 @@ import com.gsma.mobileconnect.r2.utils.StringUtils;
 import com.gsma.mobileconnect.r2.web.MobileConnectWebResponse;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -58,8 +55,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -221,7 +216,7 @@ public class AppController
             final HttpServletRequest request) throws JsonDeserializationException {
 
         LOGGER.info("* Starting authentication for sdkSession={}, subscriberId={}, scope={}",
-                LogUtils.mask(subId, LOGGER, Level.INFO), Scopes.MOBILECONNECT);
+                LogUtils.mask(subId, LOGGER, Level.INFO), Scopes.MOBILE_CONNECT);
         OperatorUrls operatorUrlsWD = new OperatorUrls.Builder()
                 .withAuthorizationUrl(operatorUrls.getAuthorizationUrl())
                 .withRequestTokenUrl(operatorUrls.getRequestTokenUrl())

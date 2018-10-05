@@ -41,10 +41,10 @@ public class SupportedVersionsTest
         String mcAuthenticationVersion = "2.0";
         final SupportedVersions supportedVersions = new SupportedVersions.Builder()
             .addSupportedVersion("openid", "1.2")
-            .addSupportedVersion(Scopes.MOBILECONNECTAUTHENTICATION, mcAuthenticationVersion)
+            .addSupportedVersion(Scopes.MOBILE_CONNECT_AUTHENTICATION, mcAuthenticationVersion)
             .build();
 
-        final String actual = supportedVersions.getSupportedVersion(Scopes.MOBILECONNECTAUTHENTICATION);
+        final String actual = supportedVersions.getSupportedVersion(Scopes.MOBILE_CONNECT_AUTHENTICATION);
 
         assertEquals(actual, mcAuthenticationVersion);
     }
@@ -54,10 +54,10 @@ public class SupportedVersionsTest
     {
         final SupportedVersions supportedVersions = new SupportedVersions.Builder()
             .addSupportedVersion("openid", "1.2")
-            .addSupportedVersion(Scopes.MOBILECONNECTAUTHENTICATION, "2.0")
+            .addSupportedVersion(Scopes.MOBILE_CONNECT_AUTHENTICATION, "2.0")
             .build();
 
-        final String actual = supportedVersions.getSupportedVersion(Scopes.MOBILECONNECTAUTHORIZATION);
+        final String actual = supportedVersions.getSupportedVersion(Scopes.MOBILE_CONNECT_AUTHORIZATION);
 
         assertEquals(actual, "1.2");
     }
@@ -138,7 +138,7 @@ public class SupportedVersionsTest
     public void isVersionSupportedShouldReturnTrueIfLowerThanMaxVersionSupported()
     {
         final SupportedVersions supportedVersions = new SupportedVersions.Builder()
-            .addSupportedVersion(Scopes.MOBILECONNECT, "mc_v1.2").build();
+            .addSupportedVersion(Scopes.MOBILE_CONNECT, "mc_v1.2").build();
         final String version = "mc_v1.1";
 
         final boolean versionSupported  = supportedVersions.isVersionSupported(version);
@@ -150,7 +150,7 @@ public class SupportedVersionsTest
     public void isVersionSupportedShouldReturnFalseIfHigherThanMaxVersionSupported()
     {
         final SupportedVersions supportedVersions = new SupportedVersions.Builder()
-            .addSupportedVersion(Scopes.MOBILECONNECT, "mc_v1.2").build();
+            .addSupportedVersion(Scopes.MOBILE_CONNECT, "mc_v1.2").build();
         final String version = "mc_v1.3";
 
         final boolean versionSupported  = supportedVersions.isVersionSupported(version);

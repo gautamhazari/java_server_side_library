@@ -23,6 +23,7 @@ import com.gsma.mobileconnect.r2.ErrorResponse;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
+import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.constants.Scope;
@@ -107,12 +108,12 @@ public class AuthenticationService implements IAuthenticationService
         final String context;
         if (options == null)
         {
-            scope = Scopes.MOBILECONNECT;
+            scope = Scopes.MOBILE_CONNECT;
             context = "";
         }
         else
         {
-            scope = StringUtils.isNullOrEmpty(options.getScope()) ? Scopes.MOBILECONNECT : options.getScope();
+            scope = StringUtils.isNullOrEmpty(options.getScope()) ? Scopes.MOBILE_CONNECT : options.getScope();
             context = options.getContext();
         }
 
@@ -123,6 +124,12 @@ public class AuthenticationService implements IAuthenticationService
             StringUtils.requireNonEmpty(options == null ? null : options.getContext(), "context");
             StringUtils.requireNonEmpty(options == null ? null : options.getClientName(),
                     "clientName");
+        }
+
+
+        if (scope.contains(Scope.KYC_PLAIN) || scope.contains(Scope.KYC_HASHED)) {
+            KYCClaimsParameter kycClaims = options.getKycClaims();
+
         }
 
         try
@@ -186,7 +193,7 @@ public class AuthenticationService implements IAuthenticationService
                                              final boolean useAuthorize)
     {
         final String requiredScope =
-                useAuthorize ? Scopes.MOBILECONNECTAUTHORIZATION : Scopes.MOBILECONNECTAUTHENTICATION;
+                useAuthorize ? Scopes.MOBILE_CONNECT_AUTHORIZATION : Scopes.MOBILE_CONNECT_AUTHENTICATION;
         final String disallowedScope = useAuthorize ? Scope.AUTHN : Scope.AUTHZ;
 
         final String version =

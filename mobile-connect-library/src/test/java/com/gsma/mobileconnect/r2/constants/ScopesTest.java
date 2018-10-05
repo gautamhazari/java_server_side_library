@@ -17,7 +17,7 @@ public class ScopesTest
     public void testCoerceOpenIdScope() throws Exception
     {
         String[] scopes = String
-            .format("%s %s", Scopes.MOBILECONNECTIDENTITYSIGNUP, Scopes.MOBILECONNECTIDENTITYPHONE)
+            .format("%s %s", Scopes.MOBILE_CONNECT_IDENTITY_SIGNUP, Scopes.MOBILE_CONNECT_IDENTITY_PHONE)
             .split(" ");
 
         List<String> scopeList =

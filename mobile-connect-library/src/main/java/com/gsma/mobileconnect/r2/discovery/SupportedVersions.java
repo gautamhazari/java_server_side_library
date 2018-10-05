@@ -53,13 +53,13 @@ public class SupportedVersions
      */
     private SupportedVersions(final Map<String, String> versionSupport)
     {
-        recognisedVersions.add(Scopes.MOBILECONNECT);
-        recognisedVersions.add(Scopes.MOBILECONNECTAUTHENTICATION);
-        recognisedVersions.add(Scopes.MOBILECONNECTAUTHORIZATION);
-        recognisedVersions.add(Scopes.MOBILECONNECTIDENTITYNATIONALID);
-        recognisedVersions.add(Scopes.MOBILECONNECTIDENTITYPHONE);
-        recognisedVersions.add(Scopes.MOBILECONNECTIDENTITYSIGNUP);
-        recognisedVersions.add(Scopes.MOBILECONNECTIDENTITYSIGNUPPLUS);
+        recognisedVersions.add(Scopes.MOBILE_CONNECT);
+        recognisedVersions.add(Scopes.MOBILE_CONNECT_AUTHENTICATION);
+        recognisedVersions.add(Scopes.MOBILE_CONNECT_AUTHORIZATION);
+        recognisedVersions.add(Scopes.MOBILE_CONNECT_IDENTITY_NATIONALID);
+        recognisedVersions.add(Scopes.MOBILE_CONNECT_IDENTITY_PHONE);
+        recognisedVersions.add(Scopes.MOBILE_CONNECT_IDENTITY_SIGNUP);
+        recognisedVersions.add(Scopes.MOBILE_CONNECT_IDENTITY_SIGNUP_PLUS);
 
         this.versions = versionSupport != null
                         ? Collections.unmodifiableMap(new HashMap<String, String>(versionSupport))
@@ -69,7 +69,7 @@ public class SupportedVersions
 
     private static String identifyMaxSupportedVersion(final Map<String, String> versions)
     {
-        String max = MobileConnectVersions.coerceVersion(null, Scopes.MOBILECONNECT);
+        String max = MobileConnectVersions.coerceVersion(null, Scopes.MOBILE_CONNECT);
 
         for (Map.Entry<String, String> versionEntry : versions.entrySet())
         {
@@ -107,7 +107,7 @@ public class SupportedVersions
         }
 
         final String version = ObjectUtils.defaultIfNull(this.versions.get(scope),
-            this.versions.get(Scopes.MOBILECONNECT));
+            this.versions.get(Scopes.MOBILE_CONNECT));
 
         return MobileConnectVersions.coerceVersion(version, scope);
     }

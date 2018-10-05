@@ -144,7 +144,7 @@ public class LoginHintTest
     {
         final ProviderMetadata providerMetadata = new ProviderMetadata.Builder()
             .withMobileConnectVersionSupported(new SupportedVersions.Builder()
-                .addSupportedVersion(Scopes.MOBILECONNECT, "mc_v1.2")
+                .addSupportedVersion(Scopes.MOBILE_CONNECT, "mc_v1.2")
                 .build())
             .withLoginHintMethodsSupported(null)
             .build();
