@@ -31,7 +31,7 @@ public class ReadAndParseFiles {
 
     public static JSONArray readJsonArray(String filePath) {
         JSONParser jsonParser = new JSONParser();
-        JSONArray jsonArray = new JSONArray();
+        JSONArray jsonArray = null;
         try {
             Object object = jsonParser.parse(new FileReader(filePath));
             jsonArray = (JSONArray) object;

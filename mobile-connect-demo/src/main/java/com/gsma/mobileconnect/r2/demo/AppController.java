@@ -514,16 +514,26 @@ public class AppController
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
     public JSONArray getSectorIdentifierUri()   {
-        return ReadAndParseFiles.readJsonArray("mobile-connect-demo\\src\\main\\resources\\config\\sector_identifier_uri.json");
+        JSONArray jsonArray;
+        jsonArray = ReadAndParseFiles.readJsonArray(Constants.SectorIdentifierPath);
+        if(jsonArray==null) {
+            jsonArray = ReadAndParseFiles.readJsonArray(Constants.SectorIdentifierPath.replace("file:/", ""));
+        }
+        if(jsonArray==null) {
+            jsonArray = ReadAndParseFiles.readJsonArray(Constants.SectorIdentifierPath.replace("file:", ""));
+        }
+        return jsonArray;
     }
 
 
     private void getParameters() {
         operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath);
-        if(operatorParams==null)
+        if(operatorParams==null) {
             operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath.replace("file:/", ""));
-        if(operatorParams==null)
+        }
+        if(operatorParams==null) {
             operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath.replace("file:", ""));
+        }
 
         apiVersion = operatorParams.getApiVersion();
         includeRequestIP = operatorParams.getIncludeRequestIP().equals("True");
