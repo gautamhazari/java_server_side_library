@@ -516,10 +516,10 @@ public class AppController
     public JSONArray getSectorIdentifierUri()   {
         JSONArray jsonArray;
         jsonArray = ReadAndParseFiles.readJsonArray(Constants.SectorIdentifierPath);
-        if(jsonArray==null) {
+        if(jsonArray == null) {
             jsonArray = ReadAndParseFiles.readJsonArray(Constants.SectorIdentifierPath.replace("file:/", ""));
         }
-        if(jsonArray==null) {
+        if(jsonArray == null) {
             jsonArray = ReadAndParseFiles.readJsonArray(Constants.SectorIdentifierPath.replace("file:", ""));
         }
         return jsonArray;
@@ -528,10 +528,10 @@ public class AppController
 
     private void getParameters() {
         operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath);
-        if(operatorParams==null) {
+        if(operatorParams == null) {
             operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath.replace("file:/", ""));
         }
-        if(operatorParams==null) {
+        if(operatorParams == null) {
             operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath.replace("file:", ""));
         }
 
