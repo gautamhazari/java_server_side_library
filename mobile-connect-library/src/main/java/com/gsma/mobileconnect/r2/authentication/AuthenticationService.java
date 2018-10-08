@@ -23,6 +23,8 @@ import com.gsma.mobileconnect.r2.ErrorResponse;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
+import com.gsma.mobileconnect.r2.claims.Claims;
+import com.gsma.mobileconnect.r2.claims.ClaimsValue;
 import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
@@ -127,10 +129,16 @@ public class AuthenticationService implements IAuthenticationService
         }
 
 
-        if (scope.contains(Scope.KYC_PLAIN) || scope.contains(Scope.KYC_HASHED)) {
-            KYCClaimsParameter kycClaims = options.getKycClaims();
-
-        }
+//        if (scope.contains(Scope.KYC_PLAIN) || scope.contains(Scope.KYC_HASHED)) {
+//            KYCClaimsParameter kycClaims = options.getKycClaims();
+            KYCClaimsParameter kycClaims =
+                    new KYCClaimsParameter.Builder()
+                            .withName(new Claims.Builder().add("name", new ClaimsValue.Builder().withValue("Name").build()).build())
+                            .withAddress(new Claims.Builder().add("address", new ClaimsValue.Builder().withValue("Address").build()).build())
+                            .build();
+            System.out.println(kycClaims.getName());
+            System.out.println(kycClaims.getAddress());
+//        }
 
         try
         {

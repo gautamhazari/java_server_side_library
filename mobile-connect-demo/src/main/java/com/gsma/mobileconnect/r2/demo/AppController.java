@@ -514,7 +514,7 @@ public class AppController
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
     public JSONArray getSectorIdentifierUri()   {
-        return ReadAndParseFiles.readJsonArray("D:\\gitlab\\java_server_side_library\\mobile-connect-demo\\src\\main\\resources\\config\\sector_identifier_uri.json");
+        return ReadAndParseFiles.readJsonArray("mobile-connect-demo\\src\\main\\resources\\config\\sector_identifier_uri.json");
     }
 
 
