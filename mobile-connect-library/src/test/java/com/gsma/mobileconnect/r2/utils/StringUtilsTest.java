@@ -32,12 +32,6 @@ import static org.testng.AssertJUnit.assertTrue;
 public final class StringUtilsTest
 {
     @Test
-    public void isNullOrEmpty_null()
-    {
-        assertTrue(StringUtils.isNullOrEmpty(null));
-    }
-
-    @Test
     public void isNullOrEmpty_empty()
     {
         assertTrue(StringUtils.isNullOrEmpty(""));

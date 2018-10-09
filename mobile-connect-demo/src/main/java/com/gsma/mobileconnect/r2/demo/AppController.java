@@ -22,6 +22,8 @@ import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
+import com.gsma.mobileconnect.r2.claims.Claims;
+import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.constants.Scope;
@@ -338,6 +340,9 @@ public class AppController
                         .withContext(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
                         .withBindingMessage(apiVersion.equals(Constants.Version2_0) ? Constants.BindingMsg : null)
                         .withClientName(clientName)
+                        .withKycClaims(new KYCClaimsParameter.Builder()
+                                .withName(new Claims.Builder().add("name", false, "Name").build())
+                                .withAddress("Address").build())
                         .build())
                 .build();
         final MobileConnectStatus status =

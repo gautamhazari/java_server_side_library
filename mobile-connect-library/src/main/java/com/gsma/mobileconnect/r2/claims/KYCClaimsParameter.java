@@ -27,24 +27,24 @@ import com.gsma.mobileconnect.r2.utils.IBuilder;
 @JsonDeserialize(builder = KYCClaimsParameter.Builder.class)
 public class KYCClaimsParameter {
     private final Claims name;
-    private final Claims givenName;
-    private final Claims familyName;
-    private final Claims address;
-    private final Claims housenoOrHousename;
-    private final Claims postalCode;
-    private final Claims town;
-    private final Claims country;
-    private final Claims birthdate;
+    private final String givenName;
+    private final String familyName;
+    private final String address;
+    private final String housenoOrHousename;
+    private final String postalCode;
+    private final String town;
+    private final String country;
+    private final String birthdate;
 
-    private final Claims nameHashed;
-    private final Claims givenNameHashed;
-    private final Claims familyNameHashed;
-    private final Claims addressHashed;
-    private final Claims housenoOrHousenameHashed;
-    private final Claims postalCodeHashed;
-    private final Claims townHashed;
-    private final Claims countryHashed;
-    private final Claims birthdateHashed;
+    private final String nameHashed;
+    private final String givenNameHashed;
+    private final String familyNameHashed;
+    private final String addressHashed;
+    private final String housenoOrHousenameHashed;
+    private final String postalCodeHashed;
+    private final String townHashed;
+    private final String countryHashed;
+    private final String birthdateHashed;
 
     private KYCClaimsParameter(Builder builder)
     {
@@ -73,96 +73,96 @@ public class KYCClaimsParameter {
         return this.name;
     }
 
-    public Claims givenName()
+    public String getGivenName()
     {
         return this.givenName;
     }
 
-    public Claims getFamilyName()
+    public String getFamilyName()
     {
         return this.familyName;
     }
 
-    public Claims getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    public Claims getHousenoOrHousename() {
+    public String getHousenoOrHousename() {
         return housenoOrHousename;
     }
 
-    public Claims getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public Claims getTown() {
+    public String getTown() {
         return town;
     }
 
-    public Claims getCountry() {
+    public String getCountry() {
         return country;
     }
 
-    public Claims getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
     }
 
-    public Claims getNameHashed() {
+    public String getNameHashed() {
         return nameHashed;
     }
 
-    public Claims getGivenNameHashed() {
+    public String getGivenNameHashed() {
         return givenNameHashed;
     }
 
-    public Claims getFamilyNameHashed() {
+    public String getFamilyNameHashed() {
         return familyNameHashed;
     }
 
-    public Claims getAddressHashed() {
+    public String getAddressHashed() {
         return addressHashed;
     }
 
-    public Claims getHousenoOrHousenameHashed() {
+    public String getHousenoOrHousenameHashed() {
         return housenoOrHousenameHashed;
     }
 
-    public Claims getPostalCodeHashed() {
+    public String getPostalCodeHashed() {
         return postalCodeHashed;
     }
 
-    public Claims getTownHashed() {
+    public String getTownHashed() {
         return townHashed;
     }
 
-    public Claims getCountryHashed() {
+    public String getCountryHashed() {
         return countryHashed;
     }
 
-    public Claims getBirthdateHashed() {
+    public String getBirthdateHashed() {
         return birthdateHashed;
     }
 
     public static final class Builder implements IBuilder<KYCClaimsParameter>
     {
         private Claims name = null;
-        private Claims givenName = null;
-        private Claims familyName = null;
-        private Claims address = null;
-        private Claims housenoOrHousename = null;
-        private Claims postalCode = null;
-        private Claims town = null;
-        private Claims country = null;
-        private Claims birthdate = null;
-        private Claims nameHashed = null;
-        private Claims givenNameHashed = null;
-        private Claims familyNameHashed = null;
-        private Claims addressHashed = null;
-        private Claims housenoOrHousenameHashed = null;
-        private Claims postalCodeHashed = null;
-        private Claims townHashed = null;
-        private Claims countryHashed = null;
-        private Claims birthdateHashed = null;
+        private String givenName = null;
+        private String familyName = null;
+        private String address = null;
+        private String housenoOrHousename = null;
+        private String postalCode = null;
+        private String town = null;
+        private String country = null;
+        private String birthdate = null;
+        private String nameHashed = null;
+        private String givenNameHashed = null;
+        private String familyNameHashed = null;
+        private String  addressHashed = null;
+        private String housenoOrHousenameHashed = null;
+        private String postalCodeHashed = null;
+        private String townHashed = null;
+        private String countryHashed = null;
+        private String birthdateHashed = null;
 
         public Builder withName(final Claims val)
         {
@@ -170,213 +170,105 @@ public class KYCClaimsParameter {
             return this;
         }
 
-        public Builder withName(final Claims.Builder val)
-        {
-            this.name = val.build();
-            return this;
-        }
-
-        public Builder withGivenName(final Claims val)
+        public Builder withGivenName(final String val)
         {
             this.givenName = val;
             return this;
         }
 
-        public Builder withGivenName(final Claims.Builder val)
-        {
-            this.givenName = val.build();
-            return this;
-        }
-
-        public Builder withFamilyName(final Claims val)
+        public Builder withFamilyName(final String val)
         {
             this.givenName = val;
             return this;
         }
 
-        public Builder withFamilyName(final Claims.Builder val)
-        {
-            this.familyName = val.build();
-            return this;
-        }
-
-        public Builder withAddress(final Claims val)
+        public Builder withAddress(final String val)
         {
             this.address = val;
             return this;
         }
 
-        public Builder withAddress(final Claims.Builder val)
-        {
-            this.address = val.build();
-            return this;
-        }
-
-        public Builder withHousenoOrHousename(final Claims val)
+        public Builder withHousenoOrHousename(final String val)
         {
             this.housenoOrHousename = val;
             return this;
         }
 
-        public Builder withHousenoOrHousename(final Claims.Builder val)
-        {
-            this.housenoOrHousename = val.build();
-            return this;
-        }
-
-        public Builder withPostalCode(final Claims val)
+        public Builder withPostalCode(final String val)
         {
             this.postalCode = val;
             return this;
         }
 
-        public Builder withPostalCode(final Claims.Builder val)
-        {
-            this.postalCode = val.build();
-            return this;
-        }
-
-        public Builder withTown(final Claims val)
+        public Builder withTown(final String val)
         {
             this.town = val;
             return this;
         }
 
-        public Builder withTown(final Claims.Builder val)
-        {
-            this.town = val.build();
-            return this;
-        }
-
-        public Builder withCountry(final Claims val)
+        public Builder withCountry(final String val)
         {
             this.country = val;
             return this;
         }
 
-        public Builder withCountry(final Claims.Builder val)
-        {
-            this.country = val.build();
-            return this;
-        }
-
-        public Builder withBirthdate(final Claims val)
+        public Builder withBirthdate(final String val)
         {
             this.birthdate = val;
             return this;
         }
 
-        public Builder withBirthdate(final Claims.Builder val)
-        {
-            this.birthdate = val.build();
-            return this;
-        }
-
-        public Builder withNameHashed(final Claims val)
+        public Builder withNameHashed(final String val)
         {
             this.nameHashed = val;
             return this;
         }
 
-        public Builder withNameHashed(final Claims.Builder val)
-        {
-            this.nameHashed = val.build();
-            return this;
-        }
-
-        public Builder withGivenNameHashed(final Claims val)
+        public Builder withGivenNameHashed(final String val)
         {
             this.givenNameHashed = val;
             return this;
         }
 
-        public Builder withGivenNameHashed(final Claims.Builder val)
-        {
-            this.givenNameHashed = val.build();
-            return this;
-        }
-
-        public Builder withFamilyNameHashed(final Claims val)
+        public Builder withFamilyNameHashed(final String val)
         {
             this.givenNameHashed = val;
             return this;
         }
 
-        public Builder withFamilyNameHashed(final Claims.Builder val)
-        {
-            this.familyNameHashed = val.build();
-            return this;
-        }
-
-        public Builder withAddressHashed(final Claims val)
+        public Builder withAddressHashed(final String val)
         {
             this.addressHashed = val;
             return this;
         }
 
-        public Builder withAddressHashed(final Claims.Builder val)
-        {
-            this.addressHashed = val.build();
-            return this;
-        }
-
-        public Builder withHousenoOrHousenameHashed(final Claims val)
+        public Builder withHousenoOrHousenameHashed(final String val)
         {
             this.housenoOrHousenameHashed = val;
             return this;
         }
 
-        public Builder withHousenoOrHousenameHashed(final Claims.Builder val)
-        {
-            this.housenoOrHousenameHashed = val.build();
-            return this;
-        }
-
-        public Builder withPostalCodeHashed(final Claims val)
+        public Builder withPostalCodeHashed(final String val)
         {
             this.postalCodeHashed = val;
             return this;
         }
 
-        public Builder withPostalCodeHashed(final Claims.Builder val)
-        {
-            this.postalCodeHashed = val.build();
-            return this;
-        }
-
-        public Builder withTownHashed(final Claims val)
+        public Builder withTownHashed(final String val)
         {
             this.townHashed = val;
             return this;
         }
 
-        public Builder withTownHashed(final Claims.Builder val)
-        {
-            this.townHashed = val.build();
-            return this;
-        }
-
-        public Builder withCountryHashed(final Claims val)
+        public Builder withCountryHashed(final String val)
         {
             this.countryHashed = val;
             return this;
         }
 
-        public Builder withCountryHashed(final Claims.Builder val)
-        {
-            this.countryHashed = val.build();
-            return this;
-        }
-
-        public Builder withBirthdateHashed(final Claims val)
+        public Builder withBirthdateHashed(final String val)
         {
             this.birthdateHashed = val;
-            return this;
-        }
-
-        public Builder withBirthdateHashed(final Claims.Builder val)
-        {
-            this.birthdateHashed = val.build();
             return this;
         }
 

@@ -23,8 +23,6 @@ import com.gsma.mobileconnect.r2.ErrorResponse;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
-import com.gsma.mobileconnect.r2.claims.Claims;
-import com.gsma.mobileconnect.r2.claims.ClaimsValue;
 import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
@@ -128,17 +126,21 @@ public class AuthenticationService implements IAuthenticationService
                     "clientName");
         }
 
-
-//        if (scope.contains(Scope.KYC_PLAIN) || scope.contains(Scope.KYC_HASHED)) {
-//            KYCClaimsParameter kycClaims = options.getKycClaims();
-            KYCClaimsParameter kycClaims =
-                    new KYCClaimsParameter.Builder()
-                            .withName(new Claims.Builder().add("name", new ClaimsValue.Builder().withValue("Name").build()).build())
-                            .withAddress(new Claims.Builder().add("address", new ClaimsValue.Builder().withValue("Address").build()).build())
-                            .build();
-            System.out.println(kycClaims.getName());
-            System.out.println(kycClaims.getAddress());
-//        }
+        KYCClaimsParameter kycClaims = options.getKycClaims();
+        if (kycClaims != null) {
+            if (scope.contains(Scope.KYC_PLAIN)) {
+//                StringUtils.requireNonEmpty("kyc name || given_name and family_name", kycClaims.getName(),
+//                        kycClaims.getGivenName(), kycClaims.getFamilyName());
+//                StringUtils.requireNonEmpty("kyc address || houseno_or_housename, postal_code, town and country",
+//                        kycClaims.getName(), kycClaims.getGivenName(), kycClaims.getFamilyName());
+            }
+            if (scope.contains(Scope.KYC_HASHED)) {
+                StringUtils.requireNonEmpty("kyc name_hashed || given_name_hashed and family_name_hashed", kycClaims.getNameHashed(),
+                        kycClaims.getGivenNameHashed(), kycClaims.getFamilyNameHashed());
+                StringUtils.requireNonEmpty("kyc address_hashed || houseno_or_housename_hashed, postal_code_hashed, town_hashed and country_hashed",
+                        kycClaims.getNameHashed(), kycClaims.getGivenNameHashed(), kycClaims.getFamilyNameHashed());
+            }
+        }
 
         try
         {
@@ -221,6 +223,37 @@ public class AuthenticationService implements IAuthenticationService
         return version;
     }
 
+    private String getKycClaimsJson(KYCClaimsParameter kycClaims) {
+//        String claimsJson = null;
+//        if (kycClaims != null) {
+//            try {
+//                claimsJson = this.jsonService.serialize(kycClaims);
+//                System.out.println(claimsJson);
+//                if (!StringUtils.isNullOrEmpty(claimsJson)) {
+//                    JSONObject premiumJson = new JSONObject();
+////                    Gson gson = new Gson();
+////                    JsonElement element = gson.fromJson(this.jsonService.serialize(kycClaims.getName()), JsonElement.class);
+////
+////                    premiumJson.add();
+//                    JsonParser jsonParser = new JsonParser();
+//                    Map<String, Object> map = new HashMap<String, Object>();
+//                    ObjectMapper objectMapper = new ObjectMapper();
+//                    map.putAll(objectMapper.readValue(kycClaims.getName(), new TypeReference<Map<String, String>>(){}));
+//                    premiumJson.put("premiuminfo", new JSONObject(kycClaims.getName(), kycClaims.getAddress()))
+//                    return premiumJson.toJSONString();
+//                }
+//            } catch (JsonSerializationException | JsonDeserializationException jse) {
+//                LOGGER.warn(
+//                        "Failed to (de)serialize kyc into JSON for authentication query parameters",
+//                        jse);
+//                throw new IllegalArgumentException(
+//                        "Failed to (de)serialize kyc claims into JSON for authentication query parameters",
+//                        jse);
+//            }
+//        }
+        return null;
+    }
+
     private List<NameValuePair> getAuthenticationQueryParams(final AuthenticationOptions options,
                                                              final boolean useAuthorize, final String version, final String encryptedMSISDN)
     {
@@ -242,6 +275,8 @@ public class AuthenticationService implements IAuthenticationService
             }
         }
 
+        String kycClaimsJson = getKycClaimsJson(options.getKycClaims());
+
         final KeyValuePair.ListBuilder builder = new KeyValuePair.ListBuilder()
                 .addIfNotEmpty(Parameters.AUTHENTICATION_REDIRECT_URI, options.getRedirectUrl().toString())
                 .addIfNotEmpty(Parameters.CLIENT_ID, options.getClientId())
@@ -259,6 +294,7 @@ public class AuthenticationService implements IAuthenticationService
                 .addIfNotEmpty(Parameters.ID_TOKEN_HINT, options.getIdTokenHint())
                 .addIfNotEmpty(Parameters.DTBS, options.getDbts())
                 .addIfNotEmpty(Parameters.CLAIMS, claimsJson)
+                .addIfNotEmpty(Parameters.CLAIMS, kycClaimsJson)
                 .addIfNotEmpty(Parameters.VERSION, version);
 
         if (!StringUtils.isNullOrEmpty(options.getLoginHint()) && !StringUtils.isNullOrEmpty(options.getLoginHintToken()))

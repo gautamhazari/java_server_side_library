@@ -50,6 +50,41 @@ public final class StringUtils
 
     /**
      * Inspect a String for content.  Note that this method considers white space as content and
+     * therefore a non-empty String.
+     *
+     * @param values to inspect.
+     * @return true if the String is not null and has zero length.
+     */
+    public static boolean isNullOrEmpty(final String... values)
+    {
+        boolean isEmpty = true;
+        for (String val : values) {
+            if (!isNullOrEmpty(val)) {
+                isEmpty = false;
+            }
+        }
+        return isEmpty;
+    }
+    /**
+     * Inspect a String for content.  Note that this method considers white space as content and
+     * therefore a non-empty String.
+     *
+     * @param values to inspect.
+     * @return true if the String is not null and has zero length.
+     */
+    public static boolean isNotEmpty(final String... values)
+    {
+        boolean isNotEmpty = true;
+        for (String val : values) {
+            if (isNullOrEmpty(val)) {
+                isNotEmpty = false;
+            }
+        }
+        return isNotEmpty;
+    }
+
+    /**
+     * Inspect a String for content.  Note that this method considers white space as content and
      * therefore a null String.
      *
      * @param str to inspect.
@@ -82,6 +117,22 @@ public final class StringUtils
         else
         {
             return value;
+        }
+    }
+    /**
+     * Inspect a String for content, throws NullPointerException if is null or empty.
+     *
+     * @param value to inspect.
+     * @param name  of String to report in exception.
+     * @throws InvalidArgumentException detailing name of String that is either null or empty.
+     */
+    public static void requireNonEmpty(final String name, final String value, final String... values)
+    {
+        ObjectUtils.requireNonNull(name, "name");
+        if ((isNullOrEmpty(value) & !isNullOrEmpty(values))) {
+            for (String val : values) {
+                requireNonEmpty(val, name);
+            }
         }
     }
 
