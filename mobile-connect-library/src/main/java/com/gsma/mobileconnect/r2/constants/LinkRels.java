@@ -44,6 +44,11 @@ public final class LinkRels
     public static final String PREMIUMINFO = "premiuminfo";
 
     /**
+     * Key for value
+     */
+    public static final String VALUE = "value";
+
+    /**
      * Key for token revoke url
      */
     public static final String TOKENREVOKE = "tokenrevoke";

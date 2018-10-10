@@ -119,6 +119,7 @@ public final class StringUtils
             return value;
         }
     }
+
     /**
      * Inspect a String for content, throws NullPointerException if is null or empty.
      *
@@ -126,14 +127,24 @@ public final class StringUtils
      * @param name  of String to report in exception.
      * @throws InvalidArgumentException detailing name of String that is either null or empty.
      */
-    public static void requireNonEmpty(final String name, final String value, final String... values)
+    public static boolean requireNonEmpty(final String name, final String value, final String... values)
     {
+        if (!isNullOrEmpty(value) & !isNullOrEmpty(values)) {
+            final InvalidArgumentException iae = new InvalidArgumentException(name,
+                    InvalidArgumentException.Disallowed.NOT_EMPTY);
+            LOGGER.warn("Allowed only split or concatenated parameter ({})", name, iae);
+            throw iae;
+        }
         ObjectUtils.requireNonNull(name, "name");
-        if ((isNullOrEmpty(value) & !isNullOrEmpty(values))) {
+        if (isNullOrEmpty(value) & !isNullOrEmpty(values)) {
             for (String val : values) {
                 requireNonEmpty(val, name);
             }
+            return true;
+        } else {
+            return false;
         }
+
     }
 
     /**

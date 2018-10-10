@@ -16,8 +16,15 @@
  */
 package com.gsma.mobileconnect.r2.claims;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.gsma.mobileconnect.r2.constants.LinkRels;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
+import com.gsma.mobileconnect.r2.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to construct required claims for the mobile connect process.
@@ -26,7 +33,7 @@ import com.gsma.mobileconnect.r2.utils.IBuilder;
  */
 @JsonDeserialize(builder = KYCClaimsParameter.Builder.class)
 public class KYCClaimsParameter {
-    private final Claims name;
+    private final String name;
     private final String givenName;
     private final String familyName;
     private final String address;
@@ -46,6 +53,9 @@ public class KYCClaimsParameter {
     private final String countryHashed;
     private final String birthdateHashed;
 
+    private final ObjectMapper mapper = new ObjectMapper();
+    private static final Logger LOGGER = LoggerFactory.getLogger(KYCClaimsParameter.class);
+
     private KYCClaimsParameter(Builder builder)
     {
         this.name = builder.name;
@@ -57,6 +67,7 @@ public class KYCClaimsParameter {
         this.town = builder.town;
         this.country = builder.country;
         this.birthdate = builder.birthdate;
+
         this.nameHashed = builder.nameHashed;
         this.givenNameHashed = builder.givenNameHashed;
         this.familyNameHashed = builder.familyNameHashed;
@@ -68,7 +79,49 @@ public class KYCClaimsParameter {
         this.birthdateHashed = builder.birthdateHashed;
     }
 
-    public Claims getName()
+    public String toJson() {
+        ObjectNode node = mapper.createObjectNode();
+        paramToJson(node, name, KYCClaimsConstants.NAME);
+        paramToJson(node, givenName, KYCClaimsConstants.GIVEN_NAME);
+        paramToJson(node, familyName, KYCClaimsConstants.FAMILY_NAME);
+        paramToJson(node, address, KYCClaimsConstants.ADDRESS);
+        paramToJson(node, housenoOrHousename, KYCClaimsConstants.HOUSENO_OR_HOUSENAME);
+        paramToJson(node, postalCode, KYCClaimsConstants.POSTAL_CODE);
+        paramToJson(node, town, KYCClaimsConstants.TOWN);
+        paramToJson(node, country, KYCClaimsConstants.COUNTRY);
+        paramToJson(node, birthdate, KYCClaimsConstants.BIRTHDATE);
+
+        paramToJson(node, nameHashed, KYCClaimsConstants.NAME_HASHED);
+        paramToJson(node, givenNameHashed, KYCClaimsConstants.GIVEN_NAME_HASHED);
+        paramToJson(node, familyNameHashed, KYCClaimsConstants.FAMILY_NAME_HASHED);
+        paramToJson(node, addressHashed, KYCClaimsConstants.ADDRESS_HASHED);
+        paramToJson(node, housenoOrHousenameHashed, KYCClaimsConstants.HOUSENO_OR_HOUSENAME_HASHED);
+        paramToJson(node, postalCodeHashed, KYCClaimsConstants.POSTAL_CODE_HASHED);
+        paramToJson(node, townHashed, KYCClaimsConstants.TOWN_HASHED);
+        paramToJson(node, countryHashed, KYCClaimsConstants.COUNTRY_HASHED);
+        paramToJson(node, birthdateHashed, KYCClaimsConstants.BIRTHDATE_HASHED);
+
+        ObjectNode premiumInfo = mapper.createObjectNode();
+        premiumInfo.putPOJO(LinkRels.PREMIUMINFO, node);
+        String premiumInfoStr = null;
+        try {
+            premiumInfoStr = mapper.writeValueAsString(premiumInfo);
+        } catch (JsonProcessingException e) {
+            LOGGER.warn("Error deserializing idToken");
+        }
+        return premiumInfoStr;
+    }
+
+    private ObjectNode paramToJson(ObjectNode node, String param, String name) {
+        if (!StringUtils.isNullOrEmpty(param)) {
+            ObjectNode valueNode = mapper.createObjectNode();
+            valueNode.put(LinkRels.VALUE, param);
+            node.putPOJO(name, valueNode);
+        }
+        return node;
+    }
+
+    public String getName()
     {
         return this.name;
     }
@@ -145,7 +198,7 @@ public class KYCClaimsParameter {
 
     public static final class Builder implements IBuilder<KYCClaimsParameter>
     {
-        private Claims name = null;
+        private String name = null;
         private String givenName = null;
         private String familyName = null;
         private String address = null;
@@ -164,7 +217,7 @@ public class KYCClaimsParameter {
         private String countryHashed = null;
         private String birthdateHashed = null;
 
-        public Builder withName(final Claims val)
+        public Builder withName(final String val)
         {
             this.name = val;
             return this;

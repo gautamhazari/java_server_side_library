@@ -85,7 +85,7 @@ public class InvalidArgumentException extends IllegalArgumentException
      */
     public enum Disallowed
     {
-        NULL("null"), NULL_OR_EMPTY("null or empty");
+        NULL("null"), NULL_OR_EMPTY("null or empty"), NOT_EMPTY("both not empty");
 
         private final String description;
 

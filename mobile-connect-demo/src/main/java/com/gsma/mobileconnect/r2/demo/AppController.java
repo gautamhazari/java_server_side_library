@@ -22,7 +22,6 @@ import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
-import com.gsma.mobileconnect.r2.claims.Claims;
 import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
@@ -82,7 +81,7 @@ public class AppController
     private RestClient restClient;
     private OperatorParameters operatorParams = new OperatorParameters();
     private final String[] IDENTITY_SCOPES = {Scope.IDENTITY_PHONE, Scope.IDENTITY_SIGNUP,
-            Scope.IDENTITY_NATIONALID, Scope.IDENTITY_SIGNUPPLUS};
+            Scope.IDENTITY_NATIONALID, Scope.IDENTITY_SIGNUPPLUS, Scope.KYC_HASHED, Scope.KYC_PLAIN};
     private final String[] USERINFO_SCOPES = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
             Scope.PHONE, Scope.OFFLINE_ACCESS};
 
@@ -177,7 +176,6 @@ public class AppController
             discoveryCache.add(StringUtils.formatKey(msisdn, mcc, mnc, sourceIp), discoveryResponse);
         } catch (CacheAccessException e) {
             LOGGER.error("Unable to access cache");
-            e.printStackTrace();
         }
     }
 
@@ -341,8 +339,14 @@ public class AppController
                         .withBindingMessage(apiVersion.equals(Constants.Version2_0) ? Constants.BindingMsg : null)
                         .withClientName(clientName)
                         .withKycClaims(new KYCClaimsParameter.Builder()
-                                .withName(new Claims.Builder().add("name", false, "Name").build())
-                                .withAddress("Address").build())
+                                .withName("Name")
+//                                .withGivenName("qwrdef")
+//                                .withFamilyName("qwrdef")
+                                .withHousenoOrHousename("Address")
+                                .withPostalCode("Address")
+                                .withCountry("dgfdhg")
+                                .withTown("dgfh")
+                                .build())
                         .build())
                 .build();
         final MobileConnectStatus status =
@@ -362,7 +366,7 @@ public class AppController
             sessionCache.add(status.getState(), new SessionData(discoveryCache.get(StringUtils.formatKey(msisdn, mcc, mnc, sourceIp)),
                     status.getNonce()));
         } catch (CacheAccessException e) {
-            e.printStackTrace();
+            LOGGER.error("Unable to access cache");
         }
     }
 
@@ -508,6 +512,7 @@ public class AppController
                             this.mobileConnectWebInterface.requestIdentity(request, sessionData.getDiscoveryResponse(),
                                     status.getRequestTokenResponse().getResponseData().getAccessToken());
                     status = status.withIdentityResponse(statusIdentity.getIdentityResponse());
+                    break;
                 }
             }
         }
@@ -560,7 +565,6 @@ public class AppController
                     .build();
         } catch (URISyntaxException e) {
             LOGGER.error("Wrong URI provided");
-            e.printStackTrace();
         }
     }
 }
