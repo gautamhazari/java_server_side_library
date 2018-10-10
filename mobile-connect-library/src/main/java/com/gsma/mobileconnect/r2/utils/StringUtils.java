@@ -140,11 +140,8 @@ public final class StringUtils
             for (String val : values) {
                 requireNonEmpty(val, name);
             }
-            return true;
-        } else {
-            return false;
         }
-
+        return !isNullOrEmpty(value) || !isNullOrEmpty(values);
     }
 
     /**

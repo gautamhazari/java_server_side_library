@@ -31,6 +31,7 @@ import com.gsma.mobileconnect.r2.constants.Scopes;
 import com.gsma.mobileconnect.r2.discovery.*;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.json.IJsonService;
@@ -128,21 +129,25 @@ public class AuthenticationService implements IAuthenticationService
 
         KYCClaimsParameter kycClaims = options.getKycClaims();
         if (kycClaims != null) {
+            boolean isNamePresent = false;
+            boolean isAddressPresent = false;
             if (scope.contains(Scope.KYC_PLAIN)) {
-                boolean isNamePresent = StringUtils.requireNonEmpty("name || given_name and family_name", kycClaims.getName(),
+                isNamePresent = StringUtils.requireNonEmpty("name || given_name and family_name", kycClaims.getName(),
                         kycClaims.getGivenName(), kycClaims.getFamilyName());
-                boolean isAddressPresent = StringUtils.requireNonEmpty("address || houseno_or_housename, postal_code",
-                        kycClaims.getAddress(), kycClaims.getHousenoOrHousename(), kycClaims.getPostalCode());
-//                if ((isNamePresent & !isAddressPresent) | (!isNamePresent & isAddressPresent)) {
-//                    throw new InvalidArgumentException(name,
-//                            InvalidArgumentException.Disallowed.NULL_OR_EMPTY);
-//                }
+                isAddressPresent = StringUtils.requireNonEmpty("address || houseno_or_housename, postal_code, country, town",
+                        kycClaims.getAddress(), kycClaims.getHousenoOrHousename(), kycClaims.getPostalCode(),
+                        kycClaims.getCountry(), kycClaims.getTown());
             }
             if (scope.contains(Scope.KYC_HASHED)) {
-                StringUtils.requireNonEmpty("name_hashed || given_name_hashed and family_name_hashed", kycClaims.getNameHashed(),
+                isNamePresent = StringUtils.requireNonEmpty("name_hashed || given_name_hashed and family_name_hashed", kycClaims.getNameHashed(),
                         kycClaims.getGivenNameHashed(), kycClaims.getFamilyNameHashed());
-                StringUtils.requireNonEmpty("address_hashed || houseno_or_housename_hashed, postal_code_hashed",
-                        kycClaims.getAddressHashed(), kycClaims.getHousenoOrHousenameHashed(), kycClaims.getPostalCodeHashed());
+                isAddressPresent = StringUtils.requireNonEmpty("address_hashed || houseno_or_housename_hashed, postal_code_hashed, country_hashed, town_hashed",
+                        kycClaims.getAddressHashed(), kycClaims.getHousenoOrHousenameHashed(), kycClaims.getPostalCodeHashed(),
+                        kycClaims.getCountryHashed(), kycClaims.getTownHashed());
+            }
+            if ((isNamePresent & !isAddressPresent) | (!isNamePresent & isAddressPresent)) {
+                throw new InvalidArgumentException("(split|concatenated, plain|hashed) name or address is empty",
+                        InvalidArgumentException.Disallowed.NULL_OR_EMPTY);
             }
         }
 
