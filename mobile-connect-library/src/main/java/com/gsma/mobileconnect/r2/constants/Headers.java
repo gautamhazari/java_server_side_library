@@ -48,6 +48,21 @@ public final class Headers
      */
     public static final String VERSION_SDK = "SDK-Version";
 
+    /**
+     * Key for version Header.
+     */
+    public static final String CLIENT_SIDE_VERSION = "Client-Side-Version";
+
+    /**
+     * Key for version Header.
+     */
+    public static final String SERVER_SIDE_VERSION = "Server-Side-Version";
+
+    /**
+     * Default value for version Header.
+     */
+    public static final String NONE = "none";
+
     private Headers()
     {
         /*

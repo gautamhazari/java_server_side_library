@@ -19,7 +19,9 @@ package com.gsma.mobileconnect.r2.discovery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
+import com.gsma.mobileconnect.r2.constants.Headers;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
+import com.gsma.mobileconnect.r2.utils.StringUtils;
 
 import java.net.URI;
 
@@ -44,6 +46,8 @@ public class DiscoveryOptions
     private final String clientIp;
     private final String xRedirect;
     private final boolean isUsingCorrelationId;
+    private final String clientSideVersion;
+    private final String serverSideVersion;
 
     private DiscoveryOptions(final Builder builder)
     {
@@ -59,6 +63,8 @@ public class DiscoveryOptions
         this.clientIp = builder.clientIp;
         this.xRedirect = builder.xRedirect;
         this.isUsingCorrelationId = builder.isUsingCorrelationId;
+        this.clientSideVersion = builder.clientSideVersion;
+        this.serverSideVersion = builder.serverSideVersion;
     }
 
     /**
@@ -174,6 +180,14 @@ public class DiscoveryOptions
     @JsonIgnore
     public boolean getUsingCorrelationId() { return this.isUsingCorrelationId; }
 
+    public String getClientSideVersion() {
+        return clientSideVersion;
+    }
+
+    public String getServerSideVersion() {
+        return serverSideVersion;
+    }
+
     public static final class Builder implements IBuilder<DiscoveryOptions>
     {
         private String msisdn = null;
@@ -188,6 +202,8 @@ public class DiscoveryOptions
         private String clientIp = null;
         private String xRedirect = null;
         private boolean isUsingCorrelationId = false;
+        private String clientSideVersion = Headers.NONE;
+        private String serverSideVersion = Headers.NONE;
         public Builder()
         {
             // default constructor
@@ -209,6 +225,8 @@ public class DiscoveryOptions
                 this.clientIp = options.getClientIp();
                 this.xRedirect = options.getXRedirect();
                 this.isUsingCorrelationId = options.getUsingCorrelationId();
+                this.clientSideVersion = options.getClientSideVersion();
+                this.serverSideVersion = options.getServerSideVersion();
             }
         }
 
@@ -280,6 +298,20 @@ public class DiscoveryOptions
 
         public Builder withUsingCorrelationId(boolean val) {
             this.isUsingCorrelationId = val;
+            return this;
+        }
+
+        public Builder withClientSideVersion(String val) {
+            if (!StringUtils.isNullOrEmpty(val)) {
+                this.clientSideVersion = val;
+            }
+            return this;
+        }
+
+        public Builder withServerSideVersion(String val) {
+            if (!StringUtils.isNullOrEmpty(val)) {
+                this.serverSideVersion = val;
+            }
             return this;
         }
 

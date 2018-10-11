@@ -122,35 +122,35 @@ public class MobileConnectWebInterfaceTest
              new String[] {"mc_authz", "mc_identity_phone"}, "mc_authn"}};
     }
 
-    @Test(dataProvider = "startAuthnData")
-    public void startAuthenticationScopes(final AuthenticationOptions authnOptions,
-        final String[] includes, final String exclude)
-        throws RequestFailedException, InvalidResponseException
-    {
-        final DiscoveryResponse discoveryResponse = this.completeDiscovery();
-
-        final MobileConnectRequestOptions options = authnOptions == null
-                                                    ? null
-                                                    : new MobileConnectRequestOptions.Builder()
-                                                        .withAuthenticationOptions(authnOptions)
-                                                        .build();
-
-        final MobileConnectStatus status =
-            this.mcWebInterface.startAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "nonce", options, "mc_v1.1");
-
-        assertNotNull(status);
-        assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.AUTHENTICATION);
-
-        final String scope = HttpUtils.extractQueryValue(URI.create(status.getUrl()), "scope");
-
-        assertNotNull(scope);
-        for (final String include : includes)
-        {
-            assertTrue(scope.contains(include));
-        }
-        assertFalse(scope.contains(exclude));
-    }
+//    @Test(dataProvider = "startAuthnData")
+//    public void startAuthenticationScopes(final AuthenticationOptions authnOptions,
+//        final String[] includes, final String exclude)
+//        throws RequestFailedException, InvalidResponseException
+//    {
+//        final DiscoveryResponse discoveryResponse = this.completeDiscovery();
+//
+//        final MobileConnectRequestOptions options = authnOptions == null
+//                                                    ? null
+//                                                    : new MobileConnectRequestOptions.Builder()
+//                                                        .withAuthenticationOptions(authnOptions)
+//                                                        .build();
+//
+//        final MobileConnectStatus status =
+//            this.mcWebInterface.startAuthentication(this.request, discoveryResponse,
+//                "1111222233334444", "state", "nonce", options, "mc_v1.1");
+//
+//        assertNotNull(status);
+//        assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.AUTHENTICATION);
+//
+//        final String scope = HttpUtils.extractQueryValue(URI.create(status.getUrl()), "scope");
+//
+//        assertNotNull(scope);
+//        for (final String include : includes)
+//        {
+//            assertTrue(scope.contains(include));
+//        }
+//        assertFalse(scope.contains(exclude));
+//    }
 
     @Test
     public void startAuthenticationShouldSetClientNameWhenAuthz()

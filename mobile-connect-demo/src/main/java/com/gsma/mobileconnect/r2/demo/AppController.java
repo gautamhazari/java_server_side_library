@@ -22,11 +22,7 @@ import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
-import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
-import com.gsma.mobileconnect.r2.constants.DefaultOptions;
-import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.constants.Scope;
-import com.gsma.mobileconnect.r2.constants.Scopes;
+import com.gsma.mobileconnect.r2.constants.*;
 import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
@@ -157,7 +153,10 @@ public class AppController
         MobileConnectRequestOptions requestOptions =
                 new MobileConnectRequestOptions.Builder()
                         .withDiscoveryOptions(new DiscoveryOptions.Builder()
-                                .withClientIp(sourceIp).build())
+                                .withClientIp(sourceIp)
+                                .withClientSideVersion(request.getHeader(Headers.CLIENT_SIDE_VERSION))
+                                .withServerSideVersion(Constants.SERVER_SIDE_VERSION)
+                                .build())
                         .build();
         MobileConnectStatus status =
                 this.mobileConnectWebInterface.attemptDiscovery(request, msisdn, mcc, mnc, true,
@@ -335,18 +334,18 @@ public class AppController
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
                         .withScope(scope)
-                        .withContext(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage(apiVersion.equals(Constants.Version2_0) ? Constants.BindingMsg : null)
+                        .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
+                        .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.BindingMsg : null)
                         .withClientName(clientName)
-                        .withKycClaims(new KYCClaimsParameter.Builder()
-                                .withName("Name")
+//                        .withKycClaims(new KYCClaimsParameter.Builder()
+//                                .withName("Name")
 //                                .withGivenName("qwrdef")
 //                                .withFamilyName("qwrdef")
 //                                .withHousenoOrHousename("Address")
 //                                .withPostalCode("Address")
 //                                .withCountry("dgfdhg")
 //                                .withTown("dgfh")
-                                .build())
+//                                .build())
                         .build())
                 .build();
         final MobileConnectStatus status =
@@ -436,8 +435,8 @@ public class AppController
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
+                        .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
+                        .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
                         .withClientName(clientName)
                         .build())
                 .build();
@@ -484,8 +483,8 @@ public class AppController
         }
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage(apiVersion.equals(Constants.Version2_0) ? Constants.ContextBindingMsg : null)
+                        .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
+                        .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
                         .withClientName(clientName)
                         .build())
                 .build();

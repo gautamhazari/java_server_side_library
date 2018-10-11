@@ -83,8 +83,8 @@ public class RestClient implements IRestClient
 
     @Override
     public RestResponse getDiscovery(final URI uri, final RestAuthentication authentication, final String xRedirect,
-                            final String sourceIp, final List<KeyValuePair> queryParams,
-                            final Iterable<KeyValuePair> cookies) throws RequestFailedException
+                            final String sourceIp, final String clientSideVersion, final String serverSideVersion,
+                            final List<KeyValuePair> queryParams, final Iterable<KeyValuePair> cookies) throws RequestFailedException
     {
         LOGGER.debug("Getting from uri={} for sourceIp={}",
                 LogUtils.maskUri(uri, LOGGER, Level.DEBUG), sourceIp);
@@ -98,7 +98,8 @@ public class RestClient implements IRestClient
         try
         {
             final HttpUriRequest request = this
-                    .createDiscoveryRequest(HttpUtils.HttpMethod.GET, uriBuilder.build(), xRedirect, authentication,
+                    .createDiscoveryRequest(HttpUtils.HttpMethod.GET, uriBuilder.build(), xRedirect, authentication, clientSideVersion,
+                            serverSideVersion,
                             sourceIp, cookies)
                     .build();
 
@@ -145,14 +146,14 @@ public class RestClient implements IRestClient
 
     @Override
     public RestResponse postDiscoveryFormData(final URI uri, final RestAuthentication authentication, final String xRedirect,
-                                     final List<KeyValuePair> formData, final String sourceIp,
+                                     final List<KeyValuePair> formData, final String sourceIp, final String clientSideVersion, final String serverSideVersion,
                                      final Iterable<KeyValuePair> cookies) throws RequestFailedException
     {
         LOGGER.debug("Posting form data to uri={} for sourceIp={}",
                 LogUtils.maskUri(uri, LOGGER, Level.DEBUG), sourceIp);
 
         final HttpUriRequest request = this
-                .createDiscoveryRequest(HttpUtils.HttpMethod.POST, uri, xRedirect, authentication, sourceIp, cookies)
+                .createDiscoveryRequest(HttpUtils.HttpMethod.POST, uri, xRedirect, authentication, sourceIp, clientSideVersion, serverSideVersion, cookies)
                 .addParameters(
                         ObjectUtils.requireNonNull(formData, "formData").toArray(new NameValuePair[] {}))
                 .build();
@@ -338,7 +339,7 @@ public class RestClient implements IRestClient
 
     private RequestBuilder createDiscoveryRequest(final HttpUtils.HttpMethod method, final URI uri, final String xRedirect,
                                          final RestAuthentication authentication, final String sourceIp,
-                                         final Iterable<KeyValuePair> cookies)
+                                         final String clientSideVersion, final String serverSideVersion, final Iterable<KeyValuePair> cookies)
     {
         LOGGER.debug(
                 "Creating discovery request with httpMethod={}, uri={}, authentication={} for sourceIp={}",
@@ -350,6 +351,8 @@ public class RestClient implements IRestClient
                 .setConfig(this.requestConfig);
 
         builder.addHeader(Headers.VERSION_SDK, Parameters.SDK_VERSION);
+        builder.addHeader(Headers.CLIENT_SIDE_VERSION, clientSideVersion);
+        builder.addHeader(Headers.SERVER_SIDE_VERSION, serverSideVersion);
 
         return prepareRequest(builder, xRedirect, authentication, sourceIp, cookies);
     }

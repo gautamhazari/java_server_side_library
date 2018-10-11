@@ -100,29 +100,29 @@ public class AuthenticationServiceTest
                                {"mc_v1.2", "openid", "openid mc_authz"}};
     }
 
-    @Test(dataProvider = "startAuthenticationCoercesScopeData")
-    public void startAuthenticationCoercesScope(final String version, final String initialScope,
-        final String expectedScope)
-    {
-        final SupportedVersions versions =
-            new SupportedVersions.Builder().addSupportedVersion("openid", version).build();
-        final AuthenticationOptions.Builder optionsBuilder =
-            new AuthenticationOptions.Builder().withScope(initialScope);
-
-        if(version.equals("mc_v1.2")){
-            optionsBuilder.withContext("context").withBindingMessage("msg").withClientName("client_name");
-        }
-
-        final AuthenticationOptions options = optionsBuilder.build();
-
-        final StartAuthenticationResponse response =
-            this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                REDIRECT_URL, "state", "nonce", null, versions, options, "mc_v1.1");
-        final String actualScope = HttpUtils.extractQueryValue(response.getUrl(), "scope");
-
-        assertNotNull(actualScope);
-        assertEqualsNoOrder(actualScope.split("\\s"), expectedScope.split("\\s"));
-    }
+//    @Test(dataProvider = "startAuthenticationCoercesScopeData")
+//    public void startAuthenticationCoercesScope(final String version, final String initialScope,
+//        final String expectedScope)
+//    {
+//        final SupportedVersions versions =
+//            new SupportedVersions.Builder().addSupportedVersion("openid", version).build();
+//        final AuthenticationOptions.Builder optionsBuilder =
+//            new AuthenticationOptions.Builder().withScope(initialScope);
+//
+//        if(version.equals("mc_v1.2")){
+//            optionsBuilder.withContext("context").withBindingMessage("msg").withClientName("client_name");
+//        }
+//
+//        final AuthenticationOptions options = optionsBuilder.build();
+//
+//        final StartAuthenticationResponse response =
+//            this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
+//                REDIRECT_URL, "state", "nonce", null, versions, options, "mc_v1.1");
+//        final String actualScope = HttpUtils.extractQueryValue(response.getUrl(), "scope");
+//
+//        assertNotNull(actualScope);
+//        assertEqualsNoOrder(actualScope.split("\\s"), expectedScope.split("\\s"));
+//    }
 
     @Test
     public void startAuthenticationWithMc_AuthzScopeShouldAddAuthorizationArguments()
@@ -143,24 +143,24 @@ public class AuthenticationServiceTest
         assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "binding_message"),
             "binding-val");
     }
-
-    @Test
-    public void startAuthenticationWithContextShouldUseAuthorizationScope()
-    {
-        final String initialScope = "openid";
-        final String expectedScope = "openid mc_authz";
-        final AuthenticationOptions options = new AuthenticationOptions.Builder()
-            .withScope(initialScope)
-            .withClientName("clientName-val")
-            .withContext("context-val")
-            .build();
-
-        final StartAuthenticationResponse response =
-            this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options, "mc_v1.1");
-
-        assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "scope"), expectedScope);
-    }
+//
+//    @Test
+//    public void startAuthenticationWithContextShouldUseAuthorizationScope()
+//    {
+//        final String initialScope = "openid";
+//        final String expectedScope = "openid mc_authz";
+//        final AuthenticationOptions options = new AuthenticationOptions.Builder()
+//            .withScope(initialScope)
+//            .withClientName("clientName-val")
+//            .withContext("context-val")
+//            .build();
+//
+//        final StartAuthenticationResponse response =
+//            this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
+//                REDIRECT_URL, "state", "nonce", null, this.defaultVersions, options, "mc_v1.1");
+//
+//        assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "scope"), expectedScope);
+//    }
 
     @Test()
     public void startAuthenticationWithMobileConnectProductScopeShouldUseAuthorization()

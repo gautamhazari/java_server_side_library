@@ -55,11 +55,14 @@ public interface IRestClient
      * @param authentication value to be used (if auth required).
      * @param queryParams    to be added to the GET request.
      * @param sourceIp       of the request (if identified).
+     * @param clientSideVersion       of the request (if identified).
+     * @param serverSideVersion       of the request (if identified).
      * @param cookies        to add to the request (if required).
      * @return future RestResponse.
      * @throws RequestFailedException if there is a failure issuing the request.
      */
     RestResponse getDiscovery(final URI uri, final RestAuthentication authentication, final String xRedirect, final String sourceIp,
+                              final String clientSideVersion, final String serverSideVersion,
                               final List<KeyValuePair> queryParams, final Iterable<KeyValuePair> cookies)
             throws RequestFailedException;
 
@@ -76,7 +79,7 @@ public interface IRestClient
      * @throws RequestFailedException if there is a failure issuing the request.
      */
     RestResponse postDiscoveryFormData(final URI uri, final RestAuthentication authentication, final String xRedirect,
-                                       final List<KeyValuePair> formData, final String sourceIp,
+                                       final List<KeyValuePair> formData, final String sourceIp, final String clientSideVersion, final String serverSideVersion,
                                        final Iterable<KeyValuePair> cookies) throws RequestFailedException;
 
     /**

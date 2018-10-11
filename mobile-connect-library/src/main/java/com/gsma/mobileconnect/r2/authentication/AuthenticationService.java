@@ -127,29 +127,32 @@ public class AuthenticationService implements IAuthenticationService
                     "clientName");
         }
 
-        KYCClaimsParameter kycClaims = options.getKycClaims();
-        if (kycClaims != null) {
-            boolean isNamePresent = false;
-            boolean isAddressPresent = false;
-            if (scope.contains(Scope.KYC_PLAIN)) {
-                isNamePresent = StringUtils.requireNonEmpty("name || given_name and family_name", kycClaims.getName(),
-                        kycClaims.getGivenName(), kycClaims.getFamilyName());
-                isAddressPresent = StringUtils.requireNonEmpty("address || houseno_or_housename, postal_code, country, town",
-                        kycClaims.getAddress(), kycClaims.getHousenoOrHousename(), kycClaims.getPostalCode(),
-                        kycClaims.getCountry(), kycClaims.getTown());
-            }
-            if (scope.contains(Scope.KYC_HASHED)) {
-                isNamePresent = StringUtils.requireNonEmpty("name_hashed || given_name_hashed and family_name_hashed", kycClaims.getNameHashed(),
-                        kycClaims.getGivenNameHashed(), kycClaims.getFamilyNameHashed());
-                isAddressPresent = StringUtils.requireNonEmpty("address_hashed || houseno_or_housename_hashed, postal_code_hashed, country_hashed, town_hashed",
-                        kycClaims.getAddressHashed(), kycClaims.getHousenoOrHousenameHashed(), kycClaims.getPostalCodeHashed(),
-                        kycClaims.getCountryHashed(), kycClaims.getTownHashed());
-            }
-            if ((isNamePresent & !isAddressPresent) | (!isNamePresent & isAddressPresent)) {
-                throw new InvalidArgumentException("(split|concatenated, plain|hashed) name or address is empty",
-                        InvalidArgumentException.Disallowed.NULL_OR_EMPTY);
+        if (options != null) {
+            KYCClaimsParameter kycClaims = options.getKycClaims();
+            if (kycClaims != null) {
+                boolean isNamePresent = false;
+                boolean isAddressPresent = false;
+                if (currentVersion.equals(DefaultOptions.MC_V2_3) && scope.contains(Scope.KYC_PLAIN)) {
+                    isNamePresent = StringUtils.requireNonEmpty("name || given_name and family_name", kycClaims.getName(),
+                            kycClaims.getGivenName(), kycClaims.getFamilyName());
+                    isAddressPresent = StringUtils.requireNonEmpty("address || houseno_or_housename, postal_code, country, town",
+                            kycClaims.getAddress(), kycClaims.getHousenoOrHousename(), kycClaims.getPostalCode(),
+                            kycClaims.getCountry(), kycClaims.getTown());
+                }
+                if (currentVersion.equals(DefaultOptions.MC_V2_3) && scope.contains(Scope.KYC_HASHED)) {
+                    isNamePresent = StringUtils.requireNonEmpty("name_hashed || given_name_hashed and family_name_hashed", kycClaims.getNameHashed(),
+                            kycClaims.getGivenNameHashed(), kycClaims.getFamilyNameHashed());
+                    isAddressPresent = StringUtils.requireNonEmpty("address_hashed || houseno_or_housename_hashed, postal_code_hashed, country_hashed, town_hashed",
+                            kycClaims.getAddressHashed(), kycClaims.getHousenoOrHousenameHashed(), kycClaims.getPostalCodeHashed(),
+                            kycClaims.getCountryHashed(), kycClaims.getTownHashed());
+                }
+                if ((isNamePresent & !isAddressPresent) | (!isNamePresent & isAddressPresent)) {
+                    throw new InvalidArgumentException("(split|concatenated, plain|hashed) name or address is empty",
+                            InvalidArgumentException.Disallowed.NULL_OR_EMPTY);
+                }
             }
         }
+
 
         try
         {
@@ -254,7 +257,11 @@ public class AuthenticationService implements IAuthenticationService
             }
         }
 
-        String kycClaimsJson = options.getKycClaims().toJson();
+
+        String kycClaimsJson = null;
+        if (options.getKycClaims() != null) {
+            kycClaimsJson = options.getKycClaims().toJson();
+        }
 
         final KeyValuePair.ListBuilder builder = new KeyValuePair.ListBuilder()
                 .addIfNotEmpty(Parameters.AUTHENTICATION_REDIRECT_URI, options.getRedirectUrl().toString())
