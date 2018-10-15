@@ -22,10 +22,7 @@ import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
-import com.gsma.mobileconnect.r2.constants.DefaultOptions;
-import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.constants.Scope;
-import com.gsma.mobileconnect.r2.constants.Scopes;
+import com.gsma.mobileconnect.r2.constants.*;
 import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
@@ -123,7 +120,7 @@ public class AppController
                     return new RedirectView(status.getUrl(), true);
                 }
                 else {
-                    return startDiscovery("447700900301", null, null, null, request);
+                    return startDiscovery(null, null, null, null, request);
                 }
             }
         }
@@ -157,8 +154,8 @@ public class AppController
                 new MobileConnectRequestOptions.Builder()
                         .withDiscoveryOptions(new DiscoveryOptions.Builder()
                                 .withClientIp(sourceIp)
-//                                .withClientSideVersion(request.getHeader(Headers.CLIENT_SIDE_VERSION))
-//                                .withServerSideVersion(Constants.SERVER_SIDE_VERSION)
+                                .withClientSideVersion(request.getHeader(Headers.CLIENT_SIDE_VERSION))
+                                .withServerSideVersion(Constants.SERVER_SIDE_VERSION)
                                 .build())
                         .build();
         MobileConnectStatus status =

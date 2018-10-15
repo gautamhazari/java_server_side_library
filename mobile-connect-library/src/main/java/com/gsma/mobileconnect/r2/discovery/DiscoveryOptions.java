@@ -19,6 +19,7 @@ package com.gsma.mobileconnect.r2.discovery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
+import com.gsma.mobileconnect.r2.constants.Headers;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
 
@@ -201,8 +202,8 @@ public class DiscoveryOptions
         private String clientIp = null;
         private String xRedirect = null;
         private boolean isUsingCorrelationId = false;
-        private String clientSideVersion;
-        private String serverSideVersion;
+        private String clientSideVersion = Headers.NONE;
+        private String serverSideVersion = Headers.NONE;
         public Builder()
         {
             // default constructor
