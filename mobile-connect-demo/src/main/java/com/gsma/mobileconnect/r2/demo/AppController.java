@@ -120,7 +120,7 @@ public class AppController
                     return new RedirectView(status.getUrl(), true);
                 }
                 else {
-                    return startDiscovery(msisdn, mcc, mnc, null, request);
+                    return startDiscovery(null, null, null, null, request);
                 }
             }
         }
