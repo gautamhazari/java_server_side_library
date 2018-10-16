@@ -83,8 +83,8 @@ public class RestClient implements IRestClient
 
     @Override
     public RestResponse getDiscovery(final URI uri, final RestAuthentication authentication, final String xRedirect,
-                            final String sourceIp, final String clientSideVersion, final String serverSideVersion,
-                            final List<KeyValuePair> queryParams, final Iterable<KeyValuePair> cookies) throws RequestFailedException
+                            final String sourceIp, final String clientSideVersion, final String serverSideVersion, final List<KeyValuePair> queryParams,
+                            final Iterable<KeyValuePair> cookies) throws RequestFailedException
     {
         LOGGER.debug("Getting from uri={} for sourceIp={}",
                 LogUtils.maskUri(uri, LOGGER, Level.DEBUG), sourceIp);
@@ -98,9 +98,8 @@ public class RestClient implements IRestClient
         try
         {
             final HttpUriRequest request = this
-                    .createDiscoveryRequest(HttpUtils.HttpMethod.GET, uriBuilder.build(), xRedirect, authentication, clientSideVersion,
-                            serverSideVersion,
-                            sourceIp, cookies)
+                    .createDiscoveryRequest(HttpUtils.HttpMethod.GET, uriBuilder.build(), xRedirect, authentication,
+                            sourceIp, clientSideVersion, serverSideVersion, cookies)
                     .build();
 
             return this.submitRequest(request, true);
@@ -338,8 +337,8 @@ public class RestClient implements IRestClient
     }
 
     private RequestBuilder createDiscoveryRequest(final HttpUtils.HttpMethod method, final URI uri, final String xRedirect,
-                                         final RestAuthentication authentication, final String sourceIp,
-                                         final String clientSideVersion, final String serverSideVersion, final Iterable<KeyValuePair> cookies)
+                                         final RestAuthentication authentication, final String sourceIp, final String clientSideVersion, final String serverSideVersion,
+                                         final Iterable<KeyValuePair> cookies)
     {
         LOGGER.debug(
                 "Creating discovery request with httpMethod={}, uri={}, authentication={} for sourceIp={}",
