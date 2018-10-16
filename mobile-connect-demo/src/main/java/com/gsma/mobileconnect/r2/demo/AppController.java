@@ -99,13 +99,18 @@ public class AppController
             @RequestParam(required = false) final String msisdn,
             @RequestParam(required = false) final String mcc,
             @RequestParam(required = false) final String mnc,
-            @RequestParam(required = false) final String sourceIp,
+            @RequestParam(required = false) String sourceIp,
+            @RequestParam(required = false) boolean ignoreIp,
             final HttpServletRequest request)
     {
-        LOGGER.info("* Attempting discovery for msisdn={}, mcc={}, mnc={}",
-                LogUtils.mask(msisdn, LOGGER, Level.INFO), sourceIp);
+        LOGGER.info("* Attempting discovery for msisdn={}, mcc={}, mnc={}, sourceIp={}",
+                LogUtils.mask(msisdn, LOGGER, Level.INFO), mcc, mnc, sourceIp);
         this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.sessionCache, this.discoveryCache);
         this.getParameters();
+
+        if (StringUtils.isNullOrEmpty(sourceIp) & !ignoreIp) {
+            sourceIp = includeRequestIP ? HttpUtils.extractClientIp(request) : null;
+        }
 
         DiscoveryResponse discoveryResponse = getDiscoveryCache(msisdn, mcc, mnc, sourceIp);
         MobileConnectStatus status;
@@ -120,7 +125,7 @@ public class AppController
                     return new RedirectView(status.getUrl(), true);
                 }
                 else {
-                    return startDiscovery(null, null, null, null, request);
+                    return startDiscovery(null, null, null, null, true, request);
                 }
             }
         }
@@ -143,7 +148,7 @@ public class AppController
         }
 
         if (url == null) {
-            return startDiscovery(null, null, null, null, request);
+            return startDiscovery(null, null, null, null, true, request);
         }
 
         return new RedirectView(url);
@@ -337,15 +342,6 @@ public class AppController
                         .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
                         .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.BindingMsg : null)
                         .withClientName(clientName)
-//                        .withKycClaims(new KYCClaimsParameter.Builder()
-//                                .withName("Name")
-//                                .withGivenName("qwrdef")
-//                                .withFamilyName("qwrdef")
-//                                .withHousenoOrHousename("Address")
-//                                .withPostalCode("Address")
-//                                .withCountry("dgfdhg")
-//                                .withTown("dgfh")
-//                                .build())
                         .build())
                 .build();
         final MobileConnectStatus status =
@@ -561,6 +557,7 @@ public class AppController
                     .withDiscoveryUrl(new URI(operatorParams.getDiscoveryURL()))
                     .withRedirectUrl(new URI(operatorParams.getRedirectURL()))
                     .withXRedirect(operatorParams.getXRedirect().equals("True") ? "APP" : "False")
+                    .withIncludeRequestIP(includeRequestIP)
                     .build();
         } catch (URISyntaxException e) {
             LOGGER.error("Wrong URI provided");

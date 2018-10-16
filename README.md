@@ -8,7 +8,7 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
 ## Quick Start
 
 ```posh
-cd java-server-side-sdk/mobile-connect-demo
+cd java-server-side-sdk
 mvn clean package
 ```
 Deploy mobile-connect.war

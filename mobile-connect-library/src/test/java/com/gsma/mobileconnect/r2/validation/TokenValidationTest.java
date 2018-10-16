@@ -141,25 +141,6 @@ public class TokenValidationTest
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_SIGNATURE);
     }
 
-    // TODO: 23/09/16 test correct hmac key and invalid hmac key
-    // TODO: 23/09/16 fix this test
-//    @Test
-//    public void validMatchingHMACAlgorithmShouldVerifySignature()
-//        throws JsonDeserializationException
-//    {
-//        final String jwksJson =
-//            "{\"keys\":[{\"alg\":\"HS256\",\"kty\":\"oct\",\"use\":\"sig\",\"k\":\"E5JqlByqY5vGQmeczEigRRr43fr-m7KdJMkN3eSDHOiv3UYYhRTr6OIirFHaYDdUgA4iq3WQ3lkHd3r-KV_iWlDzpha0dmaGaHvzYMThO5WKUBlsekGHT17V7tnnYq7aameaAUmVOZocKQ5svXrPNQJcFhDs-XO6Kcsin2zaYL6eCdLZF8w_YUYtGfxYD0SqB5mdmmE5jIam3f1dnodkoLmfGxUeSSAgCCJXHQtM-SwPpyZfGbYrhTAkcahPmrJOiQwZ7WPtFlMYR-T8U12STNaTDv63hjPW57cwLfjeTW8NEYO00KCWZD7HZo-8Tg4j93FG6b78VE7QUB-vjopQlw\"}]}";
-//        final String idToken =
-//            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhenAiOiJNekZsWmpreFpHSXRPV1UyTlMwMFpURm1MVGt3TXpjdE5UUXpOamRrTURCa016Y3pPbTl3WlhKaGRHOXlMV0U9IiwiYXV0aF90aW1lIjoxNDcwMzI2ODIwLCJhdWQiOlsiTXpGbFpqa3haR0l0T1dVMk5TMDBaVEZtTFRrd016Y3ROVFF6Tmpka01EQmtNemN6T205d1pYSmhkRzl5TFdFPSJdLCJhbXIiOlsiU0lNX1BJTiJdLCJub25jZSI6ImFkNjVmOGUwNzA3MTRlYTU5Yzc2NDRlZjE1OGM1MjM3IiwiaWF0IjoxNDcwMzI2ODIwLCJpc3MiOiJpbnRlZ3JhdGlvbjIuc2FuZGJveC5tb2JpbGVjb25uZWN0LmlvIiwiYWNyIjoiMiIsImV4cCI6MTQ3MDMzMDQyMCwic3ViIjoiYzIzMjQ2N2MtNDliMi0xMWU2LTlhYTgtMDI0MmFjMTEwMDAzIn0.iTLUvv-HCYBkDzeVX0tRc5k3URY8kbjqvY1EgyXUE2s";
-//
-//        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
-//        final TokenValidationResult tokenValidationResult =
-//            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, jacksonJsonService,
-//                iMobileConnectEncodeDecoder);
-//
-//        assertEquals(tokenValidationResult, TokenValidationResult.VALID);
-//    }
-
     @Test
     public void validateIdTokenSignatureShouldNotValidateWhenKeysetNull()
         throws JsonDeserializationException

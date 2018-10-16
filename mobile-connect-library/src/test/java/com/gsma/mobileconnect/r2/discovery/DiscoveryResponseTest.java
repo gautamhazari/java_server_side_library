@@ -38,20 +38,6 @@ public class DiscoveryResponseTest
 {
     private final IJsonService jsonService = new JacksonJsonService();
 
-//    @Test
-//    public void cachedDiscoveryResponseShouldClearSubscriberId() throws JsonDeserializationException
-//    {
-//        final DiscoveryResponse discoveryResponse =
-//            DiscoveryResponse.fromRestResponse(TestUtils.DISCOVERY_REQUEST_RESPONSE,
-//                this.jsonService);
-//
-//        assertNotNull(discoveryResponse.getResponseData().getSubscriberId());
-//
-//        discoveryResponse.cached();
-//
-//        assertNull(discoveryResponse.getResponseData().getSubscriberId());
-//    }
-
     @Test
     public void operatorUrlsShouldBeOverridenByProviderMetadataOnSet()
         throws JsonDeserializationException
