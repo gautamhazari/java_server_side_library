@@ -68,6 +68,7 @@ public class ProviderMetadata extends AbstractCacheable
     private final List<String> displayValuesSupported;
     private final List<String> claimTypesSupported;
     private final List<String> claimsSupported;
+    private final List<String> mcDiScopesSupported;
     private final String serviceDocumentation;
     private final List<String> claimsLocalesSupported;
     private final List<String> uiLocalesSupported;
@@ -119,6 +120,7 @@ public class ProviderMetadata extends AbstractCacheable
         this.displayValuesSupported = builder.displayValuesSupported;
         this.claimTypesSupported = builder.claimTypesSupported;
         this.claimsSupported = builder.claimsSupported;
+        this.mcDiScopesSupported = builder.mcDiScopesSupported;
         this.serviceDocumentation = builder.serviceDocumentation;
         this.claimsLocalesSupported = builder.claimsLocalesSupported;
         this.uiLocalesSupported = builder.uiLocalesSupported;
@@ -406,6 +408,15 @@ public class ProviderMetadata extends AbstractCacheable
     }
 
     /**
+     * @return Array containing the Claim Names of the Claims that the issuer MAY be able to supply
+     * values for. Note that for privacy or other reasons this may not be an exhaustive list
+     */
+    public List<String> getMcDiScopesSupported()
+    {
+        return this.mcDiScopesSupported;
+    }
+
+    /**
      * @return URL of a page containing human readable information that developers might want or
      * need to know when using the issuing service
      */
@@ -544,6 +555,7 @@ public class ProviderMetadata extends AbstractCacheable
         private List<String> displayValuesSupported;
         private List<String> claimTypesSupported;
         private List<String> claimsSupported;
+        private List<String> mcDiScopesSupported;
         private String serviceDocumentation;
         private List<String> claimsLocalesSupported;
         private List<String> uiLocalesSupported;
@@ -762,6 +774,12 @@ public class ProviderMetadata extends AbstractCacheable
             return this;
         }
 
+        public Builder withMcDiScopesSupported(final List<String> val)
+        {
+            this.mcDiScopesSupported = ListUtils.immutableList(val);
+            return this;
+        }
+
         public Builder withServiceDocumentation(final String val)
         {
             this.serviceDocumentation = val;
@@ -855,6 +873,10 @@ public class ProviderMetadata extends AbstractCacheable
         for (String claims : claimsSupported) {
             claimsSupportedNode.add(claims);
         }
+        ArrayNode mcDiScopesSupportedNode = mapper.createArrayNode();
+        for (String claims : mcDiScopesSupported) {
+            mcDiScopesSupportedNode.add(claims);
+        }
 
         ArrayNode idToken = mapper.createArrayNode();
         for (String token : idTokenEncryptionAlgValuesSupported) {
@@ -872,6 +894,7 @@ public class ProviderMetadata extends AbstractCacheable
         }
 
         root.putPOJO("claims_supported", claimsSupportedNode);
+        root.putPOJO("mc_di_scopes_supported", mcDiScopesSupportedNode);
         root.putPOJO("id_token_signing_alg_values_supported", idToken);
         root.putPOJO("acr_values_supported", acrValuesSupportedNode);
         root.putPOJO("scopes_supported", scopes);
