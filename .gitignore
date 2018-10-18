@@ -1,0 +1,10 @@
+.idea/
+*.iml
+target/
+doc/
+mobile-connect-demo/src/main/resources/config/mobile-connect-config.properties
+mobile-connect-example-authorization/src/main/resources/config/mobile-connect-config.properties
+mobile-connect-example-authentication/src/main/resources/config/mobile-connect-config.properties
+mobile-connect-example-signup/src/main/resources/config/mobile-connect-config.properties
+mobile-connect-example-phonenumber/src/main/resources/config/mobile-connect-config.properties
+mobile-connect-example-nationalid/src/main/resources/config/mobile-connect-config.properties
