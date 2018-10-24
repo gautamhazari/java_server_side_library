@@ -35,8 +35,8 @@ import java.net.URISyntaxException;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping(path = "server_side_api"/*, produces = MediaType.APPLICATION_JSON_UTF8_VALUE*/)
-public class WithoutDiscoveryController extends CommonController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DiscoveryController.class);
+public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.Controller {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WithoutDiscoveryController.class);
     private String clientId;
     private String clientSecret;
 
@@ -47,7 +47,7 @@ public class WithoutDiscoveryController extends CommonController {
         }
     }
 
-    @GetMapping("start_authentication_wd")
+    @GetMapping("start_discovery_manually")
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
     public RedirectView startAuthenticationWithoutDiscovery(

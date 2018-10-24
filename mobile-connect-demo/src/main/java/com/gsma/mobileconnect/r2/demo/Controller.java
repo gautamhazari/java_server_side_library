@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @org.springframework.stereotype.Controller
 @EnableAutoConfiguration
 @RequestMapping(path = "server_side_api"/*, produces = MediaType.APPLICATION_JSON_UTF8_VALUE*/)
-public class CommonController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommonController.class);
+public class Controller {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
     protected ConcurrentCache sessionCache;
-    protected MobileConnectWebInterface mobileConnectWebInterface;
+    protected MobileConnectConfig mobileConnectConfig;
     protected final IJsonService jsonService;
+    protected MobileConnectWebInterface mobileConnectWebInterface;
     protected String clientName;
     protected String apiVersion;
-    protected MobileConnectConfig mobileConnectConfig;
     protected OperatorUrls operatorUrls;
     protected boolean includeRequestIP;
     protected ConcurrentCache discoveryCache;
@@ -36,10 +36,11 @@ public class CommonController {
     protected final String[] USERINFO_SCOPES = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
             Scope.PHONE, Scope.OFFLINE_ACCESS};
 
-    protected CommonController() {
+    protected Controller() {
         this.jsonService = new JacksonJsonService();
         restClient = new RestClient.Builder().withJsonService(jsonService).withHttpClient(HttpClientBuilder.create().build()).build();
     }
+
 
 
 }
