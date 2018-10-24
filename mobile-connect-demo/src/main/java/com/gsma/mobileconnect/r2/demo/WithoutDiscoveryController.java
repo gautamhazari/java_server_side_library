@@ -1,25 +1,21 @@
 package com.gsma.mobileconnect.r2.demo;
 
-import com.gsma.mobileconnect.r2.*;
+import com.gsma.mobileconnect.r2.MobileConnect;
+import com.gsma.mobileconnect.r2.MobileConnectConfig;
+import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
+import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
-import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
 import com.gsma.mobileconnect.r2.constants.Scope;
-import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
 import com.gsma.mobileconnect.r2.discovery.SessionData;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.rest.RestClient;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -39,27 +35,13 @@ import java.net.URISyntaxException;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping(path = "server_side_api"/*, produces = MediaType.APPLICATION_JSON_UTF8_VALUE*/)
-public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.CommonController {
+public class WithoutDiscoveryController extends CommonController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscoveryController.class);
-    private MobileConnectWebInterface mobileConnectWebInterface;
-    private final IJsonService jsonService;
-    private String clientName;
     private String clientId;
     private String clientSecret;
-    private String apiVersion;
-    private MobileConnectConfig mobileConnectConfig;
-    private OperatorUrls operatorUrls;
-    private boolean includeRequestIP;
-    private ConcurrentCache discoveryCache;
-    private RestClient restClient;
-    private OperatorParameters operatorParams = new OperatorParameters();
 
-    public WithoutDiscoveryController() {
-        this.jsonService = new JacksonJsonService();
-
-        restClient = new RestClient.Builder().withJsonService(jsonService).withHttpClient(HttpClientBuilder.create().build()).build();
+    private WithoutDiscoveryController() {
         this.getWDParameters();
-
         if (this.mobileConnectWebInterface == null) {
             this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.sessionCache, this.discoveryCache);
         }
