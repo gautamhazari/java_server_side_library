@@ -1,5 +1,7 @@
 package com.gsma.mobileconnect.r2.demo.objects;
 
+import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
+
 public class OperatorParameters {
     private String clientID;
     private String clientSecret;
@@ -12,6 +14,7 @@ public class OperatorParameters {
     private String scope;
     private String arcValues;
     private long MaxDiscoveryCacheSize;
+    private OperatorUrls operatorUrls;
 
     public String getClientID() {
         return clientID;
@@ -99,6 +102,14 @@ public class OperatorParameters {
 
     public void setClientName(String clientName) {
         this.clientName = clientName;
+    }
+
+    public OperatorUrls getOperatorUrls() {
+        return operatorUrls;
+    }
+
+    public void setOperatorUrls(OperatorUrls operatorUrls) {
+        this.operatorUrls = operatorUrls;
     }
 }
 

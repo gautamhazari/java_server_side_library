@@ -61,9 +61,9 @@ import java.net.URISyntaxException;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping(path = "server_side_api"/*, produces = MediaType.APPLICATION_JSON_UTF8_VALUE*/)
-public class AppController
+public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.CommonController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DiscoveryController.class);
 
     private MobileConnectWebInterface mobileConnectWebInterface;
     private final IJsonService jsonService;
@@ -72,7 +72,6 @@ public class AppController
     private MobileConnectConfig mobileConnectConfig;
     private OperatorUrls operatorUrls;
     private boolean includeRequestIP;
-    private ConcurrentCache sessionCache;
     private ConcurrentCache discoveryCache;
     private RestClient restClient;
     private OperatorParameters operatorParams = new OperatorParameters();
@@ -81,7 +80,7 @@ public class AppController
     private final String[] USERINFO_SCOPES = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
             Scope.PHONE, Scope.OFFLINE_ACCESS};
 
-    public AppController() {
+    public DiscoveryController() {
         this.jsonService = new JacksonJsonService();
 
         restClient = new RestClient.Builder().withJsonService(jsonService).withHttpClient(HttpClientBuilder.create().build()).build();
