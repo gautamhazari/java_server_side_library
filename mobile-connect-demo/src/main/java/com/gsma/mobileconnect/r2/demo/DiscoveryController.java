@@ -16,14 +16,15 @@
  */
 package com.gsma.mobileconnect.r2.demo;
 
-import com.gsma.mobileconnect.r2.*;
+import com.gsma.mobileconnect.r2.MobileConnect;
+import com.gsma.mobileconnect.r2.MobileConnectConfig;
+import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
+import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
-import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
 import com.gsma.mobileconnect.r2.constants.*;
-import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
@@ -31,16 +32,12 @@ import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
 import com.gsma.mobileconnect.r2.discovery.SessionData;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.rest.RestClient;
 import com.gsma.mobileconnect.r2.utils.HttpUtils;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
 import com.gsma.mobileconnect.r2.web.MobileConnectWebResponse;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,32 +58,11 @@ import java.net.URISyntaxException;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping(path = "server_side_api"/*, produces = MediaType.APPLICATION_JSON_UTF8_VALUE*/)
-public class AppController
-{
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppController.class);
+public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controller {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DiscoveryController.class);
 
-    private MobileConnectWebInterface mobileConnectWebInterface;
-    private final IJsonService jsonService;
-    private String clientName;
-    private String apiVersion;
-    private MobileConnectConfig mobileConnectConfig;
-    private OperatorUrls operatorUrls;
-    private boolean includeRequestIP;
-    private ConcurrentCache sessionCache;
-    private ConcurrentCache discoveryCache;
-    private RestClient restClient;
-    private OperatorParameters operatorParams = new OperatorParameters();
-    private final String[] IDENTITY_SCOPES = {Scope.IDENTITY_PHONE, Scope.IDENTITY_SIGNUP,
-            Scope.IDENTITY_NATIONALID, Scope.IDENTITY_SIGNUPPLUS, Scope.KYC_HASHED, Scope.KYC_PLAIN};
-    private final String[] USERINFO_SCOPES = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
-            Scope.PHONE, Scope.OFFLINE_ACCESS};
-
-    public AppController() {
-        this.jsonService = new JacksonJsonService();
-
-        restClient = new RestClient.Builder().withJsonService(jsonService).withHttpClient(HttpClientBuilder.create().build()).build();
+    public DiscoveryController() {
         this.getParameters();
-
         if (this.mobileConnectWebInterface == null) {
             this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.sessionCache, this.discoveryCache);
         }
@@ -187,29 +163,6 @@ public class AppController
         return discoveryCache.get(StringUtils.formatKey(msisdn, mcc, mnc, sourceIp));
     }
 
-    @GetMapping("start_manual_discovery")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.FOUND)
-    public MobileConnectWebResponse startManualDiscovery (
-            @RequestParam(required = false) final String subId,
-            @RequestParam(required = false) final String clientId,
-            @RequestParam(required = false) final String clientName,
-            @RequestParam(required = false) final String clientSecret,
-            final HttpServletRequest request
-    ) throws JsonDeserializationException {
-
-        LOGGER.info("* Attempting discovery for clientId={}, clientSecret={}, clientName={}",
-                LogUtils.mask(clientId, LOGGER, Level.INFO), clientSecret, clientName);
-
-        this.clientName = clientName;
-        DiscoveryResponse discoveryResponse = this.mobileConnectWebInterface.generateDiscoveryManually(clientSecret,
-                clientId, subId, clientName, operatorUrls);
-
-        final MobileConnectStatus status = this.mobileConnectWebInterface.attemptManuallyDiscovery(discoveryResponse);
-
-        return new MobileConnectWebResponse(status);
-    }
-
     @GetMapping("start_manual_discovery_no_metadata")
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
@@ -233,69 +186,6 @@ public class AppController
                 this.mobileConnectWebInterface.attemptManuallyDiscovery(discoveryResponse);
 
         return new MobileConnectWebResponse(status);
-    }
-
-    @GetMapping("get_parameters")
-    @ResponseBody
-    public void getParameters(
-            @RequestParam(required = false) final String clientID,
-            @RequestParam(required = false) final String clientSecret,
-            @RequestParam(required = false) final URI discoveryURL,
-            @RequestParam(required = false) final URI redirectURL,
-            @RequestParam(required = false) final String xRedirect,
-            @RequestParam(required = false) final String includeRequestIP,
-            @RequestParam(required = false) final String apiVersion
-    ) {
-
-        LOGGER.info("* Getting parameters: clientId={}, clientSecret={}, discoveryUrl={}, redirectUrl={}, xRedirect={}, includeRequestIp={}, apiVersion={}",
-                clientID, clientSecret, discoveryURL, redirectURL, xRedirect, includeRequestIP, apiVersion);
-        this.apiVersion = apiVersion;
-        mobileConnectConfig = new MobileConnectConfig.Builder()
-                .withClientId(StringUtils.setValueToNullIfIsEmpty(clientID))
-                .withClientSecret(StringUtils.setValueToNullIfIsEmpty(clientSecret))
-                .withDiscoveryUrl(StringUtils.setValueToNullIfIsEmpty(discoveryURL))
-                .withRedirectUrl(StringUtils.setValueToNullIfIsEmpty(redirectURL))
-                .withXRedirect(StringUtils.setValueToNullIfIsEmpty(xRedirect.equals("True") ? "APP" : "True"))
-                .withIncludeRequestIP(includeRequestIP.equals("True"))
-                .build();
-
-        this.mobileConnectWebInterface = MobileConnect.buildWebInterface(
-                mobileConnectConfig,
-                new DefaultEncodeDecoder(),
-                new DiscoveryCache.Builder().withJsonService(this.jsonService).build(),
-                new DiscoveryCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
-    }
-
-    @GetMapping("endpoints")
-    @ResponseBody
-    public void endpoints (
-            @RequestParam(required = false) final String authURL,
-            @RequestParam(required = false) final String tokenURL,
-            @RequestParam(required = false) final String userInfoURl,
-            @RequestParam(required = false) final String metadata,
-            @RequestParam(required = false) final URI discoveryURL,
-            @RequestParam(required = false) final URI redirectURL
-    ) {
-        LOGGER.info("* Getting endpoints: authorizationUrl={}, tokenUrl={}, userInfoUrl={}, metadataUrl{}, discoveryUrl={}, redirectUrl={}",
-                authURL, tokenURL, userInfoURl, metadata, discoveryURL, redirectURL);
-        operatorUrls = new OperatorUrls.Builder()
-                .withAuthorizationUrl(StringUtils.setValueToNullIfIsEmpty(authURL))
-                .withRequestTokenUrl(StringUtils.setValueToNullIfIsEmpty(tokenURL))
-                .withUserInfoUrl(StringUtils.setValueToNullIfIsEmpty(userInfoURl))
-                .withProviderMetadataUri(StringUtils.setValueToNullIfIsEmpty(metadata))
-                .build();
-
-        MobileConnectConfig connectConfig = new MobileConnectConfig.Builder()
-                .withDiscoveryUrl(StringUtils.setValueToNullIfIsEmpty(discoveryURL))
-                .withRedirectUrl(StringUtils.setValueToNullIfIsEmpty(redirectURL))
-                .build();
-
-        this.mobileConnectWebInterface = MobileConnect.buildWebInterface(
-                connectConfig,
-                new DefaultEncodeDecoder(),
-                new DiscoveryCache.Builder().withJsonService(this.jsonService).build(),
-                new DiscoveryCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
-
     }
 
     @GetMapping({"start_authentication"})

@@ -1,0 +1,20 @@
+{
+  "clientID": "YWI0MTZlMmMtZWRiZS00NTcwLWIyMTgtMjZkZDMyMzlmY2VlOm9wZXJhdG9yLWI=",
+  "clientSecret": "YmM4NDI1YzYtYzlhZC00NWE0LTk4NjYtMGFkZDQ2OGVjZTUwOm9wZXJhdG9yLWI=",
+  "clientName": "demoApp",
+  "discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
+  "redirectURL": "http://172.19.2.20:8080/server_side_api/discovery_callback",
+  "xRedirect": "True",
+  "includeRequestIP": "True",
+  "apiVersion": "mc_di_r2_v2.3",
+  "scope": "openid mc_identity_phonenumber",
+  "acrValues": "2",
+  "MaxDiscoveryCacheSize": 104857600,
+  "operatorUrls": {
+    "authorizationUrl": "https://operator-b.sandbox.mobileconnect.io/oidc/authorize",
+    "requestTokenUrl": "https://operator-b.sandbox.mobileconnect.io/oidc/accesstoken",
+    "userInfoUrl": "https://operator-b.sandbox.mobileconnect.io/oidc/userinfo",
+    "premiumInfoUri": "https://operator-b.sandbox.mobileconnect.io/oidc/premiuminfo",
+    "providerMetadataUri": "https://operator-b.sandbox.mobileconnect.io/.well-known/openid-configuration"
+  }
+}
