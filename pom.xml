@@ -6,7 +6,7 @@
 
     <groupId>com.gsma.mobileconnect</groupId>
     <artifactId>mobile-connect</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
     <packaging>pom</packaging>
     <modules>
         <module>mobile-connect-library</module>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
         <dependency>
