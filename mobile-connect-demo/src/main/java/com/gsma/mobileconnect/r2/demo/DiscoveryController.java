@@ -188,69 +188,6 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         return new MobileConnectWebResponse(status);
     }
 
-//    @GetMapping("get_parameters")
-//    @ResponseBody
-//    public void getParameters(
-//            @RequestParam(required = false) final String clientID,
-//            @RequestParam(required = false) final String clientSecret,
-//            @RequestParam(required = false) final URI discoveryURL,
-//            @RequestParam(required = false) final URI redirectURL,
-//            @RequestParam(required = false) final String xRedirect,
-//            @RequestParam(required = false) final String includeRequestIP,
-//            @RequestParam(required = false) final String apiVersion
-//    ) {
-//
-//        LOGGER.info("* Getting parameters: clientId={}, clientSecret={}, discoveryUrl={}, redirectUrl={}, xRedirect={}, includeRequestIp={}, apiVersion={}",
-//                clientID, clientSecret, discoveryURL, redirectURL, xRedirect, includeRequestIP, apiVersion);
-//        this.apiVersion = apiVersion;
-//        mobileConnectConfig = new MobileConnectConfig.Builder()
-//                .withClientId(StringUtils.setValueToNullIfIsEmpty(clientID))
-//                .withClientSecret(StringUtils.setValueToNullIfIsEmpty(clientSecret))
-//                .withDiscoveryUrl(StringUtils.setValueToNullIfIsEmpty(discoveryURL))
-//                .withRedirectUrl(StringUtils.setValueToNullIfIsEmpty(redirectURL))
-//                .withXRedirect(StringUtils.setValueToNullIfIsEmpty(xRedirect.equals("True") ? "APP" : "True"))
-//                .withIncludeRequestIP(includeRequestIP.equals("True"))
-//                .build();
-//
-//        this.mobileConnectWebInterface = MobileConnect.buildWebInterface(
-//                mobileConnectConfig,
-//                new DefaultEncodeDecoder(),
-//                new DiscoveryCache.Builder().withJsonService(this.jsonService).build(),
-//                new DiscoveryCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
-//    }
-
-//    @GetMapping("endpoints")
-//    @ResponseBody
-//    public void endpoints (
-//            @RequestParam(required = false) final String authURL,
-//            @RequestParam(required = false) final String tokenURL,
-//            @RequestParam(required = false) final String userInfoURl,
-//            @RequestParam(required = false) final String metadata,
-//            @RequestParam(required = false) final URI discoveryURL,
-//            @RequestParam(required = false) final URI redirectURL
-//    ) {
-//        LOGGER.info("* Getting endpoints: authorizationUrl={}, tokenUrl={}, userInfoUrl={}, metadataUrl{}, discoveryUrl={}, redirectUrl={}",
-//                authURL, tokenURL, userInfoURl, metadata, discoveryURL, redirectURL);
-//        operatorUrls = new OperatorUrls.Builder()
-//                .withAuthorizationUrl(StringUtils.setValueToNullIfIsEmpty(authURL))
-//                .withRequestTokenUrl(StringUtils.setValueToNullIfIsEmpty(tokenURL))
-//                .withUserInfoUrl(StringUtils.setValueToNullIfIsEmpty(userInfoURl))
-//                .withProviderMetadataUri(StringUtils.setValueToNullIfIsEmpty(metadata))
-//                .build();
-//
-//        MobileConnectConfig connectConfig = new MobileConnectConfig.Builder()
-//                .withDiscoveryUrl(StringUtils.setValueToNullIfIsEmpty(discoveryURL))
-//                .withRedirectUrl(StringUtils.setValueToNullIfIsEmpty(redirectURL))
-//                .build();
-//
-//        this.mobileConnectWebInterface = MobileConnect.buildWebInterface(
-//                connectConfig,
-//                new DefaultEncodeDecoder(),
-//                new DiscoveryCache.Builder().withJsonService(this.jsonService).build(),
-//                new DiscoveryCache.Builder().withJsonService(this.jsonService).withMaxCacheSize(operatorParams.getMaxDiscoveryCacheSize()).build());
-//
-//    }
-
     @GetMapping({"start_authentication"})
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
