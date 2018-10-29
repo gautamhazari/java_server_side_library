@@ -9,5 +9,5 @@ public class Constants {
         public static final String Version2_3 = "mc_di_r2_v2.3";
         public static final String ContextBindingMsg = "demo context";
         public static final String BindingMsg = "demo binding";
-        public static final String SERVER_SIDE_VERSION = "Java-3.2.0";
+        public static final String SERVER_SIDE_VERSION = "Java-3.2.1";
     }
