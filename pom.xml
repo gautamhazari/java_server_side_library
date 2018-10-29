@@ -36,7 +36,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.2.0</version>
+            <version>3.1.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
         <dependency>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.7.201606060606</version>
+            <version>0.7.9</version>
             <scope>test</scope>
         </dependency>
         <dependency>
