@@ -24,15 +24,16 @@ import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
-import com.gsma.mobileconnect.r2.constants.*;
+import com.gsma.mobileconnect.r2.constants.DefaultOptions;
+import com.gsma.mobileconnect.r2.constants.Headers;
+import com.gsma.mobileconnect.r2.constants.Parameters;
+import com.gsma.mobileconnect.r2.constants.Scope;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
 import com.gsma.mobileconnect.r2.discovery.SessionData;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.utils.HttpUtils;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
@@ -163,30 +164,30 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         return discoveryCache.get(StringUtils.formatKey(msisdn, mcc, mnc, sourceIp));
     }
 
-    @GetMapping("start_manual_discovery_no_metadata")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.FOUND)
-    public MobileConnectWebResponse startAuthenticationNoMetadata(
-            @RequestParam(required = false) final String subId,
-            @RequestParam(required = false) final String clientId,
-            @RequestParam(required = false) final String clientSecret,
-            final HttpServletRequest request) throws JsonDeserializationException {
-
-        LOGGER.info("* Starting authentication for sdkSession={}, subscriberId={}, scope={}",
-                LogUtils.mask(subId, LOGGER, Level.INFO), Scopes.MOBILE_CONNECT);
-        OperatorUrls operatorUrlsWD = new OperatorUrls.Builder()
-                .withAuthorizationUrl(operatorUrls.getAuthorizationUrl())
-                .withRequestTokenUrl(operatorUrls.getRequestTokenUrl())
-                .withUserInfoUrl(operatorUrls.getUserInfoUrl())
-                .build();
-        DiscoveryResponse discoveryResponse = this.mobileConnectWebInterface.generateDiscoveryManually(clientSecret,
-                clientId, subId, "appName", operatorUrlsWD);
-
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.attemptManuallyDiscovery(discoveryResponse);
-
-        return new MobileConnectWebResponse(status);
-    }
+//    @GetMapping("start_manual_discovery_no_metadata")
+//    @ResponseBody
+//    @ResponseStatus(HttpStatus.FOUND)
+//    public MobileConnectWebResponse startAuthenticationNoMetadata(
+//            @RequestParam(required = false) final String subId,
+//            @RequestParam(required = false) final String clientId,
+//            @RequestParam(required = false) final String clientSecret,
+//            final HttpServletRequest request) throws JsonDeserializationException {
+//
+//        LOGGER.info("* Starting authentication for sdkSession={}, subscriberId={}, scope={}",
+//                LogUtils.mask(subId, LOGGER, Level.INFO), Scopes.MOBILE_CONNECT);
+//        OperatorUrls operatorUrlsWD = new OperatorUrls.Builder()
+//                .withAuthorizationUrl(operatorUrls.getAuthorizationUrl())
+//                .withRequestTokenUrl(operatorUrls.getRequestTokenUrl())
+//                .withUserInfoUrl(operatorUrls.getUserInfoUrl())
+//                .build();
+//        DiscoveryResponse discoveryResponse = this.mobileConnectWebInterface.generateDiscoveryManually(clientSecret,
+//                clientId, subId, "appName", operatorUrlsWD);
+//
+//        final MobileConnectStatus status =
+//                this.mobileConnectWebInterface.attemptManuallyDiscovery(discoveryResponse);
+//
+//        return new MobileConnectWebResponse(status);
+//    }
 
     @GetMapping({"start_authentication"})
     @ResponseBody

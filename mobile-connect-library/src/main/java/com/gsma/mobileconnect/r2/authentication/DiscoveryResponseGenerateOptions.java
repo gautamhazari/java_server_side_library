@@ -10,7 +10,6 @@ import java.util.List;
 
 public class DiscoveryResponseGenerateOptions {
     private String clientSecret;
-    private String subscriptionId;
     private String clientApplicationName;
     private String clientKey;
     private List<String> linksList;
@@ -19,7 +18,6 @@ public class DiscoveryResponseGenerateOptions {
     private DiscoveryResponseGenerateOptions(final BuilderResponse builder) {
         this.clientSecret = builder.clientSecret;
         this.clientKey = builder.clientKey;
-        this.subscriptionId = builder.subscriptionId;
         this.clientApplicationName = builder.clientApplicationName;
         this.linksList = builder.linksList;
         this.rel = builder.rel;
@@ -27,7 +25,7 @@ public class DiscoveryResponseGenerateOptions {
 
     ObjectNode responseToJson() {
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode subscriberId = mapper.createObjectNode();
+        ObjectNode resp = mapper.createObjectNode();
         ObjectNode response = mapper.createObjectNode();
         ObjectNode apis = mapper.createObjectNode();
         ObjectNode operatorId = mapper.createObjectNode();
@@ -40,8 +38,7 @@ public class DiscoveryResponseGenerateOptions {
             linkArray.add(link);
         }
 
-        subscriberId.put("subscriber_id", subscriptionId);
-        subscriberId.putPOJO("response", response);
+        resp.putPOJO("response", response);
         response.put("client_secret", clientSecret);
         response.put("client_name", clientApplicationName);
         response.put("client_id", clientKey);
@@ -49,11 +46,7 @@ public class DiscoveryResponseGenerateOptions {
         apis.putPOJO("operatorid", operatorId);
         operatorId.putPOJO("link", linkArray);
 
-        return subscriberId;
-    }
-
-    public String getId() {
-        return subscriptionId;
+        return resp;
     }
 
     public String getSecret() {
@@ -79,7 +72,6 @@ public class DiscoveryResponseGenerateOptions {
     public static final class BuilderResponse implements IBuilder<DiscoveryResponseGenerateOptions>
     {
         private String clientSecret;
-        private String subscriptionId;
         private String clientApplicationName;
         private String clientKey;
         private List<String> linksList;
@@ -96,7 +88,6 @@ public class DiscoveryResponseGenerateOptions {
             {
                 this.clientSecret = options.getSecret();
                 this.clientKey = options.getClientKey();
-                this.subscriptionId = options.getId();
                 this.clientApplicationName = options.getName();
                 this.linksList = options.getLinksList();
                 this.rel = options.getRel();
@@ -117,12 +108,6 @@ public class DiscoveryResponseGenerateOptions {
 
         public BuilderResponse withName(String val) {
             this.clientApplicationName = val;
-            return this;
-        }
-
-        public BuilderResponse withSubscriberId(String val)
-        {
-            this.subscriptionId = val;
             return this;
         }
 

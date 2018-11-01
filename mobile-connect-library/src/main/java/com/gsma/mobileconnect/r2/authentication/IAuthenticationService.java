@@ -18,10 +18,10 @@ package com.gsma.mobileconnect.r2.authentication;
 
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
-import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.discovery.ProviderMetadata;
 import com.gsma.mobileconnect.r2.discovery.SupportedVersions;
 import com.gsma.mobileconnect.r2.exceptions.HeadlessOperationFailedException;
+import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 
@@ -157,7 +157,6 @@ public interface IAuthenticationService
      * @param operatorUrls operator specific urls returned from a successful discovery process call
      * @throws JsonDeserializationException on failure to process response from DiscoveryResponse, ProviderMetadata
      */
-    DiscoveryResponse makeDiscoveryForAuthorization(String clientSecret, String clientKey,
-                                                    String subscriberId, String name, OperatorUrls operatorUrls)
+    DiscoveryResponse makeDiscoveryForAuthorization(String clientSecret, String clientKey, String name, OperatorUrls operatorUrls)
             throws JsonDeserializationException;
 }
