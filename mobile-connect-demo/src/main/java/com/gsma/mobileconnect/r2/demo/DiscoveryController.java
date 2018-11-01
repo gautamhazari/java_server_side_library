@@ -392,7 +392,7 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                 }
             }
 
-        } else if (!StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getPremiumInfoUri())) {
+        } else if ((apiVersion.equals(DefaultOptions.MC_V2_3) || apiVersion.equals(DefaultOptions.MC_V2_0)) & !StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getPremiumInfoUri())) {
             for (String identityScope : IDENTITY_SCOPES) {
                 if (operatorParams.getScope().contains(identityScope)) {
                     final MobileConnectStatus statusIdentity =
