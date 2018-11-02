@@ -502,7 +502,7 @@ public class MobileConnectWebInterfaceTest
                 (List<KeyValuePair>) eq(null), (Iterable<KeyValuePair>) eq(null)))
                 .thenReturn(response).thenReturn(response);
 
-        DiscoveryResponse discoveryResponse = mobileConnectWebInterface.generateDiscoveryManually(secretKey, clientKey, subscriberId, name, operatorUrls);
+        DiscoveryResponse discoveryResponse = mobileConnectWebInterface.generateDiscoveryManually(secretKey, clientKey, name, operatorUrls);
         MobileConnectStatus status = mobileConnectWebInterface.attemptManuallyDiscovery(discoveryResponse);
 
         Assert.assertNotNull(status.getSdkSession(), "sdk session is null");

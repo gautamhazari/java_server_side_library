@@ -497,8 +497,7 @@ public class AuthenticationService implements IAuthenticationService
     }
 
     @Override
-    public DiscoveryResponse makeDiscoveryForAuthorization(final String clientSecret, final String clientKey,
-                                                           final String subscriberId, final String name, OperatorUrls operatorUrls)
+    public DiscoveryResponse makeDiscoveryForAuthorization(final String clientSecret, final String clientKey, final String name, OperatorUrls operatorUrls)
             throws JsonDeserializationException
     {
         ObjectUtils.requireNonNull(clientSecret, "clientSecret");
@@ -517,7 +516,6 @@ public class AuthenticationService implements IAuthenticationService
                 .withClientKey(clientKey)
                 .withSecretKey(clientSecret)
                 .withName(name)
-                .withSubscriberId(subscriberId)
                 .withLinks(operatorUrls.getOperatorsUrls())
                 .withRel(operatorUrls.getOperatorsRel()).build();
 

@@ -829,13 +829,12 @@ public class MobileConnectWebInterface
      *
      * @param clientSecret The registered application secretKey (Required)
      * @param clientKey The registered application clientKey (consumer key) (Required)
-     * @param subscriberId subscriber id (Required)
      * @param name application name (Required)
      * @param operatorUrls operator specific urls returned from a successful discovery process call
      * @throws JsonDeserializationException on failure to process response from DiscoveryResponse, ProviderMetadata
      */
-    public DiscoveryResponse generateDiscoveryManually(String clientSecret, String clientKey, String subscriberId,
-                                                                  String name, OperatorUrls operatorUrls) throws JsonDeserializationException {
-        return authnService.makeDiscoveryForAuthorization(clientSecret, clientKey, subscriberId, name, operatorUrls);
+    public DiscoveryResponse generateDiscoveryManually(String clientSecret, String clientKey, String name,
+                                                       OperatorUrls operatorUrls) throws JsonDeserializationException {
+        return authnService.makeDiscoveryForAuthorization(clientSecret, clientKey, name, operatorUrls);
     }
 }

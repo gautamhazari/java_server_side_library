@@ -488,8 +488,7 @@ public class AuthenticationServiceTest
 
         //When
         final DiscoveryResponse discoveryResponse =
-                this.authentication.makeDiscoveryForAuthorization(secretKey, clientKey,
-                        subscriberId, name, operatorUrls);
+                this.authentication.makeDiscoveryForAuthorization(secretKey, clientKey, name, operatorUrls);
 
         //Then
         assertNotNull(discoveryResponse.getResponseData(), "response data is null");

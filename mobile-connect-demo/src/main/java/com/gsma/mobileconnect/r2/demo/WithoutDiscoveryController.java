@@ -8,6 +8,7 @@ import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
+import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.constants.Scope;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
@@ -16,6 +17,7 @@ import com.gsma.mobileconnect.r2.discovery.SessionData;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
+import com.gsma.mobileconnect.r2.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -51,16 +53,16 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
     public RedirectView startAuthenticationWithoutDiscovery(
-            @RequestParam(required = false) final String subscriberId,
+            @RequestParam(required = false) final String msisdn,
             final HttpServletRequest request)
     {
 
-        LOGGER.info("* Attempting discovery for clientId={}", LogUtils.mask(subscriberId, LOGGER, Level.INFO));
+        LOGGER.info("* Attempting discovery for msisdn={}", LogUtils.mask(msisdn, LOGGER, Level.INFO));
 
         DiscoveryResponse discoveryResponse = null;
         try {
-            discoveryResponse = this.mobileConnectWebInterface.generateDiscoveryManually(clientSecret,
-                    clientId, subscriberId, clientName, operatorUrls);
+            discoveryResponse = this.mobileConnectWebInterface.generateDiscoveryManually(clientSecret, clientId,
+                    clientName, operatorUrls);
         } catch (JsonDeserializationException e) {
             LOGGER.warn("Can't create discoveryResponse");
         }
@@ -70,12 +72,12 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
         if (operatorParams.getScope().contains(Scope.AUTHZ)) {
             url = startAuthorize(
                     discoveryResponse,
-                    discoveryResponse.getResponseData().getSubscriberId(),
+                    msisdn,
                     request);
         } else {
             url = startAuthentication(
                     discoveryResponse,
-                    discoveryResponse.getResponseData().getSubscriberId(),
+                    msisdn,
                     request);
         }
 
@@ -87,12 +89,12 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
     @ResponseStatus(HttpStatus.FOUND)
     public String startAuthentication(
             @RequestParam(required = false) final DiscoveryResponse discoveryResponse,
-            @RequestParam(required = false) final String subscriberId, final HttpServletRequest request)
+            @RequestParam(required = false) final String msisdn, final HttpServletRequest request)
     {
-        LOGGER.info("* Starting authentication for discoveryResponse={}, subscriberId={}, scope={}",
-                discoveryResponse, LogUtils.mask(subscriberId, LOGGER, Level.INFO));
+        LOGGER.info("* Starting authentication for discoveryResponse={}, msisdn={}, scope={}",
+                discoveryResponse, LogUtils.mask(msisdn, LOGGER, Level.INFO));
 
-        return startAuth(discoveryResponse, subscriberId, request);
+        return startAuth(discoveryResponse, msisdn, request);
     }
 
     @GetMapping({"start_wd_authorization"})
@@ -100,12 +102,12 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
     @ResponseStatus(HttpStatus.FOUND)
     public String startAuthorize(
             @RequestParam(required = false) final DiscoveryResponse discoveryResponse,
-            @RequestParam(required = false) final String subscriberId, final HttpServletRequest request)
+            @RequestParam(required = false) final String msisdn, final HttpServletRequest request)
     {
-        LOGGER.info("* Starting authorization for discoveryResponse={}, subscriberId={}, scope={}",
-                discoveryResponse, LogUtils.mask(subscriberId, LOGGER, Level.INFO));
+        LOGGER.info("* Starting authorization for discoveryResponse={}, msisdn={}, scope={}",
+                discoveryResponse, LogUtils.mask(msisdn, LOGGER, Level.INFO));
 
-        return startAuth(discoveryResponse, subscriberId, request);
+        return startAuth(discoveryResponse, msisdn, request);
     }
 
     @GetMapping({"start_wd_authentication", "start_wd_authorization"})
@@ -113,9 +115,14 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
     @ResponseStatus(HttpStatus.FOUND)
     public String startAuth(
             @RequestParam(required = false) final DiscoveryResponse discoveryResponse,
-            @RequestParam(required = false) final String subscriberId, final HttpServletRequest request)
+            @RequestParam(required = false) final String msisdn, final HttpServletRequest request)
     {
         String scope = operatorParams.getScope();
+        String loginHint = null;
+
+        if (!StringUtils.isNullOrEmpty(msisdn)) {
+           loginHint = String.format("%s:%s", Parameters.MSISDN, msisdn);
+        }
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
@@ -123,10 +130,11 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
                         .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
                         .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.BindingMsg : null)
                         .withClientName(clientName)
+                        .withLoginHint(loginHint)
                         .build())
                 .build();
         final MobileConnectStatus status =
-                this.mobileConnectWebInterface.startAuthentication(request, discoveryResponse, subscriberId,
+                this.mobileConnectWebInterface.startAuthentication(request, discoveryResponse, null,
                         null, null, options, apiVersion);
 
         if (status.getErrorMessage() != null) {

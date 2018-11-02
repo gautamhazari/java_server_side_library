@@ -6,7 +6,7 @@
 
     <groupId>com.gsma.mobileconnect</groupId>
     <artifactId>mobile-connect</artifactId>
-    <version>3.2.0</version>
+    <version>3.2.2</version>
     <packaging>pom</packaging>
     <modules>
         <module>mobile-connect-library</module>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.7.201606060606</version>
+            <version>0.7.9</version>
             <scope>test</scope>
         </dependency>
         <dependency>
