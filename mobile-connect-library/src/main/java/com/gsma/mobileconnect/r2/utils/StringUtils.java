@@ -21,7 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Utility methods for working with {@link String}s.
@@ -239,4 +241,7 @@ public final class StringUtils
         return value;
     }
 
+    public static List<String> convertToListBySpase(String initString) {
+        return Arrays.asList(initString.split("\\s+"));
+    }
 }

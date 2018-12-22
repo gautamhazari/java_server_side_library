@@ -36,6 +36,7 @@ import java.util.List;
 public class ProviderMetadata extends AbstractCacheable
 {
     private final String version;
+    private final List<String> mc_version;
     private final String subscriberId;
     private final String issuer;
     private final String authorizationEndpoint;
@@ -84,6 +85,7 @@ public class ProviderMetadata extends AbstractCacheable
     private ProviderMetadata(Builder builder)
     {
         this.version = builder.version;
+        this.mc_version = builder.mc_version;
         this.issuer = builder.issuer;
         this.subscriberId = builder.subscriberId;
         this.authorizationEndpoint = builder.authorizationEndpoint;
@@ -140,6 +142,13 @@ public class ProviderMetadata extends AbstractCacheable
     public String getVersion()
     {
         return this.version;
+    }
+    /**
+     * @return The version of provider metadata
+     */
+    public List<String> getMCVersion()
+    {
+        return this.mc_version;
     }
 
     /**
@@ -523,6 +532,7 @@ public class ProviderMetadata extends AbstractCacheable
     public static final class Builder implements IBuilder<ProviderMetadata>
     {
         private String version;
+        private List<String> mc_version;
         private String subscriberId;
         private String issuer;
         private String authorizationEndpoint;
@@ -580,6 +590,13 @@ public class ProviderMetadata extends AbstractCacheable
         public Builder withVersion(final String val)
         {
             this.version = val;
+            return this;
+        }
+
+
+        public Builder withMCVersion(final List<String> val)
+        {
+            this.mc_version = val;
             return this;
         }
 
