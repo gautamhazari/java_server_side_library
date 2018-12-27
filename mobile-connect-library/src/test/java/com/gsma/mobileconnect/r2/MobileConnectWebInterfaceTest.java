@@ -21,6 +21,7 @@ import com.gsma.mobileconnect.r2.authentication.AuthenticationService;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.constants.Parameters;
+import com.gsma.mobileconnect.r2.constants.Scope;
 import com.gsma.mobileconnect.r2.discovery.*;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
@@ -107,17 +108,18 @@ public class MobileConnectWebInterfaceTest
             //
             {null, new String[] {"openid"}, "mc_authz"},
             //
-            {new AuthenticationOptions.Builder().withContext("context").build(),
+            {new AuthenticationOptions.Builder().withContext("context").withScope(Scope.OPENID).build(),
              new String[] {"mc_authz"}, "mc_authn"},
             //
             {new AuthenticationOptions.Builder()
                  .withScope("mc_authz")
                  .withContext("context")
+                 .withScope(Scope.OPENID)
                  .withBindingMessage("message").build(), new String[] {"mc_authz"}, "mc_authn"},
             //
             {new AuthenticationOptions.Builder()
                  .withScope("mc_identity_phone")
-                 .withContext("context")
+                 .withContext("context").withScope(Scope.OPENID)
                  .withBindingMessage("message").build(),
              new String[] {"mc_authz", "mc_identity_phone"}, "mc_authn"}};
     }

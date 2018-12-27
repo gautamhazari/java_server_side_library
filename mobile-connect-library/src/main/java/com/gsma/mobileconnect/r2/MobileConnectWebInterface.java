@@ -195,7 +195,7 @@ public class MobileConnectWebInterface
         try {
             return MobileConnectInterfaceHelper.startAuthentication(this.authnService,
                 discoveryResponse, encryptedMsisdn, rState, rNonce, this.config, builder,
-                    VersionDetection.getCurrentVersion(currentVersion, options.getAuthenticationOptions().getScope(),
+                    VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
                             discoveryResponse.getProviderMetadata()));
         } catch (InvalidScopeException e) {
             return e.toMobileConnectStatus(currentVersion);
@@ -238,7 +238,7 @@ public class MobileConnectWebInterface
                 try {
                     return MobileConnectWebInterface.this.startAuthentication(request, cached, encryptedMsisdn, state,
                             nonce, options, VersionDetection.getCurrentVersion(currentVersion,
-                                    options.getAuthenticationOptions().getScope(), cached.getProviderMetadata()));
+                                    getScopeFromOptions(options), cached.getProviderMetadata()));
                 } catch (InvalidScopeException e) {
                     return e.toMobileConnectStatus(currentVersion);
                 }
@@ -284,11 +284,16 @@ public class MobileConnectWebInterface
             return MobileConnectInterfaceHelper.requestHeadlessAuthentication(this.authnService,
                 this.identityService, discoveryResponse, encryptedMsisdn, rState, rNonce, this.config,
                 options, iMobileConnectEncodeDecoder, this.jwKeysetService, this.jsonService,
-                    VersionDetection.getCurrentVersion(currentVersion, options.getAuthenticationOptions().getScope(),
+                    VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
                             discoveryResponse.getProviderMetadata()));
         } catch (InvalidScopeException e) {
             return e.toMobileConnectStatus(currentVersion);
         }
+    }
+
+    private static String getScopeFromOptions(MobileConnectRequestOptions options) {
+        return options != null && options.getAuthenticationOptions() != null
+                ? options.getAuthenticationOptions().getScope() : null;
     }
 
     /**
@@ -329,7 +334,7 @@ public class MobileConnectWebInterface
                 try {
                     return MobileConnectWebInterface.this.requestHeadlessAuthentication(request, cached,
                         encryptedMsisdn, state, nonce, options,
-                            VersionDetection.getCurrentVersion(currentVersion, options.getAuthenticationOptions().getScope(),
+                            VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
                                     cached.getProviderMetadata()));
                 } catch (InvalidScopeException e) {
                     return e.toMobileConnectStatus(currentVersion);
@@ -370,7 +375,7 @@ public class MobileConnectWebInterface
             return MobileConnectInterfaceHelper.requestToken(this.authnService, this.jwKeysetService,
                 discoveryResponse, redirectedUrl, expectedState, expectedNonce, this.config, options,
                 this.jsonService, this.iMobileConnectEncodeDecoder,
-                    VersionDetection.getCurrentVersion(currentVersion, options.getAuthenticationOptions().getScope(),
+                    VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
                             discoveryResponse.getProviderMetadata()));
         } catch (InvalidScopeException e) {
             return e.toMobileConnectStatus(currentVersion);
@@ -415,7 +420,7 @@ public class MobileConnectWebInterface
                 try {
                     return MobileConnectWebInterface.this.requestToken(request, cached, redirectedUrl,
                         expectedState, expectedNonce, options,
-                            VersionDetection.getCurrentVersion(currentVersion, options.getAuthenticationOptions().getScope(),
+                            VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
                                     cached.getProviderMetadata()));
                 } catch (InvalidScopeException e) {
                     return e.toMobileConnectStatus(currentVersion);
@@ -564,7 +569,7 @@ public class MobileConnectWebInterface
                 this.jwKeysetService, this.authnService, redirectedUrl, discoveryResponse,
                 expectedState, expectedNonce, this.config, options, this.jsonService,
                 this.iMobileConnectEncodeDecoder,
-                    VersionDetection.getCurrentVersion(currentVersion, options.getAuthenticationOptions().getScope(),
+                    VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
                             discoveryResponse.getProviderMetadata()));
         } catch (InvalidScopeException e) {
             return e.toMobileConnectStatus(currentVersion);
@@ -617,7 +622,7 @@ public class MobileConnectWebInterface
                                     expectedState, expectedNonce, MobileConnectWebInterface.this.config,
                                     options, MobileConnectWebInterface.this.jsonService,
                                     MobileConnectWebInterface.this.iMobileConnectEncodeDecoder,
-                                    VersionDetection.getCurrentVersion(currentVersion, options.getAuthenticationOptions().getScope(),
+                                    VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
                                             cached.getProviderMetadata())));
                 } catch (InvalidScopeException e) {
                     return e.toMobileConnectStatus(currentVersion);
