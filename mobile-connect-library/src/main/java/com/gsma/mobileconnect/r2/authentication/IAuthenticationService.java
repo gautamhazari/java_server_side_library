@@ -19,7 +19,6 @@ package com.gsma.mobileconnect.r2.authentication;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
 import com.gsma.mobileconnect.r2.discovery.ProviderMetadata;
-import com.gsma.mobileconnect.r2.discovery.SupportedVersions;
 import com.gsma.mobileconnect.r2.exceptions.HeadlessOperationFailedException;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
@@ -51,8 +50,8 @@ public interface IAuthenticationService
      */
     StartAuthenticationResponse startAuthentication(final String clientId,  //NOSONAR
                                                     final String correlationId, final URI authorizeUrl, final URI redirectUrl, final String state, final String nonce,
-                                                    final String encryptedMSISDN, final SupportedVersions versions,
-                                                    final AuthenticationOptions options, final String currentVersion);
+                                                    final String encryptedMSISDN, final AuthenticationOptions options,
+                                                    final String currentVersion);
 
     /**
      * Synchronous wrapper for
@@ -114,7 +113,7 @@ public interface IAuthenticationService
     Future<RequestTokenResponse> requestHeadlessAuthentication(final String clientId, //NOSONAR
                                                                final String clientSecret, final String correlationId, final URI authorizationUrl, final URI requestTokenUrl,
                                                                final URI redirectUrl, final String state, final String nonce, final String encryptedMsisdn,
-                                                               final SupportedVersions versions, final AuthenticationOptions options, final String currentVersion)
+                                                               final AuthenticationOptions options, final String currentVersion)
         throws RequestFailedException, HeadlessOperationFailedException;
 
     /**

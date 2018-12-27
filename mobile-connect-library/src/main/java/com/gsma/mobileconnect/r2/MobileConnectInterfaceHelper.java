@@ -22,7 +22,10 @@ import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
 import com.gsma.mobileconnect.r2.authentication.StartAuthenticationResponse;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.discovery.*;
+import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
+import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.discovery.IDiscoveryService;
+import com.gsma.mobileconnect.r2.discovery.ParsedDiscoveryRedirect;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.AbstractMobileConnectException;
 import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
@@ -149,14 +152,12 @@ class MobileConnectInterfaceHelper
                     discoveryResponse.getResponseData().getCorrelationId();
             final URI authorizationUrl =
                 URI.create(discoveryResponse.getOperatorUrls().getAuthorizationUrl());
-            final SupportedVersions supportedVersions =
-                discoveryResponse.getProviderMetadata().getMobileConnectVersionSupported();
             if(discoveryResponse.getClientName()!=null) {
                 authnOptionsBuilder.withClientName(discoveryResponse.getClientName());
             }
             final StartAuthenticationResponse startAuthenticationResponse =
                 authnService.startAuthentication(clientId, correlationId, authorizationUrl,
-                    config.getRedirectUrl(), state, nonce, encryptedMsisdn, supportedVersions,
+                    config.getRedirectUrl(), state, nonce, encryptedMsisdn,
                     authnOptionsBuilder.build(), currentVersion);
 
             LOGGER.debug(
@@ -206,8 +207,6 @@ class MobileConnectInterfaceHelper
                 URI.create(discoveryResponse.getOperatorUrls().getAuthorizationUrl());
             final URI tokenUrl =
                 URI.create(discoveryResponse.getOperatorUrls().getRequestTokenUrl());
-            final SupportedVersions supportedVersions =
-                discoveryResponse.getProviderMetadata().getMobileConnectVersionSupported();
 
             builder.withClientName(discoveryResponse.getClientName());
 
@@ -218,7 +217,7 @@ class MobileConnectInterfaceHelper
             final Future<RequestTokenResponse> requestTokenResponseAsync =
                 authnService.requestHeadlessAuthentication(clientId, clientSecret, correlationId, authorizationUrl,
                     tokenUrl, config.getRedirectUrl(), expectedState, expectedNonce,
-                    encryptedMsisdn, supportedVersions, authenticationOptions, currentVersion);
+                    encryptedMsisdn, authenticationOptions, currentVersion);
 
             final RequestTokenResponse requestTokenResponse = requestTokenResponseAsync.get();
 

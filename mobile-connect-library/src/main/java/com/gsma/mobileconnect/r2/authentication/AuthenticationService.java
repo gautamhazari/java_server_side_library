@@ -50,7 +50,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -85,10 +84,8 @@ public class AuthenticationService implements IAuthenticationService
     @Override
     public StartAuthenticationResponse startAuthentication(final String clientId, String correlationId,
                                                            final URI authorizeUrl, final URI redirectUrl, final String state, final String nonce,
-                                                           final String encryptedMSISDN, final SupportedVersions versions,
-                                                           final AuthenticationOptions options, final String currentVersion)
+                                                           final String encryptedMSISDN, final AuthenticationOptions options, final String currentVersion)
     {
-
         final String loginHint = extractLoginHint(options, encryptedMSISDN);
 
         if (options!=null && !options.getUsingCorrelationId()) {
@@ -120,7 +117,8 @@ public class AuthenticationService implements IAuthenticationService
 
         final boolean useAuthorize = this.shouldUseAuthorize(scope, context);
 
-        if (useAuthorize && new SupportedVersions.Builder(versions).build().getSupportedVersion(optionsBuilder.build()).equals(DefaultOptions.VERSION_MOBILECONNECTAUTHZ))
+        if (useAuthorize && (currentVersion.equals(Version.MC_V1_2) || currentVersion.equals(Version.MC_V2_0)
+                || currentVersion.equals(Version.MC_DI_R2_V2_3)))
         {
             StringUtils.requireNonEmpty(options == null ? null : options.getContext(), "context");
             StringUtils.requireNonEmpty(options == null ? null : options.getClientName(),
@@ -199,42 +197,6 @@ public class AuthenticationService implements IAuthenticationService
         return mcProductRequested || (!authnRequested && !StringUtils.isNullOrEmpty(context));
     }
 
-    /**
-     * Fetches the version required and modifies the scope based upon it.  mc_authn may be added or
-     * removed from the scopes depending on the version required.
-     *
-     * @param scope          specified in the original request.
-     * @param optionsBuilder to store the modified scopes to.
-     * @param versions       specified in the original request.
-     * @param useAuthorize   should mc_authz be used over mc_authn?
-     * @return the version of the scope to use.  The modified scope will be stored to the
-     * optionsBuilder.
-     */
-    private String coerceAuthenticationScope(final String scope,
-                                             final AuthenticationOptions.Builder optionsBuilder, final SupportedVersions versions,
-                                             final boolean useAuthorize)
-    {
-        final String requiredScope =
-                useAuthorize ? Scopes.MOBILE_CONNECT_AUTHORIZATION : Scopes.MOBILE_CONNECT_AUTHENTICATION;
-        final String disallowedScope = useAuthorize ? Scope.AUTHN : Scope.AUTHZ;
-
-        final String version =
-                new SupportedVersions.Builder(versions).build().getSupportedVersion(optionsBuilder.build());
-
-        List<String> scopes = Scopes.coerceOpenIdScope(Arrays.asList(scope.split("\\s")), requiredScope);
-
-        ListUtils.removeIgnoreCase(scopes, disallowedScope);
-
-        if (!useAuthorize && DefaultOptions.VERSION_MOBILECONNECTAUTHN.equals(version))
-        {
-            ListUtils.removeIgnoreCase(scopes, Scope.AUTHN);
-        }
-
-        optionsBuilder.withScope(StringUtils.join(scopes, " "));
-
-        return version;
-    }
-
 
     private List<NameValuePair> getAuthenticationQueryParams(final AuthenticationOptions options,
                                                              final boolean useAuthorize, final String version, final String encryptedMSISDN)
@@ -310,8 +272,8 @@ public class AuthenticationService implements IAuthenticationService
     @Override
     public Future<RequestTokenResponse> requestHeadlessAuthentication(final String clientId, final String clientSecret,
                                                                       final String correlationId, final URI authorizationUrl, final URI requestTokenUrl,
-                                                                      final URI redirectUrl, final String state, final String nonce, final String encryptedMsisdn,
-                                                                      final SupportedVersions versions, final AuthenticationOptions options, final String currentVersion)
+                                                                      final URI redirectUrl, final String state,
+                                                                      final String nonce, final String encryptedMsisdn, final AuthenticationOptions options, final String currentVersion)
             throws RequestFailedException
     {
         final String scope;
@@ -337,7 +299,7 @@ public class AuthenticationService implements IAuthenticationService
 
         StartAuthenticationResponse startAuthenticationResponse =
                 startAuthentication(clientId, correlationId, authorizationUrl, redirectUrl, state, nonce,
-                        encryptedMsisdn, versions, optionsBuilder.build(), currentVersion);
+                        encryptedMsisdn, optionsBuilder.build(), currentVersion);
         final RestAuthentication authentication =
                 RestAuthentication.basic(clientId, clientSecret, iMobileConnectEncodeDecoder);
 

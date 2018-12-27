@@ -19,14 +19,13 @@ package com.gsma.mobileconnect.r2.authentication;
 import com.gsma.mobileconnect.r2.claims.ClaimsParameter;
 import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
-import com.gsma.mobileconnect.r2.discovery.SupportedVersions;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
 import java.net.URI;
 
 /**
  * Holds required and optional options for {@link IAuthenticationService#startAuthentication(
- *String, String, URI, URI, String, String, String, SupportedVersions, AuthenticationOptions, String)}.
+ *String, String, URI, URI, String, String, String, AuthenticationOptions, String)}.
  *
  * @since 2.0
  */

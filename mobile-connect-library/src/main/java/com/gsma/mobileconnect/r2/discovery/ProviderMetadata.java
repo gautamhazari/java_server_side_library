@@ -36,7 +36,6 @@ import java.util.List;
 public class ProviderMetadata extends AbstractCacheable
 {
     private final String version;
-    private final List<String> mc_version;
     private final String subscriberId;
     private final String issuer;
     private final String authorizationEndpoint;
@@ -73,6 +72,7 @@ public class ProviderMetadata extends AbstractCacheable
     private final String serviceDocumentation;
     private final List<String> claimsLocalesSupported;
     private final List<String> uiLocalesSupported;
+    private final List<String> mcVersion;
     private final Boolean requireRequestUriRegistration;
     private final String operatorPolicyUri;
     private final String operatorTermsOfServiceUri;
@@ -85,7 +85,6 @@ public class ProviderMetadata extends AbstractCacheable
     private ProviderMetadata(Builder builder)
     {
         this.version = builder.version;
-        this.mc_version = builder.mc_version;
         this.issuer = builder.issuer;
         this.subscriberId = builder.subscriberId;
         this.authorizationEndpoint = builder.authorizationEndpoint;
@@ -126,6 +125,7 @@ public class ProviderMetadata extends AbstractCacheable
         this.serviceDocumentation = builder.serviceDocumentation;
         this.claimsLocalesSupported = builder.claimsLocalesSupported;
         this.uiLocalesSupported = builder.uiLocalesSupported;
+        this.mcVersion = builder.mcVersion;
         this.requireRequestUriRegistration = builder.requireRequestUriRegistration;
         this.operatorPolicyUri = builder.operatorPolicyUri;
         this.operatorTermsOfServiceUri = builder.operatorTermsOfServiceUri;
@@ -148,7 +148,7 @@ public class ProviderMetadata extends AbstractCacheable
      */
     public List<String> getMCVersion()
     {
-        return this.mc_version;
+        return this.mcVersion;
     }
 
     /**
@@ -532,7 +532,6 @@ public class ProviderMetadata extends AbstractCacheable
     public static final class Builder implements IBuilder<ProviderMetadata>
     {
         private String version;
-        private List<String> mc_version;
         private String subscriberId;
         private String issuer;
         private String authorizationEndpoint;
@@ -569,6 +568,7 @@ public class ProviderMetadata extends AbstractCacheable
         private String serviceDocumentation;
         private List<String> claimsLocalesSupported;
         private List<String> uiLocalesSupported;
+        private List<String> mcVersion;
         private Boolean requireRequestUriRegistration;
         private String operatorPolicyUri;
         private String operatorTermsOfServiceUri;
@@ -590,13 +590,6 @@ public class ProviderMetadata extends AbstractCacheable
         public Builder withVersion(final String val)
         {
             this.version = val;
-            return this;
-        }
-
-
-        public Builder withMCVersion(final List<String> val)
-        {
-            this.mc_version = val;
             return this;
         }
 
@@ -770,6 +763,13 @@ public class ProviderMetadata extends AbstractCacheable
         public Builder withTokenEndpointAuthSigningAlgValuesSupported(final List<String> val)
         {
             this.tokenEndpointAuthSigningAlgValuesSupported = ListUtils.immutableList(val);
+            return this;
+        }
+
+        @JsonProperty("mc_version")
+        public Builder withMCVersion(final List<String> val)
+        {
+            this.mcVersion = ListUtils.immutableList(val);
             return this;
         }
 
