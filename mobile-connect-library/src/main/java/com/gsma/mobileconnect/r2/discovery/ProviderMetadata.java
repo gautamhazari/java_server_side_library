@@ -16,6 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -72,6 +73,7 @@ public class ProviderMetadata extends AbstractCacheable
     private final String serviceDocumentation;
     private final List<String> claimsLocalesSupported;
     private final List<String> uiLocalesSupported;
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
     private final List<String> mcVersion;
     private final Boolean requireRequestUriRegistration;
     private final String operatorPolicyUri;
