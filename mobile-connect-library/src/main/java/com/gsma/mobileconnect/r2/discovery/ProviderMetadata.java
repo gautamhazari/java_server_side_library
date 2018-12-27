@@ -81,7 +81,6 @@ public class ProviderMetadata extends AbstractCacheable
     private final Boolean claimsParameterSupported;
     private final Boolean requestParameterSupported;
     private final Boolean requestStringParameterSupported;
-    private final SupportedVersions mobileConnectVersionSupported;
     private final List<String> loginHintMethodsSupported;
 
     private ProviderMetadata(Builder builder)
@@ -134,7 +133,6 @@ public class ProviderMetadata extends AbstractCacheable
         this.claimsParameterSupported = builder.claimsParameterSupported;
         this.requestParameterSupported = builder.requestParameterSupported;
         this.requestStringParameterSupported = builder.requestUriParameterSupported;
-        this.mobileConnectVersionSupported = builder.mobileConnectVersionSupported;
         this.loginHintMethodsSupported = builder.loginHintMethodsSupported;
     }
 
@@ -514,16 +512,6 @@ public class ProviderMetadata extends AbstractCacheable
     }
 
     /**
-     * @return Map of values that represent the supported versions for different mobile connect
-     * services from this provider. These versions are used when constructing calls to the
-     * services.
-     */
-    public SupportedVersions getMobileConnectVersionSupported()
-    {
-        return this.mobileConnectVersionSupported;
-    }
-
-    /**
      * @return Array containing a list of the login hint methods supported by the issuer ID Gateway
      */
     public List<String> getLoginHintMethodsSupported()
@@ -577,7 +565,6 @@ public class ProviderMetadata extends AbstractCacheable
         private Boolean claimsParameterSupported;
         private Boolean requestParameterSupported;
         private Boolean requestUriParameterSupported;
-        private SupportedVersions mobileConnectVersionSupported;
         private List<String> loginHintMethodsSupported;
 
         public Builder(ProviderMetadata providerMetadata) {
@@ -852,12 +839,6 @@ public class ProviderMetadata extends AbstractCacheable
         public Builder withRequestUriParameterSupported(final Boolean val)
         {
             this.requestUriParameterSupported = val;
-            return this;
-        }
-
-        public Builder withMobileConnectVersionSupported(final SupportedVersions val)
-        {
-            this.mobileConnectVersionSupported = val;
             return this;
         }
 

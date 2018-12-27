@@ -17,165 +17,16 @@
 package com.gsma.mobileconnect.r2.authentication;
 
 import com.gsma.mobileconnect.r2.constants.LoginHintPrefixes;
-import com.gsma.mobileconnect.r2.constants.Scopes;
-import com.gsma.mobileconnect.r2.discovery.ProviderMetadata;
-import com.gsma.mobileconnect.r2.discovery.SupportedVersions;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 /**
  * @since 2.0
  */
 public class LoginHintTest
 {
-    @Test
-    public void isSupportedMSISDNShouldReturnTrueIfMSISDNIncluded()
-    {
-        final ProviderMetadata providerMetadata = new ProviderMetadata.Builder()
-            .withLoginHintMethodsSupported(new ArrayList<String>(){{
-                add(LoginHintPrefixes.MSISDN.getName());
-            }})
-            .build();
-
-        final boolean supportedForMsisdn = LoginHint.isSupportedForMsisdn(providerMetadata);
-
-        assertTrue(supportedForMsisdn);
-    }
-
-    @Test
-    public void isSupportedMSISDNShouldReturnFalseIfMSISDNNotIncluded()
-    {
-        final ProviderMetadata providerMetadata = new ProviderMetadata.Builder()
-            .withLoginHintMethodsSupported(new ArrayList<String>(){{
-                add(LoginHintPrefixes.PCR.getName());
-            }})
-            .build();
-
-        final boolean supportedForMsisdn = LoginHint.isSupportedForMsisdn(providerMetadata);
-
-        assertFalse(supportedForMsisdn);
-    }
-
-    @Test
-    public void isSupportedEncryptedMSISDNShouldReturnTrueIfEncryptedMSISDNIncluded()
-    {
-        final ProviderMetadata providerMetadata = new ProviderMetadata.Builder()
-            .withLoginHintMethodsSupported(new ArrayList<String>(){{
-                add(LoginHintPrefixes.ENCRYPTED_MSISDN.getName());
-            }})
-            .build();
-
-        final boolean supportedForEncryptedMsisdn = LoginHint.isSupportedForEncryptedMsisdn(providerMetadata);
-
-        assertTrue(supportedForEncryptedMsisdn);
-    }
-
-    @Test
-    public void isSupportedEncryptedMSISDNShouldReturnFalseIfEncryptedMSISDNNotIncluded()
-    {
-        final ProviderMetadata providerMetadata = new ProviderMetadata.Builder()
-            .withLoginHintMethodsSupported(new ArrayList<String>(){{
-                add(LoginHintPrefixes.PCR.getName());
-            }})
-            .build();
-
-        final boolean supportedForEncryptedMsisdn = LoginHint.isSupportedForEncryptedMsisdn(providerMetadata);
-
-        assertFalse(supportedForEncryptedMsisdn);
-    }
-
-    @Test
-    public void isSupportedPCRShouldReturnTrueIfPCRIncluded()
-    {
-        final ProviderMetadata providerMetadata = new ProviderMetadata.Builder()
-            .withLoginHintMethodsSupported(new ArrayList<String>(){{
-                add(LoginHintPrefixes.PCR.getName());
-            }})
-            .build();
-
-        final boolean supportedForPcr = LoginHint.isSupportedForPcr(providerMetadata);
-
-        assertTrue(supportedForPcr);
-    }
-
-    @Test
-    public void isSupportedPCRShouldReturnFalseIfPCRNotIncluded()
-    {
-        final ProviderMetadata providerMetadata = new ProviderMetadata.Builder()
-            .withLoginHintMethodsSupported(new ArrayList<String>(){{
-                add(LoginHintPrefixes.MSISDN.getName());
-            }})
-            .build();
-
-        final boolean supportedForPcr = LoginHint.isSupportedForPcr(providerMetadata);
-
-        assertFalse(supportedForPcr);
-    }
-
-    @Test
-    public void isSupportedMSISDNShouldReturnTrueIfMissingMetadata()
-    {
-        final boolean supportedForMsisdn = LoginHint.isSupportedForMsisdn(null);
-
-        assertTrue(supportedForMsisdn);
-    }
-
-    @Test
-    public void isSupportedEncryptedMSISDNShouldReturnTrueIfMissingMetadata()
-    {
-        final boolean supportedForEncryptedMsisdn = LoginHint.isSupportedForEncryptedMsisdn(null);
-
-        assertTrue(supportedForEncryptedMsisdn);
-    }
-
-    @Test
-    public void isSupportedPCRShouldReturnTrueIfMissingMetadata()
-    {
-        final boolean supportedForPcr = LoginHint.isSupportedForPcr(null);
-
-        assertTrue(supportedForPcr);
-    }
-
-    @Test
-    public void isSupportedPCRShouldReturnTrueIfSupportedVersionIs1_2()
-    {
-        final ProviderMetadata providerMetadata = new ProviderMetadata.Builder()
-            .withMobileConnectVersionSupported(new SupportedVersions.Builder()
-                .addSupportedVersion(Scopes.MOBILE_CONNECT, "mc_v1.2")
-                .build())
-            .withLoginHintMethodsSupported(null)
-            .build();
-
-        final boolean supportedForPcr = LoginHint.isSupportedForPcr(providerMetadata);
-
-        assertTrue(supportedForPcr);
-    }
-
-    @Test
-    public void isSupportedForShouldReturnFalseIfUnrecognisedPrefixAndMissingMetadata()
-    {
-        final boolean supportedFor = LoginHint.isSupportedFor(null, "testprefix");
-
-        assertFalse(supportedFor);
-    }
-
-    @Test
-    public void isSupportedForShouldBeCaseInsensitive()
-    {
-        final ProviderMetadata providerMetadata = new ProviderMetadata.Builder()
-            .withLoginHintMethodsSupported(new ArrayList<String>(){{
-                add(LoginHintPrefixes.MSISDN.getName());
-            }})
-            .build();
-
-        final boolean supportedForMsisdn = LoginHint.isSupportedFor(providerMetadata, "msiSDN");
-
-        assertTrue(supportedForMsisdn);
-    }
-
     @Test
     public void generateForMSISDNShouldGenerateCorrectFormat()
     {
