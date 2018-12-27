@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -242,6 +243,9 @@ public final class StringUtils
     }
 
     public static List<String> convertToListBySpase(String initString) {
+        if (initString == null || initString.isEmpty()) {
+            return new ArrayList<>();
+        }
         return Arrays.asList(initString.split("\\s+"));
     }
 }
