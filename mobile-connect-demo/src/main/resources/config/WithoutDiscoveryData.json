@@ -3,7 +3,7 @@
   "clientSecret": "YjcyMzc5NjktOGY1Zi00NDNlLWEyMjYtYzZmZWZiMGRmYTQxOm9wZXJhdG9yLWI=",
   "clientName": "demoApp",
   "discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
-  "redirectURL": "http://3.8.5.176:8080/mobile-connect/server_side_api/discovery_callback",
+  "redirectURL": "http://172.19.2.20:8080/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "True",
   "apiVersion": "mc_di_r2_v2.3",
