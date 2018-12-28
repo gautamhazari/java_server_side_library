@@ -82,6 +82,8 @@ public class VersionDetectionTest {
                 {UNSUPPORTED, Scopes.MOBILE_CONNECT_IDENTITY_NATIONALID, LIST_V1_1_V1_0_V2_3, Version.MC_DI_R2_V2_3},
                 {UNSUPPORTED, Scopes.MOBILE_CONNECT_KYC_HASHED, LIST_V1_1_V1_0_V2_3, Version.MC_DI_R2_V2_3},
                 {UNSUPPORTED, Scopes.MOBILE_CONNECT_KYC_PLAIN, LIST_V1_1_V1_0_V2_3, Version.MC_DI_R2_V2_3},
+
+                {UNSUPPORTED, Scopes.MOBILE_CONNECT, LIST_V1_2, Version.MC_V1_2},
         };
     }
 
@@ -107,6 +109,7 @@ public class VersionDetectionTest {
                 {EMPTY, Scopes.MOBILE_CONNECT_KYC_HASHED, LIST_V1_1_V2_0},
                 {EMPTY, Scope.OPENID, LIST_V2_0_V2_3},
                 {EMPTY, null, LIST_V1_1_V1_0_V2_3},
+                {EMPTY, null, LIST_V1_2}
         };
     }
 

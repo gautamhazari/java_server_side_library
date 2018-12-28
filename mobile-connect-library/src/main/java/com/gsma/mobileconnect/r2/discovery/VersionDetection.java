@@ -27,6 +27,9 @@ public class VersionDetection {
                 return Version.MC_V2_0;
             } else if (supportedVersions.contains(Version.MC_V1_1) & containsOpenidScope(currentScopes) & currentScopes.size() == 1) {
                 return Version.MC_V1_1;
+            } else if(supportedVersions.contains(Version.MC_V1_2) & supportedVersions.size() == 1 & containsOpenidScope(currentScopes)) {
+                LOGGER.warn("Version is deprecated");
+                return Version.MC_V1_2;
             } else {
                 final InvalidScopeException scopeException = new InvalidScopeException(scope);
                 throw scopeException;
