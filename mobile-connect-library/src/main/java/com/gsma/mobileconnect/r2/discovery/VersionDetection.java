@@ -53,7 +53,8 @@ public class VersionDetection {
     }
 
     private static boolean containsScopesV1_1(List<String> currentScopes) {
-        return (containsOpenidScope(currentScopes) & currentScopes.size() == 1) || containsUniversalIndianScopes(currentScopes);
+        return (containsOpenidScope(currentScopes) & currentScopes.size() == 1) ||
+                (containsOpenidScope(currentScopes) & containsUniversalIndianScopes(currentScopes));
     }
 
     private static boolean containsScopesV2_0(List<String> currentScopes) {
