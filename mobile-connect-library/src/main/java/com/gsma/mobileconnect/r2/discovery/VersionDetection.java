@@ -27,7 +27,7 @@ public class VersionDetection {
                 return Version.MC_V2_0;
             } else if (supportedVersions.contains(Version.MC_V1_1) & containsScopesV1_1(currentScopes)) {
                 return Version.MC_V1_1;
-            } else if(supportedVersions.contains(Version.MC_V1_2) & supportedVersions.size() == 1 & containsOpenidScope(currentScopes)) {
+            } else if(supportedVersions.contains(Version.MC_V1_2) & supportedVersions.size() == 1 & containsScopesV2_0(currentScopes)) {
                 LOGGER.warn("Version is deprecated");
                 return Version.MC_V1_2;
             } else {
