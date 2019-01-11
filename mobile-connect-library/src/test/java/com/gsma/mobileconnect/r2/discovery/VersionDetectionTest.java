@@ -23,7 +23,6 @@ public class VersionDetectionTest {
             Version.MC_DI_R2_V2_3);
     private static final List<String> LIST_V1_1_V2_0 = Arrays.asList(Version.MC_V1_1, Version.MC_V2_0);
     private static final List<String> LIST_V1_1 = Arrays.asList(Version.MC_V1_1);
-    private static final List<String> LIST_V1_2 = Arrays.asList(Version.MC_V1_2);
     private static final List<String> LIST_V2_0 = Arrays.asList(Version.MC_V2_0);
     private static final List<String> LIST_V2_3 = Arrays.asList(Version.MC_DI_R2_V2_3);
 
@@ -32,13 +31,11 @@ public class VersionDetectionTest {
         return new Object[][] {
                 // version from config is supported
                 {Version.MC_V1_1, null, LIST_V1_1, Version.MC_V1_1},
-                {Version.MC_V1_2, null, LIST_V1_2, Version.MC_V1_2},
                 {Version.MC_V2_0, null, LIST_V2_0, Version.MC_V2_0},
                 {Version.MC_DI_R2_V2_3, null, LIST_V2_3, Version.MC_DI_R2_V2_3},
 
                 // version is supported but doesn't match with mc_version
                 {Version.MC_V1_1, null, LIST_V2_0, Version.MC_V1_1},
-                {Version.MC_V1_2, null, LIST_V2_0, Version.MC_V1_2},
                 {Version.MC_V2_0, null, LIST_V1_1, Version.MC_V2_0},
                 {Version.MC_DI_R2_V2_3, null, LIST_V2_0, Version.MC_DI_R2_V2_3},
 
@@ -82,8 +79,6 @@ public class VersionDetectionTest {
                 {UNSUPPORTED, Scopes.MOBILE_CONNECT_IDENTITY_NATIONALID, LIST_V1_1_V1_0_V2_3, Version.MC_DI_R2_V2_3},
                 {UNSUPPORTED, Scopes.MOBILE_CONNECT_KYC_HASHED, LIST_V1_1_V1_0_V2_3, Version.MC_DI_R2_V2_3},
                 {UNSUPPORTED, Scopes.MOBILE_CONNECT_KYC_PLAIN, LIST_V1_1_V1_0_V2_3, Version.MC_DI_R2_V2_3},
-
-                {UNSUPPORTED, Scopes.MOBILE_CONNECT, LIST_V1_2, Version.MC_V1_2},
         };
     }
 
@@ -108,8 +103,7 @@ public class VersionDetectionTest {
                 {EMPTY, Scopes.MOBILE_CONNECT_KYC_PLAIN, LIST_V1_1_V2_0},
                 {EMPTY, Scopes.MOBILE_CONNECT_KYC_HASHED, LIST_V1_1_V2_0},
                 {EMPTY, Scope.OPENID, LIST_V2_0_V2_3},
-                {EMPTY, null, LIST_V1_1_V1_0_V2_3},
-                {EMPTY, null, LIST_V1_2}
+                {EMPTY, null, LIST_V1_1_V1_0_V2_3}
         };
     }
 
