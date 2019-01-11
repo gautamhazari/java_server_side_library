@@ -25,7 +25,7 @@ public class VersionDetection {
                 return Version.MC_DI_R2_V2_3;
             } else if (supportedVersions.contains(Version.MC_V2_0) & containsScopesV2_0(currentScopes)) {
                 return Version.MC_V2_0;
-            } else if (supportedVersions.contains(Version.MC_V1_1) & containsOpenidScope(currentScopes) & currentScopes.size() == 1) {
+            } else if (supportedVersions.contains(Version.MC_V1_1) & containsScopesV1_1(currentScopes)) {
                 return Version.MC_V1_1;
             } else if(supportedVersions.contains(Version.MC_V1_2) & supportedVersions.size() == 1 & containsOpenidScope(currentScopes)) {
                 LOGGER.warn("Version is deprecated");
@@ -46,10 +46,21 @@ public class VersionDetection {
         return currentScopes.contains(Scope.OPENID);
     }
 
+    private static boolean containsUniversalIndianScopes(List<String> currentScopes) {
+        return currentScopes.contains(Scope.MC_INDIA_TC) || currentScopes.contains(Scope.MC_MNV_VALIDATE)
+                || currentScopes.contains(Scope.MC_MNV_VALIDATE_PLUS) || currentScopes.contains(Scope.MC_ATTR_VM_SHARE)
+                || currentScopes.contains(Scope.MC_ATTR_VM_SHARE_HASH);
+    }
+
+    private static boolean containsScopesV1_1(List<String> currentScopes) {
+        return (containsOpenidScope(currentScopes) & currentScopes.size() == 1) || containsUniversalIndianScopes(currentScopes);
+    }
+
     private static boolean containsScopesV2_0(List<String> currentScopes) {
         return containsOpenidScope(currentScopes) & (currentScopes.contains(Scope.AUTHN) || currentScopes.contains(Scope.AUTHZ) ||
                 currentScopes.contains(Scope.IDENTITY_PHONE) || currentScopes.contains(Scope.IDENTITY_NATIONALID) ||
-                currentScopes.contains(Scope.IDENTITY_SIGNUP) || currentScopes.contains(Scope.IDENTITY_SIGNUPPLUS));
+                currentScopes.contains(Scope.IDENTITY_SIGNUP) || currentScopes.contains(Scope.IDENTITY_SIGNUPPLUS) ||
+                containsUniversalIndianScopes(currentScopes));
     }
 
     private static boolean containsScopesV2_3(List<String> currentScopes) {

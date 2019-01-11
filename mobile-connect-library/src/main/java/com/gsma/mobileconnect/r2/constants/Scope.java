@@ -41,9 +41,16 @@ public class Scope
 
     public static final String KYC_PLAIN = "mc_kyc_plain";
     public static final String KYC_HASHED = "mc_kyc_hashed";
-    public static final String ATTR_VM_SHARE = "mc_attr_vm_share";
     public static final String ATTR_VM_MATCH = "mc_attr_vm_match";
     public static final String ATTR_VM_MATCH_HASH = "mc_attr_vm_match_hash";
+
+    public static final String MC_INDIA_TC = "mc_india_tc";
+    public static final String MC_MNV_VALIDATE = "mc_mnv_validate";
+    public static final String MC_MNV_VALIDATE_PLUS = "mc_mnv_validate_plus";
+    public static final String MC_ATTR_VM_SHARE = "mc_attr_vm_share";
+    public static final String MC_ATTR_VM_SHARE_HASH = "mc_attr_vm_share_hash";
+
+
 
     private Scope()
     {
