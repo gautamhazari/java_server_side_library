@@ -34,20 +34,30 @@ public class Scope
     public static final String OFFLINE_ACCESS = "offline_access";
 
     public static final String IDENTITY = "mc_identity";
-    public static final String IDENTITY_PHONE = "mc_identity_phonenumber";
+
+    public static final String IDENTITY_PHONENUMBER = "mc_identity_phonenumber";
+    public static final String PHONENUMBER = "mc_phonenumber";
+
     public static final String IDENTITY_SIGNUP = "mc_identity_signup";
+    public static final String SIGNUP = "mc_signup";
+
+
     public static final String IDENTITY_SIGNUPPLUS = "mc_identity_signupplus";
     public static final String IDENTITY_NATIONALID = "mc_identity_nationalid";
+    public static final String NATIONALID = "mc_nationalid";
 
     public static final String KYC_PLAIN = "mc_kyc_plain";
     public static final String KYC_HASHED = "mc_kyc_hashed";
     public static final String ATTR_VM_MATCH = "mc_attr_vm_match";
     public static final String ATTR_VM_MATCH_HASH = "mc_attr_vm_match_hash";
+    public static final String VM_MATCH = "mc_vm_match";
+    public static final String VM_MATCH_HASH = "mc_vm_match_hash";
 
     public static final String MC_INDIA_TC = "mc_india_tc";
     public static final String MC_MNV_VALIDATE = "mc_mnv_validate";
     public static final String MC_MNV_VALIDATE_PLUS = "mc_mnv_validate_plus";
     public static final String MC_ATTR_VM_SHARE = "mc_attr_vm_share";
+    public static final String MC_VM_SHARE = "mc_vm_share";
     public static final String MC_ATTR_VM_SHARE_HASH = "mc_attr_vm_share_hash";
 
 

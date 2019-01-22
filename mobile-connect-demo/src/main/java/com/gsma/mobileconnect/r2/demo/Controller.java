@@ -31,8 +31,8 @@ public class Controller {
     protected ConcurrentCache discoveryCache;
     protected RestClient restClient;
     protected OperatorParameters operatorParams = new OperatorParameters();
-    protected final String[] IDENTITY_SCOPES = {Scope.IDENTITY_PHONE, Scope.IDENTITY_SIGNUP,
-            Scope.IDENTITY_NATIONALID, Scope.IDENTITY_SIGNUPPLUS, Scope.KYC_HASHED, Scope.KYC_PLAIN};
+    protected final String[] IDENTITY_SCOPES = {Scope.IDENTITY_PHONENUMBER, Scope.PHONENUMBER, Scope.IDENTITY_SIGNUP,
+            Scope.SIGNUP, Scope.IDENTITY_NATIONALID, Scope.NATIONALID, Scope.IDENTITY_SIGNUPPLUS, Scope.KYC_HASHED, Scope.KYC_PLAIN};
     protected final String[] USERINFO_SCOPES = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
             Scope.PHONE, Scope.OFFLINE_ACCESS};
 

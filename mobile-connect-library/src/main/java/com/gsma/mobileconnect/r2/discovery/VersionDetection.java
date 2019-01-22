@@ -49,6 +49,7 @@ public class VersionDetection {
     private static boolean containsUniversalIndianScopes(List<String> currentScopes) {
         return currentScopes.contains(Scope.MC_INDIA_TC) || currentScopes.contains(Scope.MC_MNV_VALIDATE)
                 || currentScopes.contains(Scope.MC_MNV_VALIDATE_PLUS) || currentScopes.contains(Scope.MC_ATTR_VM_SHARE)
+                || currentScopes.contains(Scope.MC_VM_SHARE)
                 || currentScopes.contains(Scope.MC_ATTR_VM_SHARE_HASH);
     }
 
@@ -59,9 +60,12 @@ public class VersionDetection {
 
     private static boolean containsScopesV2_0(List<String> currentScopes) {
         return containsOpenidScope(currentScopes) & (currentScopes.contains(Scope.AUTHN) || currentScopes.contains(Scope.AUTHZ) ||
-                currentScopes.contains(Scope.IDENTITY_PHONE) || currentScopes.contains(Scope.IDENTITY_NATIONALID) ||
-                currentScopes.contains(Scope.IDENTITY_SIGNUP) || currentScopes.contains(Scope.IDENTITY_SIGNUPPLUS) ||
-                containsUniversalIndianScopes(currentScopes));
+                currentScopes.contains(Scope.IDENTITY_PHONENUMBER) || currentScopes.contains(Scope.PHONENUMBER) ||
+                currentScopes.contains(Scope.IDENTITY_NATIONALID) || currentScopes.contains(Scope.NATIONALID) ||
+                currentScopes.contains(Scope.IDENTITY_SIGNUP) || currentScopes.contains(Scope.SIGNUP) ||
+                currentScopes.contains(Scope.IDENTITY_SIGNUPPLUS) || containsUniversalIndianScopes(currentScopes) ||
+                currentScopes.contains(Scope.ATTR_VM_MATCH) || currentScopes.contains(Scope.VM_MATCH) ||
+                currentScopes.contains(Scope.ATTR_VM_MATCH_HASH) || currentScopes.contains(Scope.VM_MATCH_HASH));
     }
 
     private static boolean containsScopesV2_3(List<String> currentScopes) {
