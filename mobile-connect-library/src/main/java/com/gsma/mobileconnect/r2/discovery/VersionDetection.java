@@ -46,16 +46,19 @@ public class VersionDetection {
         return currentScopes.contains(Scope.OPENID);
     }
 
-    private static boolean containsUniversalIndianScopes(List<String> currentScopes) {
+    private static boolean containsUniversalScopes(List<String> currentScopes) {
         return currentScopes.contains(Scope.MC_INDIA_TC) || currentScopes.contains(Scope.MC_MNV_VALIDATE)
                 || currentScopes.contains(Scope.MC_MNV_VALIDATE_PLUS) || currentScopes.contains(Scope.MC_ATTR_VM_SHARE)
                 || currentScopes.contains(Scope.MC_VM_SHARE)
-                || currentScopes.contains(Scope.MC_ATTR_VM_SHARE_HASH);
+                || currentScopes.contains(Scope.MC_ATTR_VM_SHARE_HASH)
+                || currentScopes.contains(Scope.VM_MATCH)
+                || currentScopes.contains(Scope.VM_MATCH_HASH)
+                || currentScopes.contains(Scope.ATTR_VM_MATCH) || currentScopes.contains(Scope.ATTR_VM_MATCH_HASH);
     }
 
     private static boolean containsScopesV1_1(List<String> currentScopes) {
         return (containsOpenidScope(currentScopes) & currentScopes.size() == 1) ||
-                (containsOpenidScope(currentScopes) & containsUniversalIndianScopes(currentScopes));
+                (containsOpenidScope(currentScopes) & containsUniversalScopes(currentScopes));
     }
 
     private static boolean containsScopesV2_0(List<String> currentScopes) {
@@ -63,9 +66,7 @@ public class VersionDetection {
                 currentScopes.contains(Scope.IDENTITY_PHONENUMBER) || currentScopes.contains(Scope.PHONENUMBER) ||
                 currentScopes.contains(Scope.IDENTITY_NATIONALID) || currentScopes.contains(Scope.NATIONALID) ||
                 currentScopes.contains(Scope.IDENTITY_SIGNUP) || currentScopes.contains(Scope.SIGNUP) ||
-                currentScopes.contains(Scope.IDENTITY_SIGNUPPLUS) || containsUniversalIndianScopes(currentScopes) ||
-                currentScopes.contains(Scope.ATTR_VM_MATCH) || currentScopes.contains(Scope.VM_MATCH) ||
-                currentScopes.contains(Scope.ATTR_VM_MATCH_HASH) || currentScopes.contains(Scope.VM_MATCH_HASH));
+                currentScopes.contains(Scope.IDENTITY_SIGNUPPLUS) || containsUniversalScopes(currentScopes));
     }
 
     private static boolean containsScopesV2_3(List<String> currentScopes) {
