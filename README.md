@@ -7,11 +7,65 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
 
 ## Quick Start
 
+1. Clone reporitory
+
+2. Open the configuration file [local path]\mobile-connect-demo\src\main\resources\config\OperatorData.json for setup the SDK using discovery and set 11 parameters:
+```posh
+{
+  "clientID": your client Id,
+  "clientSecret": your client Secret,
+  "clientName": your client Name,
+  "discoveryURL": your Discovery endpoint,
+  "redirectURL": "<protocol>://<hostname>/server_side_api/discovery_callback",
+  "xRedirect": "True",
+  "includeRequestIP": "False",
+  "apiVersion": api version: "mc_v1.1", "mc_v2.0" or "mc_di_r2_v2.3",
+  "scope": scope,
+  "acrValues":  acr_values,
+  "MaxDiscoveryCacheSize": max cache size
+}
+```
+
+3. Open the configuration file [local path]\mobile-connect-demo\src\main\resources\config\WithoutDiscoveryData.json for setup the SDK in without discovery mode and set 17 parameters:
+```posh
+{
+  "clientID": your client Id,
+  "clientSecret": your client Secret,
+  "clientName": your client Name,
+  "discoveryURL": your Discovery endpoint,
+  "redirectURL": "<protocol>://<hostname>/server_side_api/discovery_callback",
+  "xRedirect": "True",
+  "includeRequestIP": "True",
+  "apiVersion": api version: "mc_v1.1", "mc_v2.0" or "mc_di_r2_v2.3",
+  "scope": scope,
+  "acrValues": acr_values,
+  "MaxDiscoveryCacheSize": max cache size,
+  "operatorUrls": {
+    "authorizationUrl": authorize endpoint,
+    "requestTokenUrl": token endpoint,
+    "userInfoUrl": userinfo endpoint,
+    "premiumInfoUri": premiuminfo endpoint,
+    "providerMetadataUri": provider metadata endpoint
+  }
+}
+```
+
+4. Open sector_identifier_uri.json file and specify the value of sector_identifier_uri with a single JSON array of redirect_uri values.
+```posh
+["<protocol>://<hostname>/server_side_api/discovery_callback"]
+```
+
+5. Download and install any missing dependencies.
+
+6. Build the server side SDK using Maven repository:
 ```posh
 cd java-server-side-sdk
 mvn clean package
 ```
-Deploy mobile-connect.war
+
+7. Deploy mobile-connect.war
+
+8. Prepare client side application (IOS or Android application) or Demo App for Server Side application.
 
 ## Support
 
