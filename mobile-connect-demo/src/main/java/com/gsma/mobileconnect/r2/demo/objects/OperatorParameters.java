@@ -13,7 +13,7 @@ public class OperatorParameters {
     private String apiVersion;
     private String scope;
     private String arcValues;
-    private long MaxDiscoveryCacheSize;
+    private long maxDiscoveryCacheSize;
     private OperatorUrls operatorUrls;
 
     public String getClientID() {
@@ -81,11 +81,11 @@ public class OperatorParameters {
     }
 
     public long getMaxDiscoveryCacheSize() {
-        return MaxDiscoveryCacheSize;
+        return maxDiscoveryCacheSize;
     }
 
-    public void setMaxDiscoveryCacheSize(long MaxDiscoveryCacheSize) {
-        this.MaxDiscoveryCacheSize = MaxDiscoveryCacheSize;
+    public void setMaxDiscoveryCacheSize(long maxDiscoveryCacheSize) {
+        this.maxDiscoveryCacheSize = maxDiscoveryCacheSize;
     }
 
     public String getArcValues() {

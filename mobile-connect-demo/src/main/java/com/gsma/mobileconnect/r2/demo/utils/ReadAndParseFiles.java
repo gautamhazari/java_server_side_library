@@ -17,7 +17,9 @@ import java.nio.file.Paths;
 public class ReadAndParseFiles {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReadAndParseFiles.class);
 
-    public static OperatorParameters ReadFile(String filePath)
+    private ReadAndParseFiles() {}
+
+    public static OperatorParameters readFile(String filePath)
     {
         OperatorParameters operatorParameters = null;
         try {
