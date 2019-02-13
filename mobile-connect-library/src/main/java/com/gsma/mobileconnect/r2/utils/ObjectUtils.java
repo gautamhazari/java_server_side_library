@@ -16,6 +16,8 @@
  */
 package com.gsma.mobileconnect.r2.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,6 +76,21 @@ public final class ObjectUtils
     public static <T> T defaultIfNull(final T obj, final T objDefault)
     {
         return obj != null ? obj : objDefault;
+    }
+
+    /**
+     * Convert object to string/
+     *
+     * @param obj        to convert
+     */
+    public static String convertToJsonString(Object obj)
+    {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        }
     }
 
 }

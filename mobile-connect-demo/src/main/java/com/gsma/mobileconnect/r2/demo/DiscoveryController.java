@@ -47,11 +47,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @since 2.0
@@ -85,7 +88,7 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.sessionCache, this.discoveryCache);
         this.getParameters();
 
-        if (StringUtils.isNullOrEmpty(sourceIp) & !ignoreIp) {
+        if (StringUtils.isNullOrEmpty(sourceIp) && !ignoreIp) {
             sourceIp = includeRequestIP ? HttpUtils.extractClientIp(request) : null;
         }
 
@@ -164,31 +167,6 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         return discoveryCache.get(StringUtils.formatKey(msisdn, mcc, mnc, sourceIp));
     }
 
-//    @GetMapping("start_manual_discovery_no_metadata")
-//    @ResponseBody
-//    @ResponseStatus(HttpStatus.FOUND)
-//    public MobileConnectWebResponse startAuthenticationNoMetadata(
-//            @RequestParam(required = false) final String subId,
-//            @RequestParam(required = false) final String clientId,
-//            @RequestParam(required = false) final String clientSecret,
-//            final HttpServletRequest request) throws JsonDeserializationException {
-//
-//        LOGGER.info("* Starting authentication for sdkSession={}, subscriberId={}, scope={}",
-//                LogUtils.mask(subId, LOGGER, Level.INFO), Scopes.MOBILE_CONNECT);
-//        OperatorUrls operatorUrlsWD = new OperatorUrls.Builder()
-//                .withAuthorizationUrl(operatorUrls.getAuthorizationUrl())
-//                .withRequestTokenUrl(operatorUrls.getRequestTokenUrl())
-//                .withUserInfoUrl(operatorUrls.getUserInfoUrl())
-//                .build();
-//        DiscoveryResponse discoveryResponse = this.mobileConnectWebInterface.generateDiscoveryManually(clientSecret,
-//                clientId, subId, "appName", operatorUrlsWD);
-//
-//        final MobileConnectStatus status =
-//                this.mobileConnectWebInterface.attemptManuallyDiscovery(discoveryResponse);
-//
-//        return new MobileConnectWebResponse(status);
-//    }
-
     @GetMapping({"start_authentication"})
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
@@ -230,8 +208,8 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
                         .withScope(scope)
-                        .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.BindingMsg : null)
+                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.BINDING_MSG : null)
                         .withClientName(clientName)
                         .build())
                 .build();
@@ -322,8 +300,8 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
+                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
                         .withClientName(clientName)
                         .build())
                 .build();
@@ -356,22 +334,25 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
     }
 
     @GetMapping(value = "discovery_callback")
-    @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
-    public MobileConnectWebResponse StateDiscoveryCallback(@RequestParam(required = false) String state,
-                                          @RequestParam(required = false) final String error,
-                                          @RequestParam(required = false) final String error_description,
-                                          @RequestParam(required = false) final String description,
-                                          final HttpServletRequest request)
+    public ModelAndView stateDiscoveryCallback(@RequestParam(required = false) String state,
+                                               @RequestParam(required = false) final String error,
+                                               @RequestParam(required = false) final String error_description,
+                                               @RequestParam(required = false) final String description,
+                                               final HttpServletRequest request)
     {
+
         if (error != null)
         {
-            return new MobileConnectWebResponse(MobileConnectStatus.error(error, ObjectUtils.defaultIfNull(description, error_description), new Exception()));
+            Map<String, Object> modelMap = new HashMap<>();
+            modelMap.put("status", new MobileConnectWebResponse(MobileConnectStatus.error(error,
+                    ObjectUtils.defaultIfNull(description, error_description), new Exception())));
+            return new ModelAndView("fail.html", modelMap);
         }
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
+                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
                         .withClientName(clientName)
                         .build())
                 .build();
@@ -381,8 +362,8 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri,
                 sessionData.getDiscoveryResponse(), state, sessionData.getNonce(), options, apiVersion);
 
-        if (apiVersion.equals(DefaultOptions.VERSION_MOBILECONNECT) & !StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getUserInfoUrl())) {
-            for (String userInfoScope : USERINFO_SCOPES) {
+        if (apiVersion.equals(DefaultOptions.VERSION_MOBILECONNECT) && !StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getUserInfoUrl())) {
+            for (String userInfoScope : userinfoScopes) {
                 if (operatorParams.getScope().contains(userInfoScope)) {
                     final MobileConnectStatus statusUserInfo =
                             this.mobileConnectWebInterface.requestUserInfo(request, sessionData.getDiscoveryResponse(),
@@ -392,8 +373,9 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                 }
             }
 
-        } else if ((apiVersion.equals(DefaultOptions.MC_V2_3) || apiVersion.equals(DefaultOptions.MC_V2_0)) & !StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getPremiumInfoUri())) {
-            for (String identityScope : IDENTITY_SCOPES) {
+        } else if ((apiVersion.equals(DefaultOptions.MC_V2_3) || apiVersion.equals(DefaultOptions.MC_V2_0))
+                && !StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getPremiumInfoUri())) {
+            for (String identityScope : identityScopes) {
                 if (operatorParams.getScope().contains(identityScope)) {
                     final MobileConnectStatus statusIdentity =
                             this.mobileConnectWebInterface.requestIdentity(request, sessionData.getDiscoveryResponse(),
@@ -404,7 +386,8 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
             }
         }
 
-        return new MobileConnectWebResponse(status);
+        LOGGER.info(ObjectUtils.convertToJsonString(status));
+        return new ModelAndView("success.html");
     }
 
     @GetMapping({"sector_identifier_uri", "sector_identifier_uri.json"})
@@ -412,24 +395,24 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
     @ResponseStatus(HttpStatus.FOUND)
     public JSONArray getSectorIdentifierUri()   {
         JSONArray jsonArray;
-        jsonArray = ReadAndParseFiles.readJsonArray(Constants.SectorIdentifierPath);
+        jsonArray = ReadAndParseFiles.readJsonArray(Constants.SECTOR_IDENTIFIER_PATH);
         if(jsonArray == null) {
-            jsonArray = ReadAndParseFiles.readJsonArray(Constants.SectorIdentifierPath.replace("file:/", ""));
+            jsonArray = ReadAndParseFiles.readJsonArray(Constants.SECTOR_IDENTIFIER_PATH.replace("file:/", ""));
         }
         if(jsonArray == null) {
-            jsonArray = ReadAndParseFiles.readJsonArray(Constants.SectorIdentifierPath.replace("file:", ""));
+            jsonArray = ReadAndParseFiles.readJsonArray(Constants.SECTOR_IDENTIFIER_PATH.replace("file:", ""));
         }
         return jsonArray;
     }
 
 
     private void getParameters() {
-        operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath);
+        operatorParams = ReadAndParseFiles.readFile(Constants.CONFIG_FILE_PATH);
         if(operatorParams == null) {
-            operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath.replace("file:/", ""));
+            operatorParams = ReadAndParseFiles.readFile(Constants.CONFIG_FILE_PATH.replace("file:/", ""));
         }
         if(operatorParams == null) {
-            operatorParams = ReadAndParseFiles.ReadFile(Constants.ConfigFilePath.replace("file:", ""));
+            operatorParams = ReadAndParseFiles.readFile(Constants.CONFIG_FILE_PATH.replace("file:", ""));
         }
 
         apiVersion = operatorParams.getApiVersion();
