@@ -224,11 +224,9 @@ public class DiscoveryService implements IDiscoveryService
                 if (discoveryResponse.getErrorResponse().getCorrelationId() == null)
                 {
                     LOGGER.warn("Error discovery response not contains correlation id");
-                    return discoveryResponse;
                 }
                 else if (discoveryResponse.getErrorResponse().getCorrelationId().equals(correlationId)) {
                     LOGGER.info("Error discovery response match correlation id");
-                    return discoveryResponse;
                 } else {
                     throw new IllegalStateException("Invalid correlation id in the error discovery response");
                 }
@@ -237,16 +235,15 @@ public class DiscoveryService implements IDiscoveryService
             {
                 if (discoveryResponse.getResponseData().getCorrelationId() == null) {
                     LOGGER.warn("Discovery response not contains correlation id");
-                    return discoveryResponse;
                 }
                 else if (discoveryResponse.getResponseData().getCorrelationId().equals(correlationId)) {
                     LOGGER.info("Discovery response match correlation id");
-                    return discoveryResponse;
                 } else {
                     throw new IllegalStateException("Invalid correlation id in the discovery response");
                 }
             }
         }
+        return discoveryResponse;
     }
 
     private DiscoveryResponse convertFromRestResponse(RestResponse restResponse,
