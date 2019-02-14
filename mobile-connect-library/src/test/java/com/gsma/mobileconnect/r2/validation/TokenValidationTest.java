@@ -33,7 +33,7 @@ public class TokenValidationTest
     private String nonce = "1234567890";
     private String clientId = "x-clientid-x";
     private String issuer = "http://mobileconnect.io";
-    private static final long maxAge = 300l * 24 * 60 * 60; //seconds
+    private static final long MAX_AGE = 300L * 24 * 60 * 60; //seconds
     private final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder =
         new DefaultEncodeDecoder();
     private final JacksonJsonService jacksonJsonService = new JacksonJsonService();
@@ -48,7 +48,7 @@ public class TokenValidationTest
 
         final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdToken(idToken, clientId, issuer, nonce, maxAge, jwKeyset,
+            TokenValidation.validateIdToken(idToken, clientId, issuer, nonce, MAX_AGE, jwKeyset,
                 jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.MAX_AGE_PASSED);
@@ -64,7 +64,7 @@ public class TokenValidationTest
 
         final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdToken(idToken, clientId, issuer, nonce, maxAge, jwKeyset,
+            TokenValidation.validateIdToken(idToken, clientId, issuer, nonce, MAX_AGE, jwKeyset,
                 jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.MAX_AGE_PASSED);
@@ -82,7 +82,7 @@ public class TokenValidationTest
 
         final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdToken(idToken, clientId, issuer, invalidNonce, maxAge,
+            TokenValidation.validateIdToken(idToken, clientId, issuer, invalidNonce, MAX_AGE,
                 jwKeyset, jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_NONCE);
@@ -97,13 +97,13 @@ public class TokenValidationTest
 
         final String idTokenEmpty = "";
         final TokenValidationResult tokenValidationResultEmpty =
-            TokenValidation.validateIdToken(idTokenEmpty, clientId, issuer, nonce, maxAge, jwKeyset,
+            TokenValidation.validateIdToken(idTokenEmpty, clientId, issuer, nonce, MAX_AGE, jwKeyset,
                 jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
         assertEquals(tokenValidationResultEmpty, TokenValidationResult.ID_TOKEN_MISSING);
 
         final String idTokenNull = null;
         final TokenValidationResult tokenValidationResultNull =
-            TokenValidation.validateIdToken(idTokenNull, clientId, issuer, nonce, maxAge, jwKeyset,
+            TokenValidation.validateIdToken(idTokenNull, clientId, issuer, nonce, MAX_AGE, jwKeyset,
                 jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
         assertEquals(tokenValidationResultNull, TokenValidationResult.ID_TOKEN_MISSING);
     }
@@ -217,7 +217,7 @@ public class TokenValidationTest
 
 
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenClaims(idToken, clientId, issuer, nonce, maxAge,
+            TokenValidation.validateIdTokenClaims(idToken, clientId, issuer, nonce, MAX_AGE,
                 jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.MAX_AGE_PASSED);
@@ -233,7 +233,7 @@ public class TokenValidationTest
 
 
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenClaims(idToken, clientId, issuer, invalidNonce, maxAge,
+            TokenValidation.validateIdTokenClaims(idToken, clientId, issuer, invalidNonce, MAX_AGE,
                 jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_NONCE);
@@ -249,7 +249,7 @@ public class TokenValidationTest
 
 
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenClaims(idToken, clientId, invalidIssuer, nonce, maxAge,
+            TokenValidation.validateIdTokenClaims(idToken, clientId, invalidIssuer, nonce, MAX_AGE,
                 jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_ISSUER);
@@ -263,7 +263,7 @@ public class TokenValidationTest
 
         final String invalid_clientid = "invalid_clientid";
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenClaims(idToken, invalid_clientid, issuer, nonce, maxAge,
+            TokenValidation.validateIdTokenClaims(idToken, invalid_clientid, issuer, nonce, MAX_AGE,
                 jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_AUD_AND_AZP);

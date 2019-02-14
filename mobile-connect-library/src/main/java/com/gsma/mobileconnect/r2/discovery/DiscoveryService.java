@@ -17,7 +17,6 @@
 package com.gsma.mobileconnect.r2.discovery;
 
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
-import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.ICache;
 import com.gsma.mobileconnect.r2.constants.LinkRels;
 import com.gsma.mobileconnect.r2.constants.Parameters;

@@ -5,4 +5,6 @@ public class Status {
     public static final String AUTHORISATION = "Authorisation";
     public static final String TOKEN = "Token";
     public static final String PREMIUMINFO = "PremiumInfo";
+
+    private Status() {}
 }
