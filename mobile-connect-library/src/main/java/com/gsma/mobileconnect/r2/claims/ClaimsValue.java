@@ -35,7 +35,7 @@ public class ClaimsValue
 
     private ClaimsValue(Builder builder)
     {
-        this.essential = Boolean.TRUE == builder.essential ? Boolean.TRUE : null;
+        this.essential = Boolean.TRUE.equals(builder.essential) ? Boolean.TRUE : null;
         this.value = builder.value;
         this.values = builder.values;
     }

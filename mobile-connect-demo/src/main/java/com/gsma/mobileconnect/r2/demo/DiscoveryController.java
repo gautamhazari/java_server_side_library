@@ -28,6 +28,7 @@ import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Headers;
 import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.constants.Scope;
+import com.gsma.mobileconnect.r2.demo.objects.Status;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
@@ -344,10 +345,8 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
 
         if (error != null)
         {
-            Map<String, Object> modelMap = new HashMap<>();
-            modelMap.put("status", new MobileConnectWebResponse(MobileConnectStatus.error(error,
-                    ObjectUtils.defaultIfNull(description, error_description), new Exception())));
-            return new ModelAndView("fail.html", modelMap);
+            return redirectToView(MobileConnectStatus.error(error,
+                    ObjectUtils.defaultIfNull(description, error_description), new Exception()), Status.AUTHENTICATION);
         }
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
@@ -384,10 +383,22 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                     break;
                 }
             }
+        } else {
+            return redirectToView(status, Status.TOKEN);
         }
 
+        return redirectToView(status, Status.PREMIUMINFO);
+    }
+
+    private ModelAndView redirectToView(MobileConnectStatus status, String operationStatus) {
+        Map<String, Object> modelMap = new HashMap<>();
         LOGGER.info(ObjectUtils.convertToJsonString(status));
-        return new ModelAndView("success.html");
+        modelMap.put("operation", operationStatus);
+        if (status.getErrorCode() != null) {
+            modelMap.put("status", new MobileConnectWebResponse(status));
+            return new ModelAndView(Constants.FAIL_HTML_PAGE, modelMap);
+        }
+        return new ModelAndView(Constants.SUCCESS_HTML_PAGE, modelMap);
     }
 
     @GetMapping({"sector_identifier_uri", "sector_identifier_uri.json"})

@@ -2,11 +2,14 @@ package com.gsma.mobileconnect.r2.cache;
 
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DiscoveryCache extends ConcurrentCache {
     protected DiscoveryCache(Builder builder) {
         super(builder);
     }
+    private static final Logger LOGGER = LoggerFactory.getLogger(DiscoveryCache.class);
 
     public DiscoveryResponse get(String key) {
         DiscoveryResponse discoveryResp = null;
@@ -16,10 +19,10 @@ public class DiscoveryCache extends ConcurrentCache {
         try {
             discoveryResp = this.get(key, DiscoveryResponse.class);
         } catch (CacheAccessException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage());
         }
 
-        if (discoveryResp.hasExpired()) {
+        if (discoveryResp != null && discoveryResp.hasExpired()) {
             this.remove(key);
             return null;
         }
@@ -31,7 +34,7 @@ public class DiscoveryCache extends ConcurrentCache {
         try {
             return this.get(key, DiscoveryResponse.class) != null;
         } catch (CacheAccessException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage());
             return false;
         }
     }
