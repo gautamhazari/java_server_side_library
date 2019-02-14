@@ -307,9 +307,9 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                         .build())
                 .build();
 
-        String[] mcc_mncArray = mcc_mnc.split("_");
-        String mcc = mcc_mncArray[0];
-        String mnc = mcc_mncArray[1];
+        String[] mccMncArray = mcc_mnc.split("_");
+        String mcc = mccMncArray[0];
+        String mnc = mccMncArray[1];
 
         MobileConnectStatus status = this.mobileConnectWebInterface.attemptDiscovery(request, null, mcc, mnc, true, mobileConnectConfig.getIncludeRequestIp(), options);
 
@@ -342,12 +342,18 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                                                @RequestParam(required = false) final String description,
                                                final HttpServletRequest request)
     {
-
+        String operationStatus;
         if (error != null)
         {
+            if (operatorParams.getScope().contains(Scope.AUTHN) || operatorParams.getScope().equals(Scope.OPENID)) {
+                operationStatus = Status.AUTHENTICATION;
+            } else {
+                operationStatus = Status.AUTHORISATION;
+            }
             return redirectToView(MobileConnectStatus.error(error,
-                    ObjectUtils.defaultIfNull(description, error_description), new Exception()), Status.AUTHENTICATION);
+                    ObjectUtils.defaultIfNull(description, error_description), new Exception()), operationStatus);
         }
+
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
                         .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)

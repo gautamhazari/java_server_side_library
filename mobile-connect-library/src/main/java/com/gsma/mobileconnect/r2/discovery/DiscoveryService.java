@@ -62,7 +62,6 @@ public class DiscoveryService implements IDiscoveryService
     private final IJsonService jsonService;
     private final IRestClient restClient;
     private final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder;
-    private static ConcurrentCache discoveryCache;
 
     private DiscoveryService(final Builder builder)
     {
@@ -219,31 +218,33 @@ public class DiscoveryService implements IDiscoveryService
 
         updateWithProviderMetadata(discoveryResponse, useCache);
 
-        if (discoveryResponse.getErrorResponse() != null)
-        {
-            if (discoveryResponse.getErrorResponse().getCorrelationId() == null)
+        if (discoveryResponse != null) {
+            if (discoveryResponse.getErrorResponse() != null)
             {
-                LOGGER.warn("Error discovery response not contains correlation id");
-                return discoveryResponse;
+                if (discoveryResponse.getErrorResponse().getCorrelationId() == null)
+                {
+                    LOGGER.warn("Error discovery response not contains correlation id");
+                    return discoveryResponse;
+                }
+                else if (discoveryResponse.getErrorResponse().getCorrelationId().equals(correlationId)) {
+                    LOGGER.info("Error discovery response match correlation id");
+                    return discoveryResponse;
+                } else {
+                    throw new IllegalStateException("Invalid correlation id in the error discovery response");
+                }
             }
-            else if (discoveryResponse.getErrorResponse().getCorrelationId().equals(correlationId)) {
-                LOGGER.info("Error discovery response match correlation id");
-                return discoveryResponse;
-            } else {
-                throw new IllegalStateException("Invalid correlation id in the error discovery response");
-            }
-        }
-        else
-        {
-            if (discoveryResponse.getResponseData().getCorrelationId() == null) {
-                LOGGER.warn("Discovery response not contains correlation id");
-                return discoveryResponse;
-            }
-            else if (discoveryResponse.getResponseData().getCorrelationId().equals(correlationId)) {
-                LOGGER.info("Discovery response match correlation id");
-                return discoveryResponse;
-            } else {
-                throw new IllegalStateException("Invalid correlation id in the discovery response");
+            else
+            {
+                if (discoveryResponse.getResponseData().getCorrelationId() == null) {
+                    LOGGER.warn("Discovery response not contains correlation id");
+                    return discoveryResponse;
+                }
+                else if (discoveryResponse.getResponseData().getCorrelationId().equals(correlationId)) {
+                    LOGGER.info("Discovery response match correlation id");
+                    return discoveryResponse;
+                } else {
+                    throw new IllegalStateException("Invalid correlation id in the discovery response");
+                }
             }
         }
     }
@@ -510,14 +511,7 @@ public class DiscoveryService implements IDiscoveryService
         if (result.getResponseData() != null)
         {
             final Link link =
-                    ListUtils.firstMatch(result.getResponseData().getLinks(), new Predicate<Link>()
-                    {
-                        @Override
-                        public boolean apply(final Link input)
-                        {
-                            return LinkRels.OPERATOR_SELECTION.equalsIgnoreCase(input.getRel());
-                        }
-                    });
+                    ListUtils.firstMatch(result.getResponseData().getLinks(), input -> LinkRels.OPERATOR_SELECTION.equalsIgnoreCase(input.getRel()));
 
             if (link != null)
             {

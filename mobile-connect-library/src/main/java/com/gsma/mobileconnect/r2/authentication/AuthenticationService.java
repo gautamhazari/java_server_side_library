@@ -510,7 +510,7 @@ public class AuthenticationService implements IAuthenticationService
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage());
         }
 
         final RestResponse post_response = new RestResponse.Builder()

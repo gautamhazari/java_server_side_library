@@ -2,11 +2,14 @@ package com.gsma.mobileconnect.r2.cache;
 
 import com.gsma.mobileconnect.r2.discovery.SessionData;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SessionCache extends ConcurrentCache {
     protected SessionCache(Builder builder) {
         super(builder);
     }
+    private static final Logger LOGGER = LoggerFactory.getLogger(SessionCache.class);
 
     public SessionData get(String key) {
         SessionData sessionData = null;
@@ -16,14 +19,10 @@ public class SessionCache extends ConcurrentCache {
         try {
             sessionData = this.get(key, SessionData.class);
         } catch (CacheAccessException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage());
         }
         this.remove(key);
 
-//        if (sessionData.hasExpired()) {
-//            this.remove(key);
-//            return null;
-//        }
         return sessionData;
     }
 
@@ -32,7 +31,7 @@ public class SessionCache extends ConcurrentCache {
         try {
             return this.get(key, SessionData.class) != null;
         } catch (CacheAccessException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage());
             return false;
         }
     }

@@ -33,7 +33,7 @@ public class TokenValidationTest
     private String nonce = "1234567890";
     private String clientId = "x-clientid-x";
     private String issuer = "http://mobileconnect.io";
-    private final long maxAge = 300 * 24 * 60 * 60; //seconds
+    private static final long maxAge = 300l * 24 * 60 * 60; //seconds
     private final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder =
         new DefaultEncodeDecoder();
     private final JacksonJsonService jacksonJsonService = new JacksonJsonService();

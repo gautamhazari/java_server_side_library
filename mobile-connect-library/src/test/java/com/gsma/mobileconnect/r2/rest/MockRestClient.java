@@ -20,6 +20,8 @@ import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.utils.KeyValuePair;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,7 +40,8 @@ import static org.testng.Assert.fail;
  */
 public class MockRestClient implements IRestClient
 {
-    private final Queue<Object> queue = new ConcurrentLinkedQueue<Object>();
+    private final Queue<Object> queue = new ConcurrentLinkedQueue<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(MockRestClient.class);
 
     /**
      * Queue a response.
@@ -88,7 +91,7 @@ public class MockRestClient implements IRestClient
      */
     public List<Object> reset()
     {
-        final List<Object> remaining = new ArrayList<Object>();
+        final List<Object> remaining = new ArrayList<>();
         while (!this.queue.isEmpty())
         {
             remaining.add(this.queue.poll());
@@ -157,7 +160,7 @@ public class MockRestClient implements IRestClient
         }
         catch (URISyntaxException e)
         {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage());
             throw new RequestFailedException("GET", redirectUrl, e);
         }
     }
