@@ -144,7 +144,7 @@ public class AuthenticationService implements IAuthenticationService
                             kycClaims.getAddressHashed(), kycClaims.getHousenoOrHousenameHashed(), kycClaims.getPostalCodeHashed(),
                             kycClaims.getCountryHashed(), kycClaims.getTownHashed());
                 }
-                if ((isNamePresent & !isAddressPresent) | (!isNamePresent & isAddressPresent)) {
+                if ((isNamePresent && !isAddressPresent) || (!isNamePresent && isAddressPresent)) {
                     throw new InvalidArgumentException("(split|concatenated, plain|hashed) name or address is empty",
                             InvalidArgumentException.Disallowed.NULL_OR_EMPTY);
                 }

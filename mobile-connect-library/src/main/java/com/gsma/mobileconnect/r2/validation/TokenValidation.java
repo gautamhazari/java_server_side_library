@@ -302,7 +302,7 @@ public class TokenValidation
         Object aud = claims.get(ClaimsConstants.AUD).getValue();
         Object[] audArray = claims.get(ClaimsConstants.AUD).getValues();
         Object azp = claims.get(ClaimsConstants.AZP).getValue();
-        if (aud == null & audArray == null) {
+        if (aud == null && audArray == null) {
             return false;
         }
         if (audArray != null) {
