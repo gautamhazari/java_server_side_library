@@ -20,11 +20,11 @@
   </header>
       
   <header class="page__header">
-    <h1 class="page__heading" th:text="'' + ${operation} + ' Error'"></h1>
+    <h1 id="fail" class="page__heading" th:text="'' + ${operation} + ' Error'"></h1>
 	<main align="left">
         <p th:text="'Error occurred while ' + ${operation} + '.'"></p>
-        <p th:text="'Error: ' + ${status.error} + ''"></p>
-        <p th:text="'Error description: ' + ${status.description} + ''"></p>
+        <p id="error" th:text="'Error: ' + ${status.error} + ''"></p>
+        <p id="description" th:text="'Error description: ' + ${status.description} + ''"></p>
  </main>
 
   </header>
