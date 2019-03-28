@@ -2,7 +2,6 @@ package com.gsma.mobileconnect.r2.demo.utils;
 
 public class Constants {
         public static final String CONFIG_FILE_PATH = Thread.currentThread().getContextClassLoader().getResource("OperatorData.json").toString();
-        public static final String WD_CONFIG_FILE_PATH = Thread.currentThread().getContextClassLoader().getResource("WithoutDiscoveryData.json").toString();
         public static final String SECTOR_IDENTIFIER_PATH = Thread.currentThread().getContextClassLoader().getResource("sector_identifier_uri.json").toString();
         public static final String VERSION_1_1 = "mc_v1.1";
         public static final String VERSION_2_0 = "mc_v2.0";

@@ -23,7 +23,6 @@ public class Controller {
     protected MobileConnectWebInterface mobileConnectWebInterface;
     protected String clientName;
     protected String apiVersion;
-    protected OperatorUrls operatorUrls;
     protected boolean includeRequestIP;
     protected ConcurrentCache discoveryCache;
     protected RestClient restClient;

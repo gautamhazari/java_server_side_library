@@ -332,11 +332,17 @@ public class DiscoveryResponse extends AbstractCacheable
                     }
                 }
             }
+            String url = null;
+            if (this.errorResponse != null) {
+                url = errorResponse.getErrorUri();
+            }
 
             if (!StringUtils.isNullOrEmpty(this.responseData.getError()))
             {
                 this.errorResponse = new ErrorResponse.Builder()
                         .withError(this.responseData.getError())
+                        .withErrorUri(url)
+                        .withErrorDescription(this.responseData.getDescription())
                         .withErrorDescription(this.responseData.getDescription())
                         .withCorrelationId(this.responseData.getCorrelationId())
                         .build();

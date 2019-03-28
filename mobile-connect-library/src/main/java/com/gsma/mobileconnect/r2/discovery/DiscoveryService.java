@@ -16,6 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
+import com.gsma.mobileconnect.r2.ErrorResponse;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ICache;
 import com.gsma.mobileconnect.r2.constants.LinkRels;
@@ -24,6 +25,7 @@ import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
+import com.gsma.mobileconnect.r2.json.DiscoveryResponseData;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.json.Link;
@@ -204,6 +206,15 @@ public class DiscoveryService implements IDiscoveryService
                 }
             }
             discoveryResponse = convertFromRestResponse(restResponse, cachedDiscoveryResponse);
+            if (discoveryResponse.getErrorResponse() != null) {
+                discoveryResponse = new DiscoveryResponse.Builder(discoveryResponse).withErrorResponse(new ErrorResponse
+                        .Builder(discoveryResponse.getErrorResponse()).withErrorUri(restResponse.getUri().toString()).build()).build();
+                ErrorResponse errorResponse = new ErrorResponse
+                        .Builder(discoveryResponse.getErrorResponse()).withErrorUri(restResponse.getUri().toString()).build();
+                System.out.println(errorResponse.getError());
+                discoveryResponse = new DiscoveryResponse.Builder(discoveryResponse).withErrorResponse(errorResponse).build();
+                System.out.println(discoveryResponse.getErrorResponse().getError());
+            }
 
             this.addCachedDiscoveryResponse(options, discoveryResponse);
         }

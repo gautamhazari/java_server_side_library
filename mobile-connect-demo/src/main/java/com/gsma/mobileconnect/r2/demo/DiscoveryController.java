@@ -105,6 +105,10 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                 if (status.getUrl() != null) {
                     return new RedirectView(status.getUrl(), true);
                 }
+                if (status.getDiscoveryResponse() != null && status.getDiscoveryResponse().getErrorResponse() != null &&
+                status.getDiscoveryResponse().getErrorResponse().getErrorUri() != null) {
+                    return new RedirectView(status.getDiscoveryResponse().getErrorResponse().getErrorUri(), true);
+                }
                 else {
                     return startDiscovery(null, null, null, null, true, request);
                 }
