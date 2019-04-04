@@ -227,22 +227,6 @@ public class DiscoveryServiceTest
     }
 
     @Test
-    public void completeSelectedOperatorDiscoveryShouldHandleErrorResponse()
-        throws RequestFailedException, InvalidResponseException
-    {
-        restClient.addResponse(TestUtils.NOT_FOUND_RESPONSE);
-
-        final DiscoveryResponse discoveryResponse =
-            discoveryService.completeSelectedOperatorDiscovery(config, REDIRECT_URL, "901", "01");
-
-        assertNotNull(discoveryResponse);
-        assertEquals(discoveryResponse.getResponseCode(), HttpStatus.SC_OK);
-        assertNotNull(discoveryResponse.getResponseData());
-        assertNotNull(discoveryResponse.getErrorResponse());
-        assertFalse(discoveryResponse.isCached());
-    }
-
-    @Test
     public void completeSelectedOperatorDiscoveryShouldUseCachedResponsesIfCacheSupplied()
         throws RequestFailedException, InvalidResponseException
     {
