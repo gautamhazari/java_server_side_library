@@ -1,0 +1,20 @@
+{
+  "clientID": "",
+  "clientSecret": "",
+  "clientName": "",
+  "discoveryURL": "",
+  "redirectURL": "",
+  "xRedirect": "",
+  "includeRequestIP": "",
+  "apiVersion": "",
+  "scope": "",
+  "acrValues": "",
+  "MaxDiscoveryCacheSize": 104857600,
+  "operatorUrls": {
+    "authorizationUrl": "",
+    "requestTokenUrl": "",
+    "userInfoUrl": "",
+    "premiumInfoUri": "",
+    "providerMetadataUri": ""
+  }
+}

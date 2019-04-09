@@ -21,13 +21,11 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
+import com.gsma.mobileconnect.r2.authentication.LoginHint;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
-import com.gsma.mobileconnect.r2.constants.DefaultOptions;
-import com.gsma.mobileconnect.r2.constants.Headers;
-import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.constants.Scope;
+import com.gsma.mobileconnect.r2.constants.*;
 import com.gsma.mobileconnect.r2.demo.objects.Status;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
@@ -210,9 +208,16 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
     {
         String scope = operatorParams.getScope();
 
+        String loginHint = null;
+
+        if (StringUtils.isNullOrEmpty(subscriberId)) {
+            loginHint = LoginHint.generateFor(LoginHintPrefixes.MSISDN.getName(), msisdn);
+        }
+
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
                         .withScope(scope)
+                        .withLoginHint(loginHint)
                         .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
                         .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.BINDING_MSG : null)
                         .withClientName(clientName)
