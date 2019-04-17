@@ -160,6 +160,8 @@ public class AuthenticationService implements IAuthenticationService
                                     currentVersion, loginHint))
                     .build();
 
+            LOGGER.info("Auth uri", uri.toString());
+
             return new StartAuthenticationResponse(uri);
         }
         catch (final URISyntaxException use)

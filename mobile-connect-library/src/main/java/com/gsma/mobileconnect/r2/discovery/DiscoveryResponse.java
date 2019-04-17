@@ -49,6 +49,7 @@ public class DiscoveryResponse extends AbstractCacheable
     private final OperatorUrls operatorUrls;
     private final String clientName;
     private ProviderMetadata providerMetadata;
+    private String sourseResponse;
 
 
     private DiscoveryResponse(Builder builder)
@@ -61,6 +62,7 @@ public class DiscoveryResponse extends AbstractCacheable
         this.providerMetadata = builder.providerMetadata;
         this.operatorUrls = builder.operatorUrls;
         this.clientName = builder.clientName;
+        this.sourseResponse = builder.sourseResponse;
 
         if (this.operatorUrls != null && this.providerMetadata != null)
         {
@@ -89,7 +91,12 @@ public class DiscoveryResponse extends AbstractCacheable
             .withHeaders(restResponse.getHeaders())
             .withTtl(calculateTtl(responseData.getTtl()))
             .withResponseData(responseData)
+            .withSourceResponse(restResponse.getContent())
             .build();
+    }
+
+    public String getSourceResponse() {
+        return sourseResponse;
     }
 
     /**
@@ -241,6 +248,7 @@ public class DiscoveryResponse extends AbstractCacheable
         private ProviderMetadata providerMetadata = null;
         private OperatorUrls operatorUrls = null;
         private String clientName = null;
+        private String sourseResponse = null;
 
         public Builder()
         {
@@ -259,12 +267,19 @@ public class DiscoveryResponse extends AbstractCacheable
                 this.providerMetadata = response.providerMetadata;
                 this.operatorUrls = response.operatorUrls;
                 this.clientName = response.clientName;
+                this.sourseResponse = response.sourseResponse;
             }
         }
 
         public Builder withTtl(final Date val)
         {
             this.ttl = val;
+            return this;
+        }
+
+        public Builder withSourceResponse(final String val)
+        {
+            this.sourseResponse = val;
             return this;
         }
 
