@@ -10,8 +10,6 @@ public class OperatorParameters {
     private String redirectURL;
     private String xRedirect;
     private String includeRequestIP;
-    private String apiVersion;
-    private String scope;
     private String arcValues;
     private long maxDiscoveryCacheSize;
     private OperatorUrls operatorUrls;
@@ -62,22 +60,6 @@ public class OperatorParameters {
 
     public void setIncludeRequestIP(String includeRequestIP) {
         this.includeRequestIP = includeRequestIP;
-    }
-
-    public String getApiVersion() {
-        return apiVersion;
-    }
-
-    public void setApiVersion(String apiVersion) {
-        this.apiVersion = apiVersion;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
     }
 
     public long getMaxDiscoveryCacheSize() {

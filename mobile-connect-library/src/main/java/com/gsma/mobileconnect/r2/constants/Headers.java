@@ -27,6 +27,10 @@ public final class Headers
      * Key for Source Ip Header
      */
     public static final String X_SOURCE_IP = "X-Source-IP";
+    /**
+     * Key for Source Ip Header
+     */
+    public static final String X_REQUEST_ID = "X-Request-ID";
 
     /**
      * Key for Set Cookie Header

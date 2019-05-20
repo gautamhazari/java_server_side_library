@@ -69,17 +69,11 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
 
         String url;
 
-        if (operatorParams.getScope().contains(Scope.AUTHZ)) {
-            url = startAuthorize(
+        url = startAuthorize(
                     discoveryResponse,
                     msisdn,
                     request);
-        } else {
-            url = startAuthentication(
-                    discoveryResponse,
-                    msisdn,
-                    request);
-        }
+
 
         return new RedirectView(url);
     }
@@ -117,7 +111,7 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
             @RequestParam(required = false) final DiscoveryResponse discoveryResponse,
             @RequestParam(required = false) final String msisdn, final HttpServletRequest request)
     {
-        String scope = operatorParams.getScope();
+
         String loginHint = null;
 
         if (!StringUtils.isNullOrEmpty(msisdn)) {
@@ -126,16 +120,16 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withScope(scope)
-                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
-                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.BINDING_MSG : null)
+                        .withScope("")
+//                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
+//                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.BINDING_MSG : null)
                         .withClientName(clientName)
                         .withLoginHint(loginHint)
                         .build())
                 .build();
         final MobileConnectStatus status =
                 this.mobileConnectWebInterface.startAuthentication(request, discoveryResponse, null,
-                        null, null, options, apiVersion);
+                        null, null, options, "");
 
         if (status.getErrorMessage() != null) {
             return null;
@@ -162,7 +156,7 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
             operatorParams = ReadAndParseFiles.readFile(Constants.WD_CONFIG_FILE_PATH.replace("file:", ""));
         }
 
-        apiVersion = operatorParams.getApiVersion();
+
         includeRequestIP = operatorParams.getIncludeRequestIP().equals("True");
         operatorUrls = operatorParams.getOperatorUrls();
         sessionCache = new SessionCache.Builder()

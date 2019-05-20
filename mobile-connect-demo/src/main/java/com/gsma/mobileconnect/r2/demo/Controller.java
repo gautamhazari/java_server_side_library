@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "server_side_api"/*, produces = MediaType.APPLICATION_JSON_UTF8_VALUE*/)
 public class Controller {
     protected ConcurrentCache sessionCache;
+    protected ConcurrentCache scopeSessionCache;
     protected MobileConnectConfig mobileConnectConfig;
     protected final IJsonService jsonService;
     protected MobileConnectWebInterface mobileConnectWebInterface;
     protected String clientName;
-    protected String apiVersion;
     protected OperatorUrls operatorUrls;
     protected boolean includeRequestIP;
     protected ConcurrentCache discoveryCache;
