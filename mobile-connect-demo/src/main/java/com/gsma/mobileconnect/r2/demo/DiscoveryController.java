@@ -119,9 +119,12 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                 if (status.getUrl() != null) {
                     return new RedirectView(status.getUrl(), true);
                 }
-                else {
-                    return startDiscovery(null, null, null, null, true, scope, version, discovery, request);
+                if (!ignoreIp) {
+                    return startDiscovery(msisdn, mcc, mnc, null, true, scope, version, discovery, request);
                 }
+                return new RedirectView("discovery_callback?state=" + status.getState() + "&error="
+                            + status.getErrorCode() + "&error_description=" + status.getErrorMessage());
+
             }
         }
 
@@ -233,8 +236,8 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         System.out.println(status.getUrl());
 
         if (status.getErrorMessage() != null || status.getErrorCode() != null) {
-            ErrorResponse errorResponse = new ErrorResponse.Builder().withError(status.getErrorCode()).withErrorDescription(status.getErrorMessage()).build();
-            return new RedirectView("discovery_callback?state=" + status.getState() + "&error=" + status.getErrorCode() + "&mnc=" + mnc + "&sourceIp=" + null).getUrl();
+            return new RedirectView("discovery_callback?state=" + status.getState() + "&error="
+                    + status.getErrorCode() + "&error_description=" + status.getErrorMessage()).getUrl();
         }
         setSessionCache(status, msisdn, mcc, mnc, sourceIp, scope, version);
 
@@ -370,7 +373,12 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         String operationStatus;
         if (error != null)
         {
-            if (sessionData.getScope().contains(Scope.AUTHN) || sessionData.getScope().equals(Scope.OPENID)) {
+            if (sessionData == null)
+            {
+                operationStatus = Status.DISCOVERY;
+
+            }
+            else if (sessionData.getScope().contains(Scope.AUTHN) || sessionData.getScope().equals(Scope.OPENID)) {
                 operationStatus = Status.AUTHENTICATION;
             } else {
                 operationStatus = Status.AUTHORISATION;
