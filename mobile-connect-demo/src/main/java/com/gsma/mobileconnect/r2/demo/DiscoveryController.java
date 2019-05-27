@@ -16,10 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.demo;
 
-import com.gsma.mobileconnect.r2.MobileConnect;
-import com.gsma.mobileconnect.r2.MobileConnectConfig;
-import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
-import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.*;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
@@ -233,8 +230,11 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                 this.mobileConnectWebInterface.startAuthentication(request, discoveryResponse, subscriberId,
                         null, null, options, version);
 
-        if (status.getErrorMessage() != null) {
-            return null;
+        System.out.println(status.getUrl());
+
+        if (status.getErrorMessage() != null || status.getErrorCode() != null) {
+            ErrorResponse errorResponse = new ErrorResponse.Builder().withError(status.getErrorCode()).withErrorDescription(status.getErrorMessage()).build();
+            return new RedirectView("discovery_callback?state=" + status.getState() + "&error=" + status.getErrorCode() + "&mnc=" + mnc + "&sourceIp=" + null).getUrl();
         }
         setSessionCache(status, msisdn, mcc, mnc, sourceIp, scope, version);
 
@@ -288,34 +288,34 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         return new MobileConnectWebResponse(status);
     }
 
-    @GetMapping("refresh_token")
-    @ResponseBody
-    public MobileConnectWebResponse refreshToken(
-            @RequestParam(required = false) final String sdkSession,
-            @RequestParam(required = false) final String refreshToken, final HttpServletRequest request) {
-        LOGGER.info("* Calling refresh token for sdkSession={}, refreshToken={}", sdkSession,
-                LogUtils.mask(refreshToken, LOGGER, Level.INFO));
-
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.refreshToken(request, refreshToken, sdkSession);
-
-        return new MobileConnectWebResponse(status);
-    }
-
-    @GetMapping("revoke_token")
-    @ResponseBody
-    public MobileConnectWebResponse revokeToken(
-            @RequestParam(required = false) final String sdkSession,
-            @RequestParam(required = false) final String accessToken, final HttpServletRequest request) {
-        LOGGER.info("* Calling revoke token for sdkSession={}, accessToken={}", sdkSession,
-                LogUtils.mask(accessToken, LOGGER, Level.INFO));
-
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.revokeToken(request, accessToken,
-                        Parameters.ACCESS_TOKEN_HINT, sdkSession);
-
-        return new MobileConnectWebResponse(status);
-    }
+//    @GetMapping("refresh_token")
+//    @ResponseBody
+//    public MobileConnectWebResponse refreshToken(
+//            @RequestParam(required = false) final String sdkSession,
+//            @RequestParam(required = false) final String refreshToken, final HttpServletRequest request) {
+//        LOGGER.info("* Calling refresh token for sdkSession={}, refreshToken={}", sdkSession,
+//                LogUtils.mask(refreshToken, LOGGER, Level.INFO));
+//
+//        final MobileConnectStatus status =
+//                this.mobileConnectWebInterface.refreshToken(request, refreshToken, sdkSession);
+//
+//        return new MobileConnectWebResponse(status);
+//    }
+//
+//    @GetMapping("revoke_token")
+//    @ResponseBody
+//    public MobileConnectWebResponse revokeToken(
+//            @RequestParam(required = false) final String sdkSession,
+//            @RequestParam(required = false) final String accessToken, final HttpServletRequest request) {
+//        LOGGER.info("* Calling revoke token for sdkSession={}, accessToken={}", sdkSession,
+//                LogUtils.mask(accessToken, LOGGER, Level.INFO));
+//
+//        final MobileConnectStatus status =
+//                this.mobileConnectWebInterface.revokeToken(request, accessToken,
+//                        Parameters.ACCESS_TOKEN_HINT, sdkSession);
+//
+//        return new MobileConnectWebResponse(status);
+//    }
 
     @GetMapping(value = "discovery_callback", params = "mcc_mnc")
     @ResponseBody
@@ -324,12 +324,10 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                                                 @RequestParam(required = false) final String subscriber_id,
                                                 final HttpServletRequest request)
     {
-        ClientSessionData clientSessionData = scopeSessionCache.get(getRequestId(request));
-
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext((clientSessionData.getVersion().equals(Constants.VERSION_2_0) || clientSessionData.getVersion().equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
-                        .withBindingMessage((clientSessionData.getVersion().equals(Constants.VERSION_2_0) || clientSessionData.getVersion().equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withContext(Constants.CONTEXT_BINDING_MSG)
+                        .withBindingMessage(Constants.CONTEXT_BINDING_MSG)
                         .withClientName(clientName)
                         .build())
                 .build();
@@ -338,32 +336,26 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         String mcc = mccMncArray[0];
         String mnc = mccMncArray[1];
 
-
-
         MobileConnectStatus status = this.mobileConnectWebInterface.attemptDiscovery(request, null, mcc, mnc, true, mobileConnectConfig.getIncludeRequestIp(), options);
 
-        if (status.getDiscoveryResponse() != null) {
-            setDiscoveryCache(null, mcc, mnc, null, status.getDiscoveryResponse());
-            String url;
-            if (clientSessionData.getScope().contains(Scope.AUTHZ)) {
-                url = startAuthorize(
-                        status.getDiscoveryResponse(),
-                        subscriber_id,
-                        request, null, mcc, mnc, null, clientSessionData.getScope(), clientSessionData.getVersion());
-            } else {
-                url = startAuthentication(
-                        status.getDiscoveryResponse(),
-                        subscriber_id,
-                        request, null, mcc, mnc, null, clientSessionData.getScope(), clientSessionData.getVersion());
-            }
-
-            System.out.println(url);
-            return new RedirectView(url);
-        }
-        else {
-            System.out.println(status.getUrl());
+        if (status.getDiscoveryResponse() == null || status.getDiscoveryResponse().getSourceResponse() == null) {
             return new RedirectView(status.getUrl(), true);
         }
+
+
+
+        setDiscoveryCache(null, mcc, mnc, null, status.getDiscoveryResponse());
+
+        return new RedirectView("discovery_response?msisdn=" + null + "&mcc=" + mcc + "&mnc=" + mnc + "&sourceIp=" + null);
+    }
+
+    @RequestMapping("discovery_response")
+    public ModelAndView handleRequest (String msisdn, String mcc, String mnc, String sourceIp) {
+        Map<String, Object> modelMap = new HashMap<>();
+        DiscoveryResponse discoveryResponse = getDiscoveryCache(msisdn, mcc, mnc, sourceIp);
+        modelMap.put("result", StringUtils.toPrettyFormat(discoveryResponse.getSourceResponse()));
+
+        return new ModelAndView(Constants.RESULT_HTML_PAGE, modelMap);
     }
 
     @GetMapping(value = "discovery_callback")
@@ -407,7 +399,7 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                             this.mobileConnectWebInterface.requestUserInfo(request, sessionData.getDiscoveryResponse(),
                                     status.getRequestTokenResponse().getResponseData().getAccessToken());
                     status = status.withIdentityResponse(statusUserInfo.getIdentityResponse());
-                    break;
+                    return redirectToView(status, Status.PREMIUMINFO);
                 }
             }
 
@@ -419,14 +411,11 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                             this.mobileConnectWebInterface.requestIdentity(request, sessionData.getDiscoveryResponse(),
                                     status.getRequestTokenResponse().getResponseData().getAccessToken());
                     status = status.withIdentityResponse(statusIdentity.getIdentityResponse());
-                    break;
+                    return redirectToView(status, Status.PREMIUMINFO);
                 }
             }
-        } else {
-            return redirectToView(status, Status.TOKEN);
         }
-
-        return redirectToView(status, Status.PREMIUMINFO);
+        return redirectToView(status, Status.TOKEN);
     }
 
     private ModelAndView redirectToView(MobileConnectStatus status, String operationStatus) {

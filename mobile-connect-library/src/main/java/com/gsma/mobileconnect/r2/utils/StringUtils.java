@@ -16,6 +16,10 @@
  */
 package com.gsma.mobileconnect.r2.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -204,7 +208,7 @@ public final class StringUtils
         StringBuilder stringBuilder = new StringBuilder();
         String appender = "_";
         for (String key : keys) {
-            if (key != null) {
+            if (key!= null && !key.equals("null")) {
                 stringBuilder.append(key);
                 stringBuilder.append(appender);
             }
@@ -247,5 +251,15 @@ public final class StringUtils
             return new ArrayList<>();
         }
         return Arrays.asList(initString.split("\\s+"));
+    }
+
+    public static String toPrettyFormat(String jsonString) {
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(jsonString).getAsJsonObject();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+
+        return gson.toJson(json);
     }
 }

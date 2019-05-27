@@ -96,6 +96,21 @@ public class ErrorResponse
         private String errorUri;
         private String correlationId;
 
+        public Builder() {
+        }
+
+        public Builder(final ErrorResponse errorResponse)
+        {
+            if (errorResponse != null)
+            {
+                this.error = errorResponse.error;
+                this.errorDescription = errorResponse.errorDescription;
+                this.description = errorResponse.description;
+                this.errorUri = errorResponse.errorUri;
+                this.correlationId = errorResponse.correlationId;
+            }
+        }
+
         public Builder withError(final String val)
         {
             this.error = val;

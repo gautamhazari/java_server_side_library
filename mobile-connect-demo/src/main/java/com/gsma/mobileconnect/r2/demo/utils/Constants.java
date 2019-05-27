@@ -12,6 +12,7 @@ public class Constants {
         public static final String SERVER_SIDE_VERSION = "Java-3.4.0";
         public static final String SUCCESS_HTML_PAGE = "success.html";
         public static final String FAIL_HTML_PAGE = "fail.html";
+        public static final String RESULT_HTML_PAGE = "result.html";
 
         private Constants(){}
     }
