@@ -173,7 +173,6 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
                     .withClientId(operatorParams.getClientID())
                     .withClientSecret(operatorParams.getClientSecret())
                     .withClientName(operatorParams.getClientName())
-                    .withDiscoveryUrl(new URI(operatorParams.getDiscoveryURL()))
                     .withRedirectUrl(new URI(operatorParams.getRedirectURL()))
                     .withXRedirect(operatorParams.getXRedirect().equals("True") ? "APP" : "False")
                     .withIncludeRequestIP(includeRequestIP)

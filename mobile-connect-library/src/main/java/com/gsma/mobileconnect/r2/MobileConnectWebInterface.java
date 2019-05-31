@@ -93,7 +93,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus attemptDiscovery(final HttpServletRequest request,
         final String msisdn, final String mcc, final String mnc, final boolean shouldProxyCookies, final boolean includeRequestIP,
-        final MobileConnectRequestOptions options)
+        final MobileConnectRequestOptions options, final URI discoveryUrl)
     {
         LOGGER.info("**************************************************************\nmsisdn: " + msisdn + " \nmcc: " + mcc + " \nmnc: "+ mnc);
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
@@ -113,9 +113,10 @@ public class MobileConnectWebInterface
 
         final MobileConnectStatus status =
             MobileConnectInterfaceHelper.attemptDiscovery(this.discoveryService, msisdn, mcc, mnc,
-                cookies, this.config, builder);
+                cookies, this.config, builder, discoveryUrl);
 
-        return this.cacheIfRequired(status);
+//        return this.cacheIfRequired(status);
+        return status;
     }
 
     /**
@@ -128,7 +129,8 @@ public class MobileConnectWebInterface
 
         MobileConnectStatus status = MobileConnectInterfaceHelper.extractStatus(response, this.discoveryService, "discovery manually");
 
-        return this.cacheIfRequired(status);
+//        return this.cacheIfRequired(status);
+        return status;
     }
 
     /**
@@ -140,7 +142,7 @@ public class MobileConnectWebInterface
      * connect process
      */
     public MobileConnectStatus attemptDiscoveryAfterOperatorSelection(
-        final HttpServletRequest request, final URI redirectedUrl)
+        final HttpServletRequest request, final URI redirectedUrl, final URI discoveryUrl)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -151,9 +153,10 @@ public class MobileConnectWebInterface
 
         final MobileConnectStatus status =
             MobileConnectInterfaceHelper.attemptDiscoveryAfterOperatorSelection(
-                this.discoveryService, redirectedUrl, this.config);
+                this.discoveryService, redirectedUrl, this.config, discoveryUrl);
 
-        return this.cacheIfRequired(status);
+//        return this.cacheIfRequired(status);
+        return status;
     }
 
     /**
@@ -554,7 +557,7 @@ public class MobileConnectWebInterface
     public MobileConnectStatus handleUrlRedirect(final HttpServletRequest request,
         final URI redirectedUrl, final DiscoveryResponse discoveryResponse,
         final String expectedState, final String expectedNonce,
-        final MobileConnectRequestOptions options, final String currentVersion)
+        final MobileConnectRequestOptions options, final String currentVersion, final URI discoveryUrl)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -570,7 +573,7 @@ public class MobileConnectWebInterface
                 expectedState, expectedNonce, this.config, options, this.jsonService,
                 this.iMobileConnectEncodeDecoder,
                     VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
-                            discoveryResponse.getProviderMetadata()));
+                            discoveryResponse.getProviderMetadata()), discoveryUrl);
         } catch (InvalidScopeException e) {
             return e.toMobileConnectStatus(currentVersion);
         }
@@ -600,7 +603,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus handleUrlRedirect(final HttpServletRequest request,
         final URI redirectedUrl, final String sdkSession, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion, final URI discoveryUrl)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -623,7 +626,7 @@ public class MobileConnectWebInterface
                                     options, MobileConnectWebInterface.this.jsonService,
                                     MobileConnectWebInterface.this.iMobileConnectEncodeDecoder,
                                     VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
-                                            cached.getProviderMetadata())));
+                                            cached.getProviderMetadata()), discoveryUrl));
                 } catch (InvalidScopeException e) {
                     return e.toMobileConnectStatus(currentVersion);
                 }

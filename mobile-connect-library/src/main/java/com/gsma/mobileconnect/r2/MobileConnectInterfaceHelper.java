@@ -65,7 +65,7 @@ class MobileConnectInterfaceHelper
     static MobileConnectStatus attemptDiscovery(final IDiscoveryService discoveryService,
         final String msisdn, final String mcc, final String mnc,
         final Iterable<KeyValuePair> cookies, final MobileConnectConfig config,
-        final DiscoveryOptions.Builder discoveryOptionsBuilder)
+        final DiscoveryOptions.Builder discoveryOptionsBuilder, final URI discoveryUrl)
     {
         try
         {
@@ -77,7 +77,7 @@ class MobileConnectInterfaceHelper
                 .withXRedirect(config.getXRedirect());
 
             final DiscoveryResponse response =
-                discoveryService.startAutomatedOperatorDiscovery(config, config.getRedirectUrl(),
+                discoveryService.startAutomatedOperatorDiscovery(config, discoveryUrl, config.getRedirectUrl(),
                     discoveryOptionsBuilder.build(), cookies);
 
             return extractStatus(response, discoveryService, "attemptDiscovery");
@@ -92,7 +92,7 @@ class MobileConnectInterfaceHelper
 
     static MobileConnectStatus attemptDiscoveryAfterOperatorSelection(
         final IDiscoveryService discoveryService, final URI redirectedUrl,
-        final MobileConnectConfig config)
+        final MobileConnectConfig config, final URI discoveryUrl)
     {
         final ParsedDiscoveryRedirect parsedDiscoveryRedirect =
             discoveryService.parseDiscoveryRedirect(redirectedUrl);
@@ -110,7 +110,7 @@ class MobileConnectInterfaceHelper
             try
             {
                 DiscoveryResponse response =
-                    discoveryService.completeSelectedOperatorDiscovery(config,
+                    discoveryService.completeSelectedOperatorDiscovery(config, discoveryUrl,
                         config.getRedirectUrl(), parsedDiscoveryRedirect.getSelectedMcc(),
                         parsedDiscoveryRedirect.getSelectedMnc());
 
@@ -467,7 +467,7 @@ class MobileConnectInterfaceHelper
         final URI redirectedUrl, final DiscoveryResponse discoveryResponse,
         final String expectedState, final String expectedNonce, final MobileConnectConfig config,
         final MobileConnectRequestOptions options, final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion)
+        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion, final URI discoveryUrl)
     {
         ObjectUtils.requireNonNull(redirectedUrl, "redirectedUrl");
 
@@ -505,7 +505,7 @@ class MobileConnectInterfaceHelper
                 LogUtils.maskUri(redirectedUrl, LOGGER, Level.DEBUG), expectedState,
                 LogUtils.mask(expectedNonce, LOGGER, Level.DEBUG));
 
-            return attemptDiscoveryAfterOperatorSelection(discoveryService, redirectedUrl, config);
+            return attemptDiscoveryAfterOperatorSelection(discoveryService, redirectedUrl, config, discoveryUrl);
         }
         else
         {

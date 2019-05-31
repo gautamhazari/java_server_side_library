@@ -38,7 +38,6 @@ public class MobileConnectConfig implements IPreferences
     private final String clientSecret;
     private final String clientName;
     private final String xRedirect;
-    private final URI discoveryUrl;
     private final URI redirectUrl;
     private final boolean includeRequestIP;
 
@@ -51,7 +50,6 @@ public class MobileConnectConfig implements IPreferences
         this.clientSecret = builder.clientSecret;
         this.clientName = builder.clientName;
         this.xRedirect = builder.xRedirect;
-        this.discoveryUrl = builder.discoveryUrl;
         this.redirectUrl = builder.redirectUrl;
         this.includeRequestIP = builder.includeRequestIP;
         this.cacheResponsesWithSessionId = builder.cacheResponsesWithSessionId;
@@ -74,11 +72,6 @@ public class MobileConnectConfig implements IPreferences
     {
         return this.xRedirect;
     }
-    @Override
-    public URI getDiscoveryUrl()
-    {
-        return this.discoveryUrl;
-    }
 
     public boolean getIncludeRequestIp() {
         return this.includeRequestIP;
@@ -86,7 +79,7 @@ public class MobileConnectConfig implements IPreferences
 
     public boolean isCacheResponsesWithSessionId()
     {
-        return this.cacheResponsesWithSessionId;
+        return false;
     }
 
     public URI getRedirectUrl()
@@ -101,8 +94,6 @@ public class MobileConnectConfig implements IPreferences
             .append(LogUtils.mask(this.clientId))
             .append(",clientSecret=")
             .append(LogUtils.mask(this.clientSecret))
-            .append(",discoveryUrl=")
-            .append(this.discoveryUrl)
             .append(",redirectUrl=")
             .append(this.redirectUrl)
             .append(",cacheResponseWithSessionId=")
@@ -120,7 +111,7 @@ public class MobileConnectConfig implements IPreferences
         private URI discoveryUrl;
         private URI redirectUrl;
         private boolean includeRequestIP;
-        private boolean cacheResponsesWithSessionId = true;
+        private boolean cacheResponsesWithSessionId = false;
 
         public Builder withClientId(String val)
         {

@@ -98,20 +98,17 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         this.mobileConnectWebInterface = MobileConnect.buildWebInterface(mobileConnectConfig, new DefaultEncodeDecoder(), this.sessionCache, this.discoveryCache);
         this.getParameters();
 
+//        discovery = "https://discovery.sandbox.mobileconnect.io/v2/discovery";
+
         if (StringUtils.isNullOrEmpty(sourceIp) && !ignoreIp) {
             sourceIp = includeRequestIP ? HttpUtils.extractClientIp(request) : null;
         }
-
-//        String a = getRequestId(request);
-//
-//
-//        setScopeSessionCache(getRequestId(request), scope, version);
 
         DiscoveryResponse discoveryResponse = getDiscoveryCache(msisdn, mcc, mnc, sourceIp);
         MobileConnectStatus status;
 
         if (discoveryResponse == null) {
-            status = attemptDiscovery(msisdn, mcc, mnc, sourceIp, request);
+            status = attemptDiscovery(msisdn, mcc, mnc, sourceIp, request, discovery);
             discoveryResponse = status.getDiscoveryResponse();
 
             if (discoveryResponse == null  || discoveryResponse.getResponseCode() !=
@@ -145,14 +142,11 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                     msisdn, mcc, mnc, sourceIp, scope, version);
         }
 
-        if (url == null) {
-            return startDiscovery(null, null, null, null, true, scope, version, discovery, request);
-        }
 
         return new RedirectView(url);
     }
 
-    private MobileConnectStatus attemptDiscovery(String msisdn, String mcc, String mnc, String sourceIp, HttpServletRequest request) {
+    private MobileConnectStatus attemptDiscovery(String msisdn, String mcc, String mnc, String sourceIp, HttpServletRequest request, String discoveryUrl) {
         MobileConnectRequestOptions requestOptions =
                 new MobileConnectRequestOptions.Builder()
                         .withDiscoveryOptions(new DiscoveryOptions.Builder()
@@ -162,13 +156,18 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                                 .build())
                         .build();
         MobileConnectStatus status =
-                this.mobileConnectWebInterface.attemptDiscovery(request, msisdn, mcc, mnc, true,
-                        mobileConnectConfig.getIncludeRequestIp(), requestOptions);
-
-        if (status.getErrorMessage() != null) {
-            status = this.mobileConnectWebInterface.attemptDiscovery(request, null, null, null,
-                    false, includeRequestIP, requestOptions);
+                null;
+        try {
+            status = this.mobileConnectWebInterface.attemptDiscovery(request, msisdn, mcc, mnc, true,
+                    mobileConnectConfig.getIncludeRequestIp(), requestOptions, new URI(discoveryUrl));
+        } catch (URISyntaxException e) {
+            LOGGER.warn("Invalid URL");
         }
+
+//        if (status.getErrorMessage() != null) {
+//            status = this.mobileConnectWebInterface.attemptDiscovery(request, null, null, null,
+//                    false, includeRequestIP, requestOptions);
+//        }
         return status;
     }
 
@@ -327,19 +326,16 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                                                 @RequestParam(required = false) final String subscriber_id,
                                                 final HttpServletRequest request)
     {
-        final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
-                .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext(Constants.CONTEXT_BINDING_MSG)
-                        .withBindingMessage(Constants.CONTEXT_BINDING_MSG)
-                        .withClientName(clientName)
-                        .build())
-                .build();
+
+
+        LOGGER.info("HELLO");
 
         String[] mccMncArray = mcc_mnc.split("_");
         String mcc = mccMncArray[0];
         String mnc = mccMncArray[1];
 
-        MobileConnectStatus status = this.mobileConnectWebInterface.attemptDiscovery(request, null, mcc, mnc, true, mobileConnectConfig.getIncludeRequestIp(), options);
+        MobileConnectStatus status = getDiscovery(mcc, mnc, request);
+
 
         if (status.getDiscoveryResponse() == null || status.getDiscoveryResponse().getSourceResponse() == null) {
             return new RedirectView(status.getUrl(), true);
@@ -350,6 +346,41 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         setDiscoveryCache(null, mcc, mnc, null, status.getDiscoveryResponse());
 
         return new RedirectView("discovery_response?msisdn=" + null + "&mcc=" + mcc + "&mnc=" + mnc + "&sourceIp=" + null);
+    }
+
+    private MobileConnectStatus getDiscovery(final String mcc, final String mnc, final HttpServletRequest request) {
+        String[] disvoveryArray = {"https://discover.mobileconnect.io/gsma/v2/discovery", "https://dublin.discover.mobileconnect.io/gsma/v2/discovery",
+                "https://singapore.discover.mobileconnect.io/gsma/v2/discovery",
+                "https://india.discover.mobileconnect.io/gsma/v2/discovery"
+//                "https://discovery.sandbox.mobileconnect.io/v2/discovery"
+        };
+        final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
+                .withAuthenticationOptions(new AuthenticationOptions.Builder()
+                        .withContext(Constants.CONTEXT_BINDING_MSG)
+                        .withBindingMessage(Constants.CONTEXT_BINDING_MSG)
+                        .withClientName(clientName)
+                        .build())
+                .build();
+        MobileConnectStatus status1 = null;
+        try {
+            for (String disvoveryUrl:
+                    disvoveryArray) {
+
+                status1 = this.mobileConnectWebInterface.attemptDiscovery(request, null, mcc, mnc,
+                        true, mobileConnectConfig.getIncludeRequestIp(), options, new URI(disvoveryUrl));
+                if (status1.getErrorCode() == null && !status1.getDiscoveryResponse().getSourceResponse().contains("fault")
+                        && !status1.getDiscoveryResponse().getSourceResponse().contains("error")) {
+                    return status1;
+                }
+                else if (disvoveryUrl.equals(disvoveryArray[disvoveryArray.length - 1])) {
+                    return this.mobileConnectWebInterface.attemptDiscovery(request, null, mcc, mnc,
+                            true, mobileConnectConfig.getIncludeRequestIp(), options, new URI(disvoveryArray[0]));
+                }
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return status1;
     }
 
     @RequestMapping("discovery_response")
@@ -397,8 +428,13 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
 
         URI requestUri = HttpUtils.extractCompleteUrl(request);
 
-        MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri,
-                sessionData.getDiscoveryResponse(), state, sessionData.getNonce(), options, sessionData.getVersion());
+        MobileConnectStatus status = null;
+        try {
+            status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri,
+                    sessionData.getDiscoveryResponse(), state, sessionData.getNonce(), options, sessionData.getVersion(), new URI(""));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         if (sessionData.getVersion().equals(DefaultOptions.VERSION_MOBILECONNECT) && !StringUtils.isNullOrEmpty(sessionData.getDiscoveryResponse().getOperatorUrls().getUserInfoUrl())) {
             for (String userInfoScope : userinfoScopes) {
@@ -480,7 +516,6 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                     .withClientId(operatorParams.getClientID())
                     .withClientSecret(operatorParams.getClientSecret())
                     .withClientName(operatorParams.getClientName())
-                    .withDiscoveryUrl(new URI(operatorParams.getDiscoveryURL()))
                     .withRedirectUrl(new URI(operatorParams.getRedirectURL()))
                     .withXRedirect(operatorParams.getXRedirect().equals("True") ? "APP" : "False")
                     .withIncludeRequestIP(includeRequestIP)

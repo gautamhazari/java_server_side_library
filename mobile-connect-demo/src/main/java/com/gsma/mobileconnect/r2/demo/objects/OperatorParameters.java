@@ -6,7 +6,6 @@ public class OperatorParameters {
     private String clientID;
     private String clientSecret;
     private String clientName;
-    private String discoveryURL;
     private String redirectURL;
     private String xRedirect;
     private String includeRequestIP;
@@ -28,14 +27,6 @@ public class OperatorParameters {
 
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
-    }
-
-    public String getDiscoveryURL() {
-        return discoveryURL;
-    }
-
-    public void setDiscoveryURL(String discoveryURL) {
-        this.discoveryURL = discoveryURL;
     }
 
     public String getRedirectURL() {

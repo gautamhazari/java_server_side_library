@@ -108,11 +108,11 @@ public class DiscoveryService implements IDiscoveryService
                 new DiscoveryOptions.Builder(options).withRedirectUrl(redirectUrl);
 
         return this.callDiscoveryEndpoint(clientId, clientSecret, discoveryUrl, builder.build(),
-                currentCookies, true);
+                currentCookies, false);
     }
 
     @Override
-    public DiscoveryResponse startAutomatedOperatorDiscovery(final IPreferences preferences,
+    public DiscoveryResponse startAutomatedOperatorDiscovery(final IPreferences preferences, final URI discoveryUrl,
                                                              final URI redirectUrl, final DiscoveryOptions options,
                                                              final Iterable<KeyValuePair> currentCookies)
             throws RequestFailedException, InvalidResponseException
@@ -120,7 +120,7 @@ public class DiscoveryService implements IDiscoveryService
         ObjectUtils.requireNonNull(preferences, ARG_PREFERENCES);
 
         return this.startAutomatedOperatorDiscovery(preferences.getClientId(),
-                preferences.getClientSecret(), preferences.getDiscoveryUrl(), redirectUrl, options,
+                preferences.getClientSecret(), discoveryUrl, redirectUrl, options,
                 currentCookies);
     }
 
@@ -145,13 +145,13 @@ public class DiscoveryService implements IDiscoveryService
 
     @Override
     public Future<DiscoveryResponse> startAutomatedOperatorDiscoveryAsync(
-            final IPreferences preferences, final URI redirectUrl, final DiscoveryOptions options,
+            final IPreferences preferences, final URI discoveryUrl, final URI redirectUrl, final DiscoveryOptions options,
             final Iterable<KeyValuePair> currentCookies)
     {
         ObjectUtils.requireNonNull(preferences, ARG_PREFERENCES);
 
         return this.startAutomatedOperatorDiscoveryAsync(preferences.getClientId(),
-                preferences.getClientSecret(), preferences.getDiscoveryUrl(), redirectUrl, options,
+                preferences.getClientSecret(), discoveryUrl, redirectUrl, options,
                 currentCookies);
     }
 
@@ -371,13 +371,13 @@ public class DiscoveryService implements IDiscoveryService
     }
 
     @Override
-    public DiscoveryResponse getOperatorSelectionURL(final IPreferences preferences,
+    public DiscoveryResponse getOperatorSelectionURL(final IPreferences preferences, final URI discoveryUrl,
                                                      final URI redirectUrl) throws RequestFailedException, InvalidResponseException
     {
         ObjectUtils.requireNonNull(preferences, ARG_PREFERENCES);
 
         return this.getOperatorSelectionURL(preferences.getClientId(),
-                preferences.getClientSecret(), preferences.getDiscoveryUrl(), redirectUrl);
+                preferences.getClientSecret(), discoveryUrl, redirectUrl);
     }
 
     @Override
@@ -403,13 +403,13 @@ public class DiscoveryService implements IDiscoveryService
     }
 
     @Override
-    public Future<DiscoveryResponse> getOperatorSelectionURLAsync(final IPreferences preferences,
+    public Future<DiscoveryResponse> getOperatorSelectionURLAsync(final IPreferences preferences, final URI discoveryUrl,
                                                                   final URI redirectUrl)
     {
         ObjectUtils.requireNonNull(preferences, ARG_PREFERENCES);
 
         return this.getOperatorSelectionURLAsync(preferences.getClientId(),
-                preferences.getClientSecret(), preferences.getDiscoveryUrl(), redirectUrl);
+                preferences.getClientSecret(), discoveryUrl, redirectUrl);
     }
 
     @Override
@@ -455,18 +455,18 @@ public class DiscoveryService implements IDiscoveryService
                 .build();
 
         return this.callDiscoveryEndpoint(clientId, clientSecret, discoveryUrl, discoveryOptions,
-                null, true);
+                null, false);
     }
 
     @Override
-    public DiscoveryResponse completeSelectedOperatorDiscovery(final IPreferences preferences,
+    public DiscoveryResponse completeSelectedOperatorDiscovery(final IPreferences preferences, final URI discoveryUrl,
                                                                final URI redirectUrl, final String selectedMCC, final String selectedMNC)
             throws RequestFailedException, InvalidResponseException
     {
         ObjectUtils.requireNonNull(preferences, ARG_PREFERENCES);
 
         return this.completeSelectedOperatorDiscovery(preferences.getClientId(),
-                preferences.getClientSecret(), preferences.getDiscoveryUrl(), redirectUrl, selectedMCC,
+                preferences.getClientSecret(), discoveryUrl, redirectUrl, selectedMCC,
                 selectedMNC);
     }
 
@@ -491,7 +491,7 @@ public class DiscoveryService implements IDiscoveryService
 
     @Override
     public Future<DiscoveryResponse> completeSelectedOperatorDiscoveryAsync(
-            final IPreferences preferences, final URI redirectUrl, final String selectedMCC,
+            final IPreferences preferences, final URI discoveryUrl, final URI redirectUrl, final String selectedMCC,
             final String selectedMNC)
     {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -500,7 +500,7 @@ public class DiscoveryService implements IDiscoveryService
             @Override
             public DiscoveryResponse call() throws Exception
             {
-                return DiscoveryService.this.completeSelectedOperatorDiscovery(preferences,
+                return DiscoveryService.this.completeSelectedOperatorDiscovery(preferences, discoveryUrl,
                         redirectUrl, selectedMCC, selectedMNC);
             }
         });

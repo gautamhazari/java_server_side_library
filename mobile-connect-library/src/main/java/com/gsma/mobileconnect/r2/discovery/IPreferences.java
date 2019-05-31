@@ -45,8 +45,4 @@ public interface IPreferences
      */
     boolean getIncludeRequestIp();
 
-    /**
-     * @return The URL of the discovery service endpoint
-     */
-    URI getDiscoveryUrl();
 }

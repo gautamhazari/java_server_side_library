@@ -81,7 +81,7 @@ public class MobileConnectInterface
      * Connect process
      */
     public Future<MobileConnectStatus> attemptDiscoveryAsync(final String msisdn, final String mcc,
-        final String mnc, final MobileConnectRequestOptions options)
+        final String mnc, final MobileConnectRequestOptions options, final URI discoveryUrl)
     {
         LOGGER.debug("Queuing attemptDiscovery async request for msisdn={}, mcc={}, mnc={}",
             LogUtils.mask(msisdn, LOGGER, Level.DEBUG), mcc, mnc);
@@ -92,7 +92,7 @@ public class MobileConnectInterface
             @Override
             public MobileConnectStatus call() throws Exception
             {
-                return MobileConnectInterface.this.attemptDiscovery(msisdn, mcc, mnc, options);
+                return MobileConnectInterface.this.attemptDiscovery(msisdn, mcc, mnc, options, discoveryUrl);
             }
         });
         executorService.shutdownNow();
@@ -112,13 +112,13 @@ public class MobileConnectInterface
      * Connect process
      */
     public MobileConnectStatus attemptDiscovery(final String msisdn, final String mcc,
-        final String mnc, final MobileConnectRequestOptions options)
+        final String mnc, final MobileConnectRequestOptions options, final URI discoveryUrl)
     {
         LOGGER.debug("Running attemptDiscovery request for msisdn={}, mcc={}, mnc={}",
             LogUtils.mask(msisdn, LOGGER, Level.DEBUG), mcc, mnc);
 
         return MobileConnectInterfaceHelper.attemptDiscovery(this.discoveryService, msisdn, mcc,
-            mnc, null, this.config, options.getDiscoveryOptionsBuilder());
+            mnc, null, this.config, options.getDiscoveryOptionsBuilder(), discoveryUrl);
     }
 
     /**
@@ -130,7 +130,7 @@ public class MobileConnectInterface
      * Connect process
      */
     public Future<MobileConnectStatus> attemptDiscoveryAfterOperatorSelectionAsync(
-        final URI redirectedUrl)
+        final URI redirectedUrl, final URI discoveryUrl)
     {
         LOGGER.debug(
             "Queuing attemptDiscoveryAfterOperatorSelection async request for redirectedUrl={}",
@@ -142,7 +142,7 @@ public class MobileConnectInterface
             public MobileConnectStatus call() throws Exception
             {
                 return MobileConnectInterface.this.attemptDiscoveryAfterOperatorSelection(
-                    redirectedUrl);
+                    redirectedUrl, discoveryUrl);
             }
         });
         executorService.shutdownNow();
@@ -156,14 +156,14 @@ public class MobileConnectInterface
      * @return MobileConnectStatus object with required information for continuing the Mobile
      * Connect process
      */
-    public MobileConnectStatus attemptDiscoveryAfterOperatorSelection(final URI redirectedUrl)
+    public MobileConnectStatus attemptDiscoveryAfterOperatorSelection(final URI redirectedUrl, final URI discoveryUrl)
     {
         LOGGER.debug(
             "Running attemptDiscoveryAfterOperatorSelection async request for redirectUrl={}",
             LogUtils.maskUri(redirectedUrl, LOGGER, Level.DEBUG));
 
         return MobileConnectInterfaceHelper.attemptDiscoveryAfterOperatorSelection(
-            this.discoveryService, redirectedUrl, this.config);
+            this.discoveryService, redirectedUrl, this.config, discoveryUrl);
     }
 
     /**
@@ -311,7 +311,7 @@ public class MobileConnectInterface
      */
     public Future<MobileConnectStatus> handleUrlRedirectAsync(final URI redirectedUrl,
         final DiscoveryResponse discoveryResponse, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion, final URI discoveryUrl)
     {
         LOGGER.debug(
             "Queuing handleUrlRedirect async for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -324,7 +324,7 @@ public class MobileConnectInterface
             public MobileConnectStatus call() throws Exception
             {
                 return MobileConnectInterface.this.handleUrlRedirect(redirectedUrl,
-                    discoveryResponse, expectedState, expectedNonce, options, currentVersion);
+                    discoveryResponse, expectedState, expectedNonce, options, currentVersion, discoveryUrl);
             }
         });
         executorService.shutdownNow();
@@ -349,7 +349,7 @@ public class MobileConnectInterface
      */
     public MobileConnectStatus handleUrlRedirect(final URI redirectedUrl,
         final DiscoveryResponse discoveryResponse, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion, final URI discoveryUrl)
     {
         LOGGER.debug(
             "Running handleUrlRedirect for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -359,7 +359,7 @@ public class MobileConnectInterface
         return MobileConnectInterfaceHelper.handleUrlRedirect(this.discoveryService,
             this.jwKeysetService, this.authnService, redirectedUrl, discoveryResponse,
             expectedState, expectedNonce, this.config, options, this.jsonService,
-            this.iMobileConnectEncodeDecoder, currentVersion);
+            this.iMobileConnectEncodeDecoder, currentVersion, discoveryUrl);
     }
 
     /**

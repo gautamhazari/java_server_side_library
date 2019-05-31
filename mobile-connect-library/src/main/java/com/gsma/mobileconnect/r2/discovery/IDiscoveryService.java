@@ -78,7 +78,7 @@ public interface IDiscoveryService
      * @throws RequestFailedException   if there is a failure to issue the HTTP request.
      * @throws InvalidResponseException if there is a failure processing the HTTP response.
      */
-    DiscoveryResponse startAutomatedOperatorDiscovery(final IPreferences preferences,
+    DiscoveryResponse startAutomatedOperatorDiscovery(final IPreferences preferences, final URI discoveryUrl,
                                                       final URI redirectUrl, final DiscoveryOptions options,
                                                       final Iterable<KeyValuePair> currentCookies)
             throws RequestFailedException, InvalidResponseException;
@@ -119,7 +119,7 @@ public interface IDiscoveryService
      * @param currentCookies List of the current cookies sent by the browser if applicable
      * @return the discovery response.
      */
-    Future<DiscoveryResponse> startAutomatedOperatorDiscoveryAsync(final IPreferences preferences,
+    Future<DiscoveryResponse> startAutomatedOperatorDiscoveryAsync(final IPreferences preferences, final URI discoveryUrl,
                                                                    final URI redirectUrl, final DiscoveryOptions options,
                                                                    final Iterable<KeyValuePair> currentCookies);
 
@@ -151,7 +151,7 @@ public interface IDiscoveryService
      * @throws RequestFailedException   if a failure occurred making the HTTP request.
      * @throws InvalidResponseException if a failure occurred processing the HTTP response.
      */
-    DiscoveryResponse getOperatorSelectionURL(final IPreferences preferences, final URI redirectUrl)
+    DiscoveryResponse getOperatorSelectionURL(final IPreferences preferences, final URI discoveryUrl, final URI redirectUrl)
             throws RequestFailedException, InvalidResponseException;
 
     /**
@@ -178,7 +178,7 @@ public interface IDiscoveryService
      * @param redirectUrl The URL the operator selection functionality redirects to. (Required)
      * @return the discovery response.
      */
-    Future<DiscoveryResponse> getOperatorSelectionURLAsync(final IPreferences preferences,
+    Future<DiscoveryResponse> getOperatorSelectionURLAsync(final IPreferences preferences, final URI discoveryUrl,
                                                            final URI redirectUrl);
 
     /**
@@ -232,7 +232,7 @@ public interface IDiscoveryService
      * @throws RequestFailedException   if a failure occurred making the HTTP request.
      * @throws InvalidResponseException if a failure occurred processing the HTTP response.
      */
-    DiscoveryResponse completeSelectedOperatorDiscovery(final IPreferences preferences,
+    DiscoveryResponse completeSelectedOperatorDiscovery(final IPreferences preferences, final URI discoveryUrl,
                                                         final URI redirectUrl, final String selectedMCC, final String selectedMNC)
             throws RequestFailedException, InvalidResponseException;
 
@@ -264,7 +264,7 @@ public interface IDiscoveryService
      * @param selectedMNC The Mobile Network Code of the selected operator. (Required)
      * @return the discovery response.
      */
-    Future<DiscoveryResponse> completeSelectedOperatorDiscoveryAsync(final IPreferences preferences,
+    Future<DiscoveryResponse> completeSelectedOperatorDiscoveryAsync(final IPreferences preferences, final URI discoveryUrl,
                                                                      final URI redirectUrl, final String selectedMCC, final String selectedMNC);
 
     /**
