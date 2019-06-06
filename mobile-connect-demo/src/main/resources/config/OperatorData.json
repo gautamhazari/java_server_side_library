@@ -1,7 +1,7 @@
 ﻿{
   "clientID": "4cbaf325-7b76-43ea-a5cc-55dc4060f222",
   "clientSecret": "a4f3ec6a-1739-4d5f-8471-8fec30595c94",
-  "clientName": "IndiaApp",
+  "clientName": "GlobalDemoApp",
   "redirectURL": "http://3.8.5.176:8080/mobile-connect-sc/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "True",
