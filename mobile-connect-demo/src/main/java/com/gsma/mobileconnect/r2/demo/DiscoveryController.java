@@ -90,6 +90,7 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
             @RequestParam(required = false) String scope,
             @RequestParam(required = false) String version,
             @RequestParam(required = false) String discovery,
+            @RequestParam(required = false) boolean ignoreAuth,
             final HttpServletRequest request)
     {
         LOGGER.info("* Attempting discovery for msisdn={}, mcc={}, mnc={}, sourceIp={}",
@@ -117,7 +118,7 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                     return new RedirectView(status.getUrl(), true);
                 }
                 if (!ignoreIp) {
-                    return startDiscovery(msisdn, mcc, mnc, null, true, scope, version, discovery, request);
+                    return startDiscovery(msisdn, mcc, mnc, null, true, scope, version, discovery, ignoreAuth, request);
                 }
                 return new RedirectView("discovery_callback?state=" + status.getState() + "&error="
                             + status.getErrorCode() + "&error_description=" + status.getErrorMessage());
@@ -128,22 +129,25 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         setDiscoveryCache(msisdn, mcc, mnc, sourceIp, discoveryResponse);
 
         String url;
-        if (scope.contains(Scope.AUTHZ)) {
-            url = startAuthorize(
-                    discoveryResponse,
-                    discoveryResponse.getResponseData().getSubscriberId(),
-                    request,
-                    msisdn, mcc, mnc, sourceIp, scope, version);
-        } else {
-            url = startAuthentication(
-                    discoveryResponse,
-                    discoveryResponse.getResponseData().getSubscriberId(),
-                    request,
-                    msisdn, mcc, mnc, sourceIp, scope, version);
+        if (!ignoreAuth) {
+            if (scope.contains(Scope.AUTHZ)) {
+                url = startAuthorize(
+                        discoveryResponse,
+                        discoveryResponse.getResponseData().getSubscriberId(),
+                        request,
+                        msisdn, mcc, mnc, sourceIp, scope, version);
+            } else {
+                url = startAuthentication(
+                        discoveryResponse,
+                        discoveryResponse.getResponseData().getSubscriberId(),
+                        request,
+                        msisdn, mcc, mnc, sourceIp, scope, version);
+            }
+            return new RedirectView(url);
         }
 
 
-        return new RedirectView(url);
+        return new RedirectView("discovery_response?msisdn=" + msisdn + "&mcc=" + mcc + "&mnc=" + mnc + "&sourceIp=" + sourceIp);
     }
 
     private MobileConnectStatus attemptDiscovery(String msisdn, String mcc, String mnc, String sourceIp, HttpServletRequest request, String discoveryUrl) {
