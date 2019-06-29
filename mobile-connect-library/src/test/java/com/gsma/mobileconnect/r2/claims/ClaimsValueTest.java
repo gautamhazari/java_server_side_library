@@ -17,7 +17,7 @@
 package com.gsma.mobileconnect.r2.claims;
 
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.json.JsonSerializationException;
 import org.testng.annotations.DataProvider;
@@ -33,7 +33,7 @@ import static org.testng.Assert.assertEqualsNoOrder;
  */
 public class ClaimsValueTest
 {
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
 
     @DataProvider
     public Object[][] claimsValueSerialization()
@@ -60,7 +60,7 @@ public class ClaimsValueTest
     public void claimsValueShouldSerialiseToJson(final ClaimsValue claimsValue,
         final String expected) throws JsonSerializationException
     {
-        final String actual = new JacksonJsonService().serialize(claimsValue);
+        final String actual = new GsonJsonService().serialize(claimsValue);
 
         assertEquals(actual, expected);
     }

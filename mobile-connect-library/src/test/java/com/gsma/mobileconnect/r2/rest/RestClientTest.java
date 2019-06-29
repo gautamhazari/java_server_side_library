@@ -20,7 +20,7 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.utils.KeyValuePair;
 import com.gsma.mobileconnect.r2.utils.TestUtils;
 import org.apache.commons.io.IOUtils;
@@ -81,7 +81,7 @@ public class RestClientTest
 
     @Captor private ArgumentCaptor<HttpUriRequest> requestCaptor;
 
-    private IJsonService jsonService = new JacksonJsonService();
+    private IJsonService jsonService = new GsonJsonService();
     private RestClient restClient;
 
     private static String getStringContent(final StringEntity entity) throws IOException

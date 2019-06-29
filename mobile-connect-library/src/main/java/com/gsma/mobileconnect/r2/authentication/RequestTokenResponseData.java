@@ -16,7 +16,8 @@
  */
 package com.gsma.mobileconnect.r2.authentication;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.gson.annotations.SerializedName;
+import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
 
 import java.net.URI;
@@ -29,17 +30,24 @@ import java.util.concurrent.TimeUnit;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = RequestTokenResponseData.Builder.class)
 public class RequestTokenResponseData
 {
     private final Date timeReceived;
+    @SerializedName(Parameters.ACCESS_TOKEN)
     private final String accessToken;
+    @SerializedName(Parameters.TOKEN_TYPE)
     private final String tokenType;
+    @SerializedName(Parameters.ID_TOKEN)
     private final String idToken;
+    @SerializedName(Parameters.REFRESH_TOKEN)
     private final String refreshToken;
-    private final Date expiry;
+    @SerializedName(Parameters.EXPIRES_IN)
     private final Long expiresIn;
+    @SerializedName(Parameters.CORRELATION_ID)
     private final String correlationId;
+
+
+    private final Date expiry;
 
     private RequestTokenResponseData(final Builder builder)
     {

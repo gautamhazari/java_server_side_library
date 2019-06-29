@@ -26,7 +26,7 @@ import com.gsma.mobileconnect.r2.exceptions.HeadlessOperationFailedException;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.json.JsonSerializationException;
 import com.gsma.mobileconnect.r2.rest.IRestClient;
@@ -62,7 +62,7 @@ public class AuthenticationServiceTest
     private final static URI REDIRECT_URL = URI.create("http://localhost:8080/");
     private final static URI AUTHORIZE_URL = URI.create("http://localhost:8080/authorize");
     private final static URI TOKEN_URL = URI.create("http://localhost:8080/token");
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
     private final IRestClient restClient = Mockito.mock(RestClient.class);
 
     private final IAuthenticationService authentication = new AuthenticationService.Builder()
@@ -382,7 +382,7 @@ public class AuthenticationServiceTest
         final String outcome =
             this.authentication.revokeToken(this.config.getClientId(),
                 this.config.getClientSecret(), TOKEN_URL, "AccessToken",
-                Parameters.ACCESS_TOKEN_HINT);
+                Parameters.ACCESS_TOKEN);
 
         // Then
         assertNotNull(outcome);
@@ -480,7 +480,7 @@ public class AuthenticationServiceTest
                 .withMethod("GET")
                 .withContent(providerMetadata).build();
 
-        when(restClient.get(any(URI.class), (RestAuthentication) eq(null), anyString(), (String) eq(null), (List<KeyValuePair>) eq(null), (Iterable<KeyValuePair>) eq(null))).thenReturn(response).thenReturn(response);
+        when(restClient.get(any(URI.class), eq(null), anyString(), eq(null), eq(null), eq(null))).thenReturn(response).thenReturn(response);
 
         //When
         final DiscoveryResponse discoveryResponse =

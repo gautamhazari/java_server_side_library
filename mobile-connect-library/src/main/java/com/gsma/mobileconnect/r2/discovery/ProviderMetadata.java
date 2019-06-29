@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.cache.AbstractCacheable;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.ListUtils;
@@ -38,29 +39,43 @@ public class ProviderMetadata extends AbstractCacheable
 {
     private final String version;
     private final String subscriberId;
+    @SerializedName("issuer")
     private final String issuer;
+    @SerializedName("authorization_endpoint")
     private final String authorizationEndpoint;
+    @SerializedName("token_endpoint")
     private final String tokenEndpoint;
+    @SerializedName("userinfo_endpoint")
     private final String userinfoEndpoint;
+    @SerializedName("premiuminfo_endpoint")
     private final String premiuminfoEndpoint;
     private final String checkSessionIframe;
     private final String endSessionEndpoint;
+    @SerializedName("revocation_endpoint")
     private final String revocationEndpoint;
     private final String refreshEndpoint;
     private final String registrationEndpoint;
+    @SerializedName("jwks_uri")
     private final String jwksUri;
+    @SerializedName("scopes_supported")
     private final List<String> scopesSupported;
+    @SerializedName("response_types_supported")
     private final List<String> responseTypesSupported;
+    @SerializedName("response_modes_supported")
     private final List<String> responseModesSupported;
+    @SerializedName("grant_types_supported")
     private final List<String> grantTypesSupported;
+    @SerializedName("acr_values_supported")
     private final List<String> acrValuesSupported;
     private final List<String> subjectTypesSupported;
     private final List<String> userinfoSigningAlgValuesSupported;
     private final List<String> userinfoEncryptionAlgValuesSupported;
     private final List<String> userinfoEncryptionEncValuesSupported;
+    @SerializedName("id_token_signing_alg_values_supported")
     private final List<String> idTokenSigningAlgValuesSupported;
     private final List<String> idTokenEncryptionAlgValuesSupported;
     private final List<String> idTokenEncryptionEncValuesSupported;
+    @SerializedName("request_object_signing_alg_values_supported")
     private final List<String> requestObjectSigningAlgValuesSupported;
     private final List<String> requestObjectEncryptionAlgValuesSupported;
     private final List<String> requestObjectEncryptionEncValuesSupported;
@@ -68,17 +83,25 @@ public class ProviderMetadata extends AbstractCacheable
     private final List<String> tokenEndpointAuthSigningAlgValuesSupported;
     private final List<String> displayValuesSupported;
     private final List<String> claimTypesSupported;
+    @SerializedName("claims_supported")
     private final List<String> claimsSupported;
+    @SerializedName("mc_di_scopes_supported")
     private final List<String> mcDiScopesSupported;
+    @SerializedName("service_documentation")
     private final String serviceDocumentation;
     private final List<String> claimsLocalesSupported;
+    @SerializedName("ui_locales_supported")
     private final List<String> uiLocalesSupported;
-    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @SerializedName("mc_version")
     private final List<String> mcVersion;
     private final Boolean requireRequestUriRegistration;
+    @SerializedName("op_policy_uri")
     private final String operatorPolicyUri;
+    @SerializedName("op_tos_uri")
     private final String operatorTermsOfServiceUri;
+    @SerializedName(value = "claims_parameter_supported", alternate = "mc_claims_parameter_supported")
     private final Boolean claimsParameterSupported;
+    @SerializedName("request_parameter_supported")
     private final Boolean requestParameterSupported;
     private final Boolean requestStringParameterSupported;
     private final List<String> loginHintMethodsSupported;

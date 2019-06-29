@@ -14,23 +14,54 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. YOU AGREE TO
  * INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
-package com.gsma.mobileconnect.r2.discovery;
+package com.gsma.mobileconnect.r2.json;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.gsma.mobileconnect.r2.utils.IBuilder;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Indicates that either provider metadata is not available, or the provider metadata does not
- * contain a required field.
+ * Object for deserialization of Discovery Response content.
  *
  * @since 2.0
  */
-public class ProviderMetadataUnavailableException extends Exception
+@JsonDeserialize(builder = Operatorid.Builder.class)
+public class Operatorid
 {
-    /**
-     * Create a new instance of this exception.
-     *
-     * @param message explaining the circumstances.
-     */
-    public ProviderMetadataUnavailableException(final String message)
+    private final List<Link> link;
+
+    private Operatorid(Builder builder)
     {
-        super(message);
+        this.link = builder.link;
+    }
+
+    public List<Link> getLink()
+    {
+        return this.link;
+    }
+
+    public static final class Builder implements IBuilder<Operatorid>
+    {
+        private List<Link> link = null;
+
+        public Builder withLink(final List<Link> val)
+        {
+            this.link = Collections.unmodifiableList(new ArrayList<Link>(val));
+            return this;
+        }
+
+        @Override
+        public Operatorid build()
+        {
+            if (this.link == null)
+            {
+                this.link = Collections.emptyList();
+            }
+
+            return new Operatorid(this);
+        }
     }
 }

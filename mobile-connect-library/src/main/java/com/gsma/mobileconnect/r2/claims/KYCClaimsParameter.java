@@ -18,8 +18,8 @@ package com.gsma.mobileconnect.r2.claims;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.constants.LinkRels;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
@@ -31,26 +31,42 @@ import org.slf4j.LoggerFactory;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = KYCClaimsParameter.Builder.class)
 public class KYCClaimsParameter {
     private final String name;
+    @SerializedName(KYCClaimsConstants.GIVEN_NAME)
     private final String givenName;
+    @SerializedName(KYCClaimsConstants.FAMILY_NAME)
     private final String familyName;
+    @SerializedName(KYCClaimsConstants.ADDRESS)
     private final String address;
+    @SerializedName(KYCClaimsConstants.HOUSENO_OR_HOUSENAME)
     private final String housenoOrHousename;
+    @SerializedName(KYCClaimsConstants.POSTAL_CODE)
     private final String postalCode;
+    @SerializedName(KYCClaimsConstants.TOWN)
     private final String town;
+    @SerializedName(KYCClaimsConstants.COUNTRY)
     private final String country;
+    @SerializedName(KYCClaimsConstants.BIRTHDATE)
     private final String birthdate;
 
+    @SerializedName(KYCClaimsConstants.NAME_HASHED)
     private final String nameHashed;
+    @SerializedName(KYCClaimsConstants.GIVEN_NAME_HASHED)
     private final String givenNameHashed;
+    @SerializedName(KYCClaimsConstants.FAMILY_NAME_HASHED)
     private final String familyNameHashed;
+    @SerializedName(KYCClaimsConstants.ADDRESS_HASHED)
     private final String addressHashed;
+    @SerializedName(KYCClaimsConstants.HOUSENO_OR_HOUSENAME_HASHED)
     private final String housenoOrHousenameHashed;
+    @SerializedName(KYCClaimsConstants.POSTAL_CODE_HASHED)
     private final String postalCodeHashed;
+    @SerializedName(KYCClaimsConstants.TOWN_HASHED)
     private final String townHashed;
+    @SerializedName(KYCClaimsConstants.COUNTRY_HASHED)
     private final String countryHashed;
+    @SerializedName(KYCClaimsConstants.BIRTHDATE_HASHED)
     private final String birthdateHashed;
 
     private final ObjectMapper mapper = new ObjectMapper();

@@ -7,7 +7,7 @@ import com.gsma.mobileconnect.r2.constants.Scope;
 import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
 import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.rest.RestClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -34,7 +34,7 @@ public class Controller {
             Scope.PHONE, Scope.OFFLINE_ACCESS};
 
     protected Controller() {
-        this.jsonService = new JacksonJsonService();
+        this.jsonService = new GsonJsonService();
         restClient = new RestClient.Builder().withJsonService(jsonService).withHttpClient(HttpClientBuilder.create().build()).build();
     }
 

@@ -9,10 +9,10 @@ import java.util.List;
 
 import static org.testng.Assert.*;
 
-public class OperatorIdTest
+public class OperatoridTest
 {
-    private OperatorId operatorIdWithLinks;
-    private OperatorId operatorIdWithoutLinks;
+    private Operatorid operatoridWithLinks;
+    private Operatorid operatoridWithoutLinks;
 
     private List<Link> links;
 
@@ -23,23 +23,23 @@ public class OperatorIdTest
         links.add(new Link.Builder().withHref("href1").withRel("rel1").build());
         links.add(new Link.Builder().withHref("href2").withRel("rel2").build());
 
-        operatorIdWithLinks = new OperatorId.Builder().withLink(links).build();
-        operatorIdWithoutLinks = new OperatorId.Builder().build();
+        operatoridWithLinks = new Operatorid.Builder().withLink(links).build();
+        operatoridWithoutLinks = new Operatorid.Builder().build();
     }
 
     @AfterMethod
     public void tearDown() throws Exception
     {
         links = null;
-        operatorIdWithLinks = null;
-        operatorIdWithoutLinks = null;
+        operatoridWithLinks = null;
+        operatoridWithoutLinks = null;
     }
 
     @Test
     public void testGetLink() throws Exception
     {
-        assertEquals(operatorIdWithLinks.getLink(), links);
-        assertTrue(operatorIdWithoutLinks.getLink().isEmpty());
+        assertEquals(operatoridWithLinks.getLink(), links);
+        assertTrue(operatoridWithoutLinks.getLink().isEmpty());
     }
 
 }

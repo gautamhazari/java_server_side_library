@@ -286,7 +286,7 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
 
         final MobileConnectStatus status =
                 this.mobileConnectWebInterface.revokeToken(request, accessToken,
-                        Parameters.ACCESS_TOKEN_HINT, sdkSession);
+                        Parameters.ACCESS_TOKEN, sdkSession);
 
         return new MobileConnectWebResponse(status);
     }

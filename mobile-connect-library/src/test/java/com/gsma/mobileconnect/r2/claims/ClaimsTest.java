@@ -17,7 +17,7 @@
 package com.gsma.mobileconnect.r2.claims;
 
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.json.JsonSerializationException;
 import com.gsma.mobileconnect.r2.utils.TestUtils;
@@ -33,7 +33,7 @@ import static org.testng.AssertJUnit.assertNull;
  */
 public class ClaimsTest
 {
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
 
     @Test
     public void claimsShouldSerialize() throws JsonSerializationException

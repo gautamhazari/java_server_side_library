@@ -4,6 +4,8 @@ package com.gsma.mobileconnect.r2.authentication;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.annotations.SerializedName;
+import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
 import java.util.List;

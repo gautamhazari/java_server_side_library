@@ -19,7 +19,7 @@ package com.gsma.mobileconnect.r2.validation;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import org.testng.annotations.Test;
 
@@ -36,7 +36,7 @@ public class TokenValidationTest
     private static final long MAX_AGE = 300L * 24 * 60 * 60; //seconds
     private final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder =
         new DefaultEncodeDecoder();
-    private final JacksonJsonService jacksonJsonService = new JacksonJsonService();
+    private final GsonJsonService gsonJsonService = new GsonJsonService();
 
     @Test
     public void validateIdTokenShouldReturnValidSignature() throws JsonDeserializationException
@@ -46,10 +46,10 @@ public class TokenValidationTest
         final String idToken =
             "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjEyMzQ1Njc4OTAiLCJhdWQiOiJ4LWNsaWVudGlkLXgiLCJhenAiOiJ4LWNsaWVudGlkLXgiLCJpc3MiOiJodHRwOi8vbW9iaWxlY29ubmVjdC5pbyIsImV4cCI6MjE0NzQ4MzY0NywiYXV0aF90aW1lIjoyMTQ3NDgzNjQ3LCJpYXQiOjE0NzEwMDczMjd9.U9c5iuybG4GIvrbQH5BT9AgllRbPL6SuIzL4Y3MW7VlCVIQOc_HFfkiLa0LNvqZiP-kFlADmnkzuuQxPq7IyaOILVYct20mrcOb_U_zMli4jg-t9P3BxHaq3ds9JlLBjz0oewd01ZQtWHgRnrGymfKAIojzHlde-aePuL1M26Eld5zoKQvCLcKAynZsjKsWF_6YdLk-uhlC5ofMOaOoPirPSPAxYvbj91z3o9XIgSHoU-umN7AJ6UQ4H-ulfftlRGK8hz0Yzpf2MHOy9OHg1u3ayfCaaf8g5zKGngcz0LgK9VAw2B31xJw-RHkPPh0Hz82FgBc4588oEFC1c22GGTw";
 
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
             TokenValidation.validateIdToken(idToken, clientId, issuer, nonce, MAX_AGE, jwKeyset,
-                jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                    gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.MAX_AGE_PASSED);
     }
@@ -62,10 +62,10 @@ public class TokenValidationTest
         final String idToken =
             "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjEyMzQ1Njc4OTAiLCJhdWQiOiJ4LWNsaWVudGlkLXgiLCJhenAiOiJ4LWNsaWVudGlkLXgiLCJpc3MiOiJodHRwOi8vbW9iaWxlY29ubmVjdC5pbyIsImV4cCI6MjE0NzQ4MzY0NywiYXV0aF90aW1lIjoyMTQ3NDgzNjQ3LCJpYXQiOjE0NzEwMDczMjd9.U9c5iuybG4GIvrbQH5BT9AgllRbPL6SuIzL4Y3MW7VlCVIQOc_HFfkiLa0LNvqZiP-kFlADmnkzuuQxPq7IyaOILVYct20mrcOb_U_zMli4jg-t9P3BxHaq3ds9JlLBjz0oewd01ZQtWHgRnrGymfKAIojzHlde-aePuL1M26Eld5zoKQvCLcKAynZsjKsWF_6YdLk-uhlC5ofMOaOoPirPSPAxYvbj91z3o9XIgSHoU-umN7AJ6UQ4H-ulfftlRGK8hz0Yzpf2MHOy9OHg1u3ayfCaaf8g5zKGngcz0LgK9VAw2B31xJw-RHkPPh0Hz82FgBcabd8oEFC1c22GGT1";
 
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
             TokenValidation.validateIdToken(idToken, clientId, issuer, nonce, MAX_AGE, jwKeyset,
-                jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                    gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.MAX_AGE_PASSED);
     }
@@ -80,10 +80,10 @@ public class TokenValidationTest
         final String idToken =
             "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjEyMzQ1Njc4OTAiLCJhdWQiOiJ4LWNsaWVudGlkLXgiLCJhenAiOiJ4LWNsaWVudGlkLXgiLCJpc3MiOiJodHRwOi8vbW9iaWxlY29ubmVjdC5pbyIsImV4cCI6MjE0NzQ4MzY0NywiYXV0aF90aW1lIjoyMTQ3NDgzNjQ3LCJpYXQiOjE0NzEwMDczMjd9.U9c5iuybG4GIvrbQH5BT9AgllRbPL6SuIzL4Y3MW7VlCVIQOc_HFfkiLa0LNvqZiP-kFlADmnkzuuQxPq7IyaOILVYct20mrcOb_U_zMli4jg-t9P3BxHaq3ds9JlLBjz0oewd01ZQtWHgRnrGymfKAIojzHlde-aePuL1M26Eld5zoKQvCLcKAynZsjKsWF_6YdLk-uhlC5ofMOaOoPirPSPAxYvbj91z3o9XIgSHoU-umN7AJ6UQ4H-ulfftlRGK8hz0Yzpf2MHOy9OHg1u3ayfCaaf8g5zKGngcz0LgK9VAw2B31xJw-RHkPPh0Hz82FgBc4588oEFC1c22GGTw";
 
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
             TokenValidation.validateIdToken(idToken, clientId, issuer, invalidNonce, MAX_AGE,
-                jwKeyset, jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                jwKeyset, gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_NONCE);
     }
@@ -93,18 +93,18 @@ public class TokenValidationTest
     {
         final String jwksJson =
             "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO-C0GBr5lRA-AXtmCO7bh0CEC9-R6mqctkzUhVnU22Vrj-B1J0JtJoaya9VTC3DdhzI_-7kxtIc5vrHq-ss5wo8-tK7UqtKLSRf9DcyZA0H9FEABbO5Qfvh-cfK4EI_ytA5UBZgO322RVYgQ9Do0D_-jf90dcuUgoxz_JTAOpVNc0u_m9LxGnGL3GhMbxLaX3eUublD40aK0nS2k37dOYOpQHxuAS8BZxLvS6900qqaZ6z0kwZ2WFq-hhk3Imd6fweS724fzqVslY7rHpM5n7z5m7s1ArurU1dBC1Dxw1Hzn6ZeJkEaZQ\",\"kty\":\"RSA\",\"use\":\"sig\"}]}";
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
 
         final String idTokenEmpty = "";
         final TokenValidationResult tokenValidationResultEmpty =
             TokenValidation.validateIdToken(idTokenEmpty, clientId, issuer, nonce, MAX_AGE, jwKeyset,
-                jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                    gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
         assertEquals(tokenValidationResultEmpty, TokenValidationResult.ID_TOKEN_MISSING);
 
         final String idTokenNull = null;
         final TokenValidationResult tokenValidationResultNull =
             TokenValidation.validateIdToken(idTokenNull, clientId, issuer, nonce, MAX_AGE, jwKeyset,
-                jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                    gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
         assertEquals(tokenValidationResultNull, TokenValidationResult.ID_TOKEN_MISSING);
     }
 
@@ -116,9 +116,9 @@ public class TokenValidationTest
         final String idToken =
             "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek";
 
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, jacksonJsonService,
+            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, gsonJsonService,
                 iMobileConnectEncodeDecoder);
 
         assertEquals(tokenValidationResult, TokenValidationResult.VALID);
@@ -133,9 +133,9 @@ public class TokenValidationTest
         final String idToken =
             "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek";
 
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, jacksonJsonService,
+            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, gsonJsonService,
                 iMobileConnectEncodeDecoder);
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_SIGNATURE);
@@ -149,9 +149,9 @@ public class TokenValidationTest
         final String idToken =
             "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek";
 
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, jacksonJsonService,
+            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, gsonJsonService,
                 iMobileConnectEncodeDecoder);
 
         assertEquals(tokenValidationResult, TokenValidationResult.JWKS_ERROR);
@@ -166,9 +166,9 @@ public class TokenValidationTest
         final String idToken =
             "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek";
 
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, jacksonJsonService,
+            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, gsonJsonService,
                 iMobileConnectEncodeDecoder);
 
         assertEquals(tokenValidationResult, TokenValidationResult.NO_MATCHING_KEY);
@@ -183,9 +183,9 @@ public class TokenValidationTest
         final String idToken =
             "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.";
 
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, jacksonJsonService,
+            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, gsonJsonService,
                 iMobileConnectEncodeDecoder);
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_SIGNATURE);
@@ -200,9 +200,9 @@ public class TokenValidationTest
         final String idToken =
             "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek";
 
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
         final TokenValidationResult tokenValidationResult =
-            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, jacksonJsonService,
+            TokenValidation.validateIdTokenSignature(idToken, jwKeyset, gsonJsonService,
                 iMobileConnectEncodeDecoder);
 
         assertEquals(tokenValidationResult, TokenValidationResult.KEY_MISFORMED);
@@ -218,7 +218,7 @@ public class TokenValidationTest
 
         final TokenValidationResult tokenValidationResult =
             TokenValidation.validateIdTokenClaims(idToken, clientId, issuer, nonce, MAX_AGE,
-                jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                    gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.MAX_AGE_PASSED);
 
@@ -234,7 +234,7 @@ public class TokenValidationTest
 
         final TokenValidationResult tokenValidationResult =
             TokenValidation.validateIdTokenClaims(idToken, clientId, issuer, invalidNonce, MAX_AGE,
-                jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                    gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_NONCE);
 
@@ -250,7 +250,7 @@ public class TokenValidationTest
 
         final TokenValidationResult tokenValidationResult =
             TokenValidation.validateIdTokenClaims(idToken, clientId, invalidIssuer, nonce, MAX_AGE,
-                jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                    gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_ISSUER);
     }
@@ -264,7 +264,7 @@ public class TokenValidationTest
         final String invalid_clientid = "invalid_clientid";
         final TokenValidationResult tokenValidationResult =
             TokenValidation.validateIdTokenClaims(idToken, invalid_clientid, issuer, nonce, MAX_AGE,
-                jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                    gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.INVALID_AUD_AND_AZP);
     }
@@ -279,7 +279,7 @@ public class TokenValidationTest
 
         final TokenValidationResult tokenValidationResult =
             TokenValidation.validateIdTokenClaims(idToken, clientId, issuer, nonce, maxAgeExpired,
-                jacksonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
+                    gsonJsonService, iMobileConnectEncodeDecoder, "mc_v1.1");
 
         assertEquals(tokenValidationResult, TokenValidationResult.MAX_AGE_PASSED);
 

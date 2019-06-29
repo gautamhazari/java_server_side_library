@@ -16,11 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.claims;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
 
@@ -32,8 +28,6 @@ import java.util.*;
  *
  * @since 2.0
  */
-@JsonDeserialize(using = Claims.JacksonDeserializer.class)
-@JsonSerialize(using = Claims.JacksonSerializer.class)
 public class Claims
 {
     public static final ClaimsValue ESSENTIAL_CLAIM =
@@ -95,35 +89,91 @@ public class Claims
         return this.claimsMap.isEmpty();
     }
 
-    protected static class JacksonDeserializer extends JsonDeserializer<Claims>
+//    protected static class JacksonDeserializer extends JsonDeserializer<Claims>
+//    {
+//        @Override
+//        public Claims deserialize(final JsonParser jsonParser,
+//            final DeserializationContext deserializationContext) throws IOException
+//        {
+//            final JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+//            final Claims claims = new Claims();
+//
+//            for (final Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); )
+//            {
+//                final Map.Entry<String, JsonNode> entry = it.next();
+//
+//                final JsonNode value = entry.getValue();
+//                final ClaimsValue claimsValue;
+//
+//                if (value.isNull())
+//                {
+//                    claimsValue = VOLUNTARY_CLAIM;
+//                }
+//                else
+//                {
+//                    claimsValue = extractClaimsValue(value);
+//                }
+//
+//                claims.claimsMap.put(entry.getKey(), claimsValue);
+//            }
+//
+//            return claims;
+//        }
+//
+//        private ClaimsValue extractClaimsValue(JsonNode value)
+//        {
+//            final ClaimsValue.Builder builder =
+//                new ClaimsValue.Builder().withEssential(value.has("essential"))
+//                    .withValue(value.isNumber() ? value.longValue() : value.textValue());
+//
+//            if (value.has(VALUES))
+//            {
+//                final List<Object> objects = new ArrayList<Object>();
+//                for (final JsonNode v : value.get(VALUES))
+//                {
+//                    objects.add(v.textValue());
+//                }
+//                builder.withValues(objects.toArray());
+//            }
+//
+//            if (value.isArray()) {
+//                final List<Object> objects = new ArrayList<Object>();
+//                for (final JsonNode v : value) {
+//                    objects.add(v.textValue());
+//                }
+//                builder.withValues(objects.toArray());
+//            }
+//            return builder.build();
+//        }
+//    }
+
+
+//    protected static class JacksonSerializer extends JsonSerializer<Claims>
+//    {
+//        @Override
+//        public void serialize(final Claims claims, final JsonGenerator jsonGenerator,
+//            final SerializerProvider serializerProvider) throws IOException
+//        {
+//            jsonGenerator.writeStartObject();
+//
+//            for (final Map.Entry<String, ClaimsValue> entry : claims.claimsMap.entrySet())
+//            {
+//                final ClaimsValue value =
+//                    entry.getValue() == VOLUNTARY_CLAIM ? null : entry.getValue();
+//                jsonGenerator.writeObjectField(entry.getKey(), value);
+//            }
+//
+//            jsonGenerator.writeEndObject();
+//        }
+//    }
+
+
+    public static class Builder implements IBuilder<Claims>
     {
-        @Override
-        public Claims deserialize(final JsonParser jsonParser,
-            final DeserializationContext deserializationContext) throws IOException
-        {
-            final JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-            final Claims claims = new Claims();
+        private final Map<String, ClaimsValue> claimsMap = new HashMap<String, ClaimsValue>();
 
-            for (final Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); )
-            {
-                final Map.Entry<String, JsonNode> entry = it.next();
+        public Builder(String json) {
 
-                final JsonNode value = entry.getValue();
-                final ClaimsValue claimsValue;
-
-                if (value.isNull())
-                {
-                    claimsValue = VOLUNTARY_CLAIM;
-                }
-                else
-                {
-                    claimsValue = extractClaimsValue(value);
-                }
-
-                claims.claimsMap.put(entry.getKey(), claimsValue);
-            }
-
-            return claims;
         }
 
         private ClaimsValue extractClaimsValue(JsonNode value)
@@ -151,32 +201,36 @@ public class Claims
             }
             return builder.build();
         }
-    }
 
+//        public Claims deserialize(final JsonParser jsonParser,
+//            final DeserializationContext deserializationContext) throws IOException
+//        {
+//            final JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+//            final Claims claims = new Claims();
+//
+//            for (final Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); )
+//            {
+//                final Map.Entry<String, JsonNode> entry = it.next();
+//
+//                final JsonNode value = entry.getValue();
+//                final ClaimsValue claimsValue;
+//
+//                if (value.isNull())
+//                {
+//                    claimsValue = VOLUNTARY_CLAIM;
+//                }
+//                else
+//                {
+//                    claimsValue = extractClaimsValue(value);
+//                }
+//
+//                claims.claimsMap.put(entry.getKey(), claimsValue);
+//            }
+//
+//            return claims;
+//        }
+//
 
-    protected static class JacksonSerializer extends JsonSerializer<Claims>
-    {
-        @Override
-        public void serialize(final Claims claims, final JsonGenerator jsonGenerator,
-            final SerializerProvider serializerProvider) throws IOException
-        {
-            jsonGenerator.writeStartObject();
-
-            for (final Map.Entry<String, ClaimsValue> entry : claims.claimsMap.entrySet())
-            {
-                final ClaimsValue value =
-                    entry.getValue() == VOLUNTARY_CLAIM ? null : entry.getValue();
-                jsonGenerator.writeObjectField(entry.getKey(), value);
-            }
-
-            jsonGenerator.writeEndObject();
-        }
-    }
-
-
-    public static class Builder implements IBuilder<Claims>
-    {
-        private final Map<String, ClaimsValue> claimsMap = new HashMap<String, ClaimsValue>();
 
         /**
          * Add a claim value with the specified key.
