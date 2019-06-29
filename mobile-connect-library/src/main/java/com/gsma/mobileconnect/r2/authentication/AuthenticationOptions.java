@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.authentication;
 
-import com.gsma.mobileconnect.r2.claims.ClaimsParameter;
 import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
@@ -52,7 +51,7 @@ public class AuthenticationOptions
     private final String context;
     private final String bindingMessage;
     private final String claimsJson;
-    private final ClaimsParameter claims;
+    private final Object claims;
     private final KYCClaimsParameter kycClaims;
     private final String correlationId;
     private final String version;
@@ -186,7 +185,7 @@ public class AuthenticationOptions
         return this.claimsJson;
     }
 
-    public ClaimsParameter getClaims()
+    public Object getClaims()
     {
         return this.claims;
     }
@@ -227,7 +226,7 @@ public class AuthenticationOptions
         private String context;
         private String bindingMessage;
         private String claimsJson;
-        private ClaimsParameter claims;
+        private Object claims;
         private KYCClaimsParameter kycClaims;
         private String correlationId;
         private boolean isUsingCorrelationId;
@@ -391,7 +390,7 @@ public class AuthenticationOptions
             return this;
         }
 
-        public Builder withClaims(final ClaimsParameter val)
+        public Builder withClaims(final Object val)
         {
             this.claims = val;
             return this;

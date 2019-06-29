@@ -17,19 +17,19 @@
 package com.gsma.mobileconnect.r2.validation;
 
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
-import com.gsma.mobileconnect.r2.claims.Claims;
-import com.gsma.mobileconnect.r2.claims.ClaimsConstants;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.MobileConnectInvalidJWKException;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.token.IdToken;
 import com.gsma.mobileconnect.r2.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -129,8 +129,8 @@ public class TokenValidation
         final JWKey jwKeyDeserialized = jsonService.deserialize(
             JsonWebTokens.Part.HEADER.decode(idToken, mobileConnectEncodeDecoder),
             JWKey.class);
-        final String alg = jwKeyDeserialized.getAlgorithm();
-        final String keyId = jwKeyDeserialized.getKeyId();
+        final String alg = jwKeyDeserialized.getAlg();
+        final String keyId = jwKeyDeserialized.getKid();
 
         final JWKey jwKey = extractJwKey(keyset, alg, keyId);
 
@@ -160,13 +160,13 @@ public class TokenValidation
             @Override
             public boolean apply(final JWKey input)
             {
-                if (input.getKeyId() == null)
+                if (input.getKid() == null)
                 {
-                    return keyId == null && (StringUtils.isNullOrEmpty(input.getAlgorithm())
-                        || input.getAlgorithm().equals(alg));
+                    return keyId == null && (StringUtils.isNullOrEmpty(input.getAlg())
+                        || input.getAlg().equals(alg));
                 }
-                return input.getKeyId().equals(keyId) && (StringUtils.isNullOrEmpty(
-                    input.getAlgorithm()) || input.getAlgorithm().equals(alg));
+                return input.getKid().equals(keyId) && (StringUtils.isNullOrEmpty(
+                    input.getAlg()) || input.getAlg().equals(alg));
             }
         });
     }
@@ -219,116 +219,112 @@ public class TokenValidation
         final IMobileConnectEncodeDecoder mobileConnectEncodeDecoder, final String currentVersion)
         throws JsonDeserializationException
     {
-        final Claims claims = extractClaims(idToken, jsonService, mobileConnectEncodeDecoder);
+        final IdToken decodedIdToken = decodeIdToken(idToken, jsonService, mobileConnectEncodeDecoder);
 
         if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
-            if (!isAtHashPresent(claims)) {
+            if (!isAtHashPresent(decodedIdToken)) {
                 LOGGER.warn("Invalid at_hash");
                 return TokenValidationResult.INVALID_AT_HASH;
             }
-            if (!isAcrPresent(claims)) {
+            if (!isAcrPresent(decodedIdToken)) {
                 LOGGER.warn("Invalid acr");
                 return TokenValidationResult.INVALID_ACR;
             }
-            if (!isAmrPresent(claims)) {
+            if (!isAmrPresent(decodedIdToken)) {
                 LOGGER.warn("Invalid amr");
                 return TokenValidationResult.INVALID_AMR;
             }
-            if (!isAcrPresent(claims)) {
+            if (!isAcrPresent(decodedIdToken)) {
                 LOGGER.warn("Invalid hashed_login_hint");
                 return TokenValidationResult.INVALID_HASHED_LOGIN_HINT;
             }
         }
 
-        if (isNonceInvalid(claims, expectedNonce))
+        if (isNonceInvalid(decodedIdToken, expectedNonce))
         {
             LOGGER.warn("Invalid Nonce");
             return TokenValidationResult.INVALID_NONCE;
         }
 
-        if (isIssuerInvalid(claims, issuer))
+        if (isIssuerInvalid(decodedIdToken, issuer))
         {
             LOGGER.warn("Issuer does not match expected");
             return TokenValidationResult.INVALID_ISSUER;
         }
 
-        if (!doesAudOrAzpClaimMatchClientId(claims, clientId))
+        if (!doesAudOrAzpClaimMatchClientId(decodedIdToken, clientId))
         {
             LOGGER.warn("Audience or Authorized party does not match client id");
             return TokenValidationResult.INVALID_AUD_AND_AZP;
         }
 
-        return validateTokenExpiry(claims, maxAge);
+        return validateTokenExpiry(decodedIdToken, maxAge);
     }
 
-    private static Claims extractClaims(final String idToken, final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder mobileConnectEncodeDecoder)
+    private static IdToken decodeIdToken(final String idToken, final IJsonService jsonService,
+                                         final IMobileConnectEncodeDecoder mobileConnectEncodeDecoder)
         throws JsonDeserializationException
     {
         String claimsJson = JsonWebTokens.Part.CLAIMS.decode(idToken, mobileConnectEncodeDecoder);
-        return jsonService.deserialize(claimsJson, Claims.class);
+        return jsonService.deserialize(claimsJson, IdToken.class);
     }
 
-    private static boolean isAtHashPresent(Claims claims) {
-        return claims.get(ClaimsConstants.AT_HASH) != null;
+    private static boolean isAtHashPresent(IdToken idToken) {
+        return idToken.getAtHash() != null;
     }
 
-    private static boolean isAcrPresent(Claims claims) {
-        return claims.get(ClaimsConstants.ACR) != null;
+    private static boolean isAcrPresent(IdToken idToken) {
+        return idToken.getAcr() != null;
     }
 
-    private static boolean isAmrPresent(Claims claims) {
-        return claims.get(ClaimsConstants.AMR) != null;
+    private static boolean isAmrPresent(IdToken idToken) {
+        return idToken.getAmr() != null;
     }
 
-    private static boolean isHashedLoginHintPresent(Claims claims) {
-        return claims.get(ClaimsConstants.HASHED_LOGIN_HINT) != null;
+    private static boolean isHashedLoginHintPresent(IdToken idToken) {
+        return idToken.getHashedLoginHint() != null;
     }
 
-    private static boolean isNonceInvalid(final Claims claims, final String expectedNonce)
+    private static boolean isNonceInvalid(final IdToken idToken, final String expectedNonce)
     {
-        return expectedNonce != null && !expectedNonce.equals(
-            claims.get(ClaimsConstants.NONCE).getValue().toString());
+        return expectedNonce != null && !expectedNonce.equals(idToken.getNonce().toString());
     }
 
-    private static boolean isIssuerInvalid(final Claims claims, final String issuer)
+    private static boolean isIssuerInvalid(final IdToken idToken, final String issuer)
     {
-        return !claims.get(ClaimsConstants.ISSUER).getValue().toString().equals(issuer);
+        return !idToken.getIss().toString().equals(issuer);
     }
 
-    private static boolean doesAudOrAzpClaimMatchClientId(final Claims claims,
+    private static boolean doesAudOrAzpClaimMatchClientId(final IdToken idToken,
         final String clientId)
     {
-        Object aud = claims.get(ClaimsConstants.AUD).getValue();
-        Object[] audArray = claims.get(ClaimsConstants.AUD).getValues();
-        Object azp = claims.get(ClaimsConstants.AZP).getValue();
-        if (aud == null && audArray == null) {
+        ArrayList<Object> aud = idToken.getAud();
+        Object azp = idToken.getAzp();
+        if (aud == null) {
             return false;
         }
-        if (audArray != null) {
-            if (audArray.length == 1) {
-                return clientId.equals(audArray[0]) || clientId.equals(azp);
-            } else if (audArray.length > 1) {
-                for (Object audElement : audArray) {
-                    if (audElement.equals(clientId)) {
-                        return true;
-                    }
+
+        if (aud.size() == 1) {
+            return clientId.equals(aud.get(0)) || clientId.equals(azp);
+        } else if (aud.size() > 1) {
+            for (Object audElement : aud) {
+                if (audElement.equals(clientId)) {
+                    return true;
                 }
             }
-            return false;
         }
-        return clientId.equals(aud) || clientId.equals(azp);
+        return false;
     }
 
-    private static TokenValidationResult validateTokenExpiry(Claims claims, long maxAge)
+    private static TokenValidationResult validateTokenExpiry(IdToken idToken, long maxAge)
     {
-        if (tokenHasExpired(claims))
+        if (tokenHasExpired(idToken))
         {
             LOGGER.warn("Id token has expired");
             return TokenValidationResult.ID_TOKEN_EXPIRED;
         }
 
-        if (maxAgeHasPassed(claims, maxAge))
+        if (maxAgeHasPassed(idToken, maxAge))
         {
             LOGGER.warn("Id token has passed max age");
             return TokenValidationResult.MAX_AGE_PASSED;
@@ -337,15 +333,15 @@ public class TokenValidation
         return TokenValidationResult.VALID;
     }
 
-    private static boolean tokenHasExpired(final Claims claims)
+    private static boolean tokenHasExpired(final IdToken idToken)
     {
-        return (Long.valueOf(claims.get(ClaimsConstants.EXPIRED).getValue().toString()) * 1000)
+        return (Long.valueOf(idToken.getExp().toString()) * 1000)
             < Calendar.getInstance().getTimeInMillis();
     }
 
-    private static boolean maxAgeHasPassed(final Claims claims, final long maxAge)
+    private static boolean maxAgeHasPassed(final IdToken idToken, final long maxAge)
     {
-        return (Long.valueOf(claims.get(ClaimsConstants.ISSUED_AT_TIME).getValue().toString())
+        return (Long.valueOf(idToken.getIat().toString())
             * 1000) + (maxAge * 1000) < Calendar.getInstance().getTimeInMillis();
     }
 

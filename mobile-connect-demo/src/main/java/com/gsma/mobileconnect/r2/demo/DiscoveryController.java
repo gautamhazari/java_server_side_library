@@ -364,6 +364,11 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
 
         URI requestUri = HttpUtils.extractCompleteUrl(request);
         SessionData sessionData = sessionCache.get(state);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         MobileConnectStatus status = this.mobileConnectWebInterface.handleUrlRedirect(request, requestUri,
                 sessionData.getDiscoveryResponse(), state, sessionData.getNonce(), options, apiVersion);
 

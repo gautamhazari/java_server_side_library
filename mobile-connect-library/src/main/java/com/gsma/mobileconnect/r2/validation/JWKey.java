@@ -18,6 +18,7 @@ package com.gsma.mobileconnect.r2.validation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.MobileConnectInvalidJWKException;
 import com.gsma.mobileconnect.r2.utils.ByteUtils;
@@ -39,16 +40,22 @@ import java.security.spec.RSAPublicKeySpec;
  */
 class JWKey
 {
-    private String keyType;
+    private String kty;
     private String use;
+    @SerializedName("key_ops")
     private String keyOps;
-    private String algorithm;
-    private String keyId;
+    private String alg;
+    private String kid;
+    @SerializedName("k")
     private String key;
-    private String eccCurve;
+    private String crv;
+    @SerializedName("x")
     private String eccX;
+    @SerializedName("y")
     private String eccY;
+    @SerializedName("n")
     private String rsaN;
+    @SerializedName("e")
     private String rsaE;
 
     private JWKey()
@@ -56,13 +63,12 @@ class JWKey
     }
 
     /**
-     * @return The "kty" (key type) parameter identifies the cryptographic algorithm family used
+     * @return The "kty" (key type) parameter identifies the cryptographic alg family used
      * with the key, such as "RSA" or "EC"
      */
-    @JsonProperty("kty")
-    public String getKeyType()
+    public String getKty()
     {
-        return keyType;
+        return kty;
     }
 
     /**
@@ -70,7 +76,6 @@ class JWKey
      * key.The "use" parameter is employed to indicate whether a public key is used for encrypting
      * data or verifying the signature on data.
      */
-    @JsonProperty("use")
     public String getUse()
     {
         return use;
@@ -81,36 +86,32 @@ class JWKey
      * key is intended to be used.The "key_ops" parameter is intended for use cases in which public,
      * private, or symmetric keys may be present.
      */
-    @JsonProperty("key_ops")
     public String getKeyOps()
     {
         return keyOps;
     }
 
     /**
-     * @return The "alg" (algorithm) parameter identifies the algorithm intended for use with the
+     * @return The "alg" (alg) parameter identifies the alg intended for use with the
      * key.
      */
-    @JsonProperty("alg")
-    public String getAlgorithm()
+    public String getAlg()
     {
-        return algorithm;
+        return alg;
     }
 
     /**
      * @return The "kid" (key ID) parameter is used to match a specific key. This is used, for
      * instance, to choose among a set of keys within a JWK Set during key rollover.
      */
-    @JsonProperty("kid")
-    public String getKeyId()
+    public String getKid()
     {
-        return keyId;
+        return kid;
     }
 
-    @JsonIgnore
     Boolean isSymmetric()
     {
-        return "OCT".equalsIgnoreCase(this.keyType);
+        return "OCT".equalsIgnoreCase(this.kty);
     }
 
     /**
@@ -118,32 +119,28 @@ class JWKey
      * single-valued) key. It is represented as the base64url encoding of the octet sequence
      * containing the key value.
      */
-    @JsonProperty("k")
     public String getKey()
     {
         return key;
     }
 
-    @JsonIgnore
     Boolean isEcc()
     {
-        return "EC".equalsIgnoreCase(this.keyType);
+        return "EC".equalsIgnoreCase(this.kty);
     }
 
     /**
      * @return The "crv" (curve) parameter identifies the cryptographic curve used with the key
      */
-    @JsonProperty("crv")
-    public String getEccCurve()
+    public String getCrv()
     {
-        return eccCurve;
+        return crv;
     }
 
     /**
      * @return The "x" (x coordinate) parameter contains the x coordinate for the Elliptic Curve
      * point
      */
-    @JsonProperty("x")
     public String getEccX()
     {
         return eccX;
@@ -153,23 +150,20 @@ class JWKey
      * @return The "y" (y coordinate) parameter contains the y coordinate for the Elliptic Curve
      * point
      */
-    @JsonProperty("y")
     public String getEccY()
     {
         return eccY;
     }
 
-    @JsonIgnore
     Boolean isRsa()
     {
-        return "RSA".equalsIgnoreCase(this.keyType);
+        return "RSA".equalsIgnoreCase(this.kty);
     }
 
     /**
      * @return The "n" (modulus) parameter contains the modulus value for the RSA public key. It is
      * represented as a Base64urlUInt-encoded value.
      */
-    @JsonProperty("n")
     public String getRsaN()
     {
         return rsaN;
@@ -179,7 +173,6 @@ class JWKey
      * @return The "e" (exponent) parameter contains the exponent value for the RSA public key. It
      * is represented as a Base64urlUInt-encoded value.
      */
-    @JsonProperty("e")
     public String getRsaE()
     {
         return rsaE;
