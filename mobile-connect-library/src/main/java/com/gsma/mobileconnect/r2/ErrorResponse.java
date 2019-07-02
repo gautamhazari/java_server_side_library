@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
@@ -26,7 +25,6 @@ import com.gsma.mobileconnect.r2.utils.StringUtils;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = ErrorResponse.Builder.class)
 public class ErrorResponse
 {
     private final String error;

@@ -14,7 +14,7 @@ public class OperatorParameters {
     private String scope;
     private String arcValues;
     private long maxDiscoveryCacheSize;
-    private transient OperatorUrls operatorUrls;
+    private OperatorUrls operatorUrls;
 
     public String getClientID() {
         return clientID;

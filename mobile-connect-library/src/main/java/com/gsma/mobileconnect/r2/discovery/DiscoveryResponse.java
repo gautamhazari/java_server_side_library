@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.ErrorResponse;
 import com.gsma.mobileconnect.r2.cache.AbstractCacheable;
@@ -287,7 +286,6 @@ public class DiscoveryResponse extends AbstractCacheable
             return this;
         }
 
-        @JsonIgnore
         public Builder withHeaders(final List<KeyValuePair> val)
         {
             this.headers = val;

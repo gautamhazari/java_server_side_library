@@ -16,10 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.annotations.SerializedName;
@@ -34,7 +31,6 @@ import java.util.List;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = ProviderMetadata.Builder.class)
 public class ProviderMetadata extends AbstractCacheable
 {
     private final String version;
@@ -778,7 +774,6 @@ public class ProviderMetadata extends AbstractCacheable
             return this;
         }
 
-        @JsonProperty("mc_version")
         public Builder withMCVersion(final List<String> val)
         {
             this.mcVersion = ListUtils.immutableList(val);
@@ -833,14 +828,12 @@ public class ProviderMetadata extends AbstractCacheable
             return this;
         }
 
-        @JsonProperty("op_policy_uri")
         public Builder withOperatorPolicyUri(final String val)
         {
             this.operatorPolicyUri = val;
             return this;
         }
 
-        @JsonProperty("op_tos_uri")
         public Builder withOperatorTermsOfServiceUri(final String val)
         {
             this.operatorTermsOfServiceUri = val;

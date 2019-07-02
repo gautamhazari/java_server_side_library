@@ -16,8 +16,6 @@
 */
 package com.gsma.mobileconnect.r2.validation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.MobileConnectInvalidJWKException;

@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.constants.LinkRels;
 import com.gsma.mobileconnect.r2.json.DiscoveryResponseData;

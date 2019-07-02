@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.json;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
 /**
@@ -24,7 +23,6 @@ import com.gsma.mobileconnect.r2.utils.IBuilder;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = Apis.Builder.class)
 public class Apis
 {
     private final Operatorid operatorid;

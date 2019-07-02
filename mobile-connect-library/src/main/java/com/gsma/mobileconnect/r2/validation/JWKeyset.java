@@ -16,8 +16,6 @@
 */
 package com.gsma.mobileconnect.r2.validation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gsma.mobileconnect.r2.cache.AbstractCacheable;
 import com.gsma.mobileconnect.r2.utils.ListUtils;
 import com.gsma.mobileconnect.r2.utils.Predicate;
@@ -40,7 +38,6 @@ public class JWKeyset extends AbstractCacheable
     /**
      * @return All available keys
      */
-    @JsonProperty("keys")
     public List<JWKey> getKeys()
     {
         return keys;
@@ -52,7 +49,6 @@ public class JWKeyset extends AbstractCacheable
      * @param predicate A function to test each key for eligibility
      * @return Ienumerable containing matching elements
      */
-    @JsonIgnore
     public Iterable<JWKey> getMatching(Predicate<JWKey> predicate)
     {
         if (predicate == null || keys == null || keys.isEmpty())

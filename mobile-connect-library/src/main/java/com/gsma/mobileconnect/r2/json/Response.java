@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.json;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
@@ -25,7 +24,6 @@ import com.gsma.mobileconnect.r2.utils.IBuilder;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = Response.Builder.class)
 public class Response
 {
     @SerializedName("serving_operator")

@@ -235,62 +235,6 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         }
     }
 
-    @GetMapping("headless_authentication")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.FOUND)
-    public MobileConnectWebResponse headlessAuthentication(
-            @RequestParam(required = false) final String sdkSession,
-            @RequestParam(required = false) final String subscriberId,
-            @RequestParam(required = false) final String scope, final HttpServletRequest request)
-    {
-        LOGGER.info("* Starting authentication for sdkSession={}, subscriberId={}, scope={}",
-                sdkSession, LogUtils.mask(subscriberId, LOGGER, Level.INFO), scope);
-
-        final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
-                .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withScope(scope)
-                        .withContext(apiVersion.equals(DefaultOptions.VERSION_MOBILECONNECTAUTHZ) ? "headless" : null)
-                        .withBindingMessage(apiVersion.equals(DefaultOptions.VERSION_MOBILECONNECTAUTHZ) ? "demo headless" : null)
-                        .build())
-                .witAutoRetrieveIdentitySet(true)
-                .build();
-
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.requestHeadlessAuthentication(request, sdkSession,
-                        subscriberId, null, null, options, apiVersion);
-
-        return new MobileConnectWebResponse(status);
-    }
-
-    @GetMapping("refresh_token")
-    @ResponseBody
-    public MobileConnectWebResponse refreshToken(
-            @RequestParam(required = false) final String sdkSession,
-            @RequestParam(required = false) final String refreshToken, final HttpServletRequest request) {
-        LOGGER.info("* Calling refresh token for sdkSession={}, refreshToken={}", sdkSession,
-                LogUtils.mask(refreshToken, LOGGER, Level.INFO));
-
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.refreshToken(request, refreshToken, sdkSession);
-
-        return new MobileConnectWebResponse(status);
-    }
-
-    @GetMapping("revoke_token")
-    @ResponseBody
-    public MobileConnectWebResponse revokeToken(
-            @RequestParam(required = false) final String sdkSession,
-            @RequestParam(required = false) final String accessToken, final HttpServletRequest request) {
-        LOGGER.info("* Calling revoke token for sdkSession={}, accessToken={}", sdkSession,
-                LogUtils.mask(accessToken, LOGGER, Level.INFO));
-
-        final MobileConnectStatus status =
-                this.mobileConnectWebInterface.revokeToken(request, accessToken,
-                        Parameters.ACCESS_TOKEN, sdkSession);
-
-        return new MobileConnectWebResponse(status);
-    }
-
     @GetMapping(value = "discovery_callback", params = "mcc_mnc")
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)

@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.json;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
 import java.util.ArrayList;
@@ -28,7 +27,6 @@ import java.util.List;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = Operatorid.Builder.class)
 public class Operatorid
 {
     private final List<Link> link;

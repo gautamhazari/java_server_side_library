@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.identity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.utils.IBuilder;

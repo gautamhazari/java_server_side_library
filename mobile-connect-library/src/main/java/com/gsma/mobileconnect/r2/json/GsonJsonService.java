@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of the {@link IJsonService} that uses Jackson to perform json serialisation and
+ * Implementation of the {@link IJsonService} that uses to perform json serialisation and
  * deserialisation.
  *
  * @since 2.0

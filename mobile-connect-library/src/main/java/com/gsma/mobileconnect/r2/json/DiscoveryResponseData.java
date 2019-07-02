@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.json;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.ListUtils;
@@ -28,7 +27,6 @@ import java.util.List;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = DiscoveryResponseData.Builder.class)
 public class DiscoveryResponseData
 {
     private final long ttl;

@@ -16,8 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.Headers;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
@@ -78,7 +76,6 @@ public class DiscoveryOptions
     /**
      * @return The URL to redirect to after succesful discovery.
      */
-    @JsonProperty("Redirect_URL")
     public URI getRedirectUrl()
     {
         return this.redirectUrl;
@@ -87,7 +84,6 @@ public class DiscoveryOptions
     /**
      * @return Set to true if manual select is requested.
      */
-    @JsonProperty("Manually-Select")
     public boolean isManuallySelect()
     {
         return this.manuallySelect;
@@ -96,7 +92,6 @@ public class DiscoveryOptions
     /**
      * @return The identified Mobile Country Code.
      */
-    @JsonProperty("Identified-MCC")
     public String getIdentifiedMcc()
     {
         return this.identifiedMcc;
@@ -105,7 +100,6 @@ public class DiscoveryOptions
     /**
      * @return The identified Mobile Country Code.
      */
-    @JsonProperty("Identified-MNC")
     public String getIdentifiedMnc()
     {
         return this.identifiedMnc;
@@ -114,7 +108,6 @@ public class DiscoveryOptions
     /**
      * @return The selected Mobile Country Code.
      */
-    @JsonProperty("Selected-MCC")
     public String getSelectedMcc()
     {
         return this.selectedMcc;
@@ -123,7 +116,6 @@ public class DiscoveryOptions
     /**
      * @return The selected Mobile Network Code
      */
-    @JsonProperty("Selected-MNC")
     public String getSelectedMnc()
     {
         return this.selectedMnc;
@@ -134,7 +126,6 @@ public class DiscoveryOptions
      * service via mobile data. <p> This tells the Discovery Service to discover using the
      * mobile-network.</p>
      */
-    @JsonProperty("Using-Mobile-Data")
     public boolean isUsingMobileData()
     {
         return this.usingMobileData;
@@ -146,7 +137,6 @@ public class DiscoveryOptions
      * injection processes from the MNO to confirm the application is directly using a mobile data
      * connection from the consumption device rather than MiFi/WiFi to mobile hotspot.</p>
      */
-    @JsonProperty("Local-Client-IP")
     public String getLocalClientIp()
     {
         return this.localClientIp;
@@ -159,7 +149,6 @@ public class DiscoveryOptions
      * from the Local-Client-IP address, and the public IP address detected by the application
      * server should not be used for the Local-Client-IP address.</p>
      */
-    @JsonIgnore
     public String getClientIp()
     {
         return this.clientIp;
@@ -168,7 +157,6 @@ public class DiscoveryOptions
     /**
      * @return X-Redicrect header value.
      */
-    @JsonIgnore
     public String getXRedirect()
     {
         return this.xRedirect;
@@ -177,7 +165,6 @@ public class DiscoveryOptions
     /**
      * @return Allows a server application to use correlationId.
      */
-    @JsonIgnore
     public boolean getUsingCorrelationId() { return this.isUsingCorrelationId; }
 
     public String getClientSideVersion() {

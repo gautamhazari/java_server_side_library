@@ -74,7 +74,7 @@ public class AuthenticationService implements IAuthenticationService
 
     private AuthenticationService(final Builder builder)
     {
-        this.jsonService = builder.jsonService;
+        jsonService = builder.jsonService;
         this.restClient = builder.restClient;
         this.iMobileConnectEncodeDecoder = builder.iMobileConnectEncodeDecoder;
 
@@ -206,7 +206,7 @@ public class AuthenticationService implements IAuthenticationService
         {
             try
             {
-                claimsJson = this.jsonService.serialize(options.getClaims());
+                claimsJson = jsonService.serialize(options.getClaims());
             }
             catch (final JsonSerializationException jse)
             {
@@ -337,7 +337,7 @@ public class AuthenticationService implements IAuthenticationService
         final RestResponse restResponse =
                 this.restClient.postFormData(refreshTokenUrl, authentication,null, formData, null, null);
 
-        return RequestTokenResponse.fromRestResponse(restResponse, this.jsonService,
+        return RequestTokenResponse.fromRestResponse(restResponse, jsonService,
                 this.iMobileConnectEncodeDecoder);
     }
 
@@ -367,7 +367,7 @@ public class AuthenticationService implements IAuthenticationService
         if (HttpUtils.isHttpErrorCode(restResponse.getStatusCode()))
         {
             errorResponse =
-                    this.jsonService.deserialize(restResponse.getContent(), ErrorResponse.class);
+                    jsonService.deserialize(restResponse.getContent(), ErrorResponse.class);
         }
         // As per the OAuth2 spec an error (non-200 response code) should only be returned by the
         // endpoint for the error code unsupported_token_type
@@ -396,7 +396,7 @@ public class AuthenticationService implements IAuthenticationService
         final RestResponse restResponse =
                 this.restClient.postFormData(requestTokenUrl, authentication, null, formData, null, null);
 
-        return RequestTokenResponse.fromRestResponse(restResponse, this.jsonService,
+        return RequestTokenResponse.fromRestResponse(restResponse, jsonService,
                 this.iMobileConnectEncodeDecoder);
     }
 
@@ -465,7 +465,7 @@ public class AuthenticationService implements IAuthenticationService
         ObjectUtils.requireNonNull(clientSecret, "clientSecret");
         ObjectUtils.requireNonNull(clientKey, "clientKey");
         ObjectUtils.requireNonNull(name, "appName");
-        ObjectUtils.requireNonNull(operatorUrls, "operator urls");
+        ObjectUtils.requireNonNull(operatorUrls, "operatorUrls");
 
         discoveryCache = new DiscoveryCache.Builder().withJsonService(jsonService).build();
         discoveryService = new DiscoveryService.Builder()
@@ -518,7 +518,7 @@ public class AuthenticationService implements IAuthenticationService
                 .withContent(discoveryResponseWithoutRequest.toString())
                 .build();
 
-        DiscoveryResponse discoveryResponse = DiscoveryResponse.fromRestResponse(post_response, this.jsonService);
+        DiscoveryResponse discoveryResponse = DiscoveryResponse.fromRestResponse(post_response, jsonService);
         discoveryResponse.setProviderMetadata(providerMetadata);
 
         return discoveryResponse;
