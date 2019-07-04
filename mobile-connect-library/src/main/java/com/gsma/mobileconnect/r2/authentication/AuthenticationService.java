@@ -16,27 +16,19 @@
  */
 package com.gsma.mobileconnect.r2.authentication;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gsma.mobileconnect.r2.ErrorResponse;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.claims.KYCClaimsParameter;
-import com.gsma.mobileconnect.r2.constants.DefaultOptions;
-import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.constants.Scope;
-import com.gsma.mobileconnect.r2.constants.Scopes;
+import com.gsma.mobileconnect.r2.constants.*;
 import com.gsma.mobileconnect.r2.discovery.*;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.json.JsonSerializationException;
+import com.gsma.mobileconnect.r2.json.*;
 import com.gsma.mobileconnect.r2.rest.IRestClient;
 import com.gsma.mobileconnect.r2.rest.RestAuthentication;
 import com.gsma.mobileconnect.r2.rest.RestResponse;
@@ -47,7 +39,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -485,37 +476,24 @@ public class AuthenticationService implements IAuthenticationService
                 .withAuthOptionDiscoveryResponse(discoveryResponseGenerateOptions)
                 .build();
 
-        ObjectNode discoveryResponseWithoutRequest = mobileConnectRequestOptions.getDiscoveryResponseGenerateOptions().responseToJson();
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode discoveryResponseJSONTree;
-        JsonNode linkToProviderMetadata = null;
+        String discoveryResponseWithoutRequest = mobileConnectRequestOptions.getDiscoveryResponseGenerateOptions().responseToJson();
+        DiscoveryResponseData discoveryResponseData = jsonService.deserialize(discoveryResponseWithoutRequest, DiscoveryResponseData.class);
 
-        try {
-            discoveryResponseJSONTree = mapper.readTree(discoveryResponseWithoutRequest.toString());
-            int openIdIndex = 0;
+        String linkToProviderMetadata = null;
 
-            int max = discoveryResponseJSONTree.path("response").path("apis").path("operatorid").path("link").size();
-            for (int index = 0; index < max; index++) {
-                JsonNode openIdLink = discoveryResponseJSONTree.path("response").path("apis").path("operatorid").path("link").get(index).findValue("rel");
-                String providerMetadataText = openIdLink.textValue();
-                if (providerMetadataText.contains("openid-configuration")) {
-                    openIdIndex = index;
-                    break;
-                }
+        for (Link link : discoveryResponseData.getResponse().getApis().getOperatorid().getLink()) {
+            if (link.getRel().equals(LinkRels.OPENID_CONFIGURATION)) {
+                linkToProviderMetadata = link.getHref();
             }
-            linkToProviderMetadata = discoveryResponseJSONTree.path("response").path("apis").path("operatorid").path("link").get(openIdIndex).findValue("href");
+        }
 
-            if (!linkToProviderMetadata.isNull()) {
-                providerMetadata = discoveryService.retrieveProviderMetadata(URI.create(linkToProviderMetadata.asText()), true);
-            }
-
-        } catch (IOException e) {
-            LOGGER.warn(e.getMessage());
+        if (linkToProviderMetadata != null) {
+            providerMetadata = discoveryService.retrieveProviderMetadata(URI.create(linkToProviderMetadata), true);
         }
 
         final RestResponse post_response = new RestResponse.Builder()
                 .withStatusCode(HttpStatus.SC_OK)
-                .withContent(discoveryResponseWithoutRequest.toString())
+                .withContent(discoveryResponseWithoutRequest)
                 .build();
 
         DiscoveryResponse discoveryResponse = DiscoveryResponse.fromRestResponse(post_response, jsonService);

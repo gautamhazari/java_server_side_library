@@ -16,9 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.cache.AbstractCacheable;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
@@ -869,54 +866,5 @@ public class ProviderMetadata extends AbstractCacheable
         {
             return new ProviderMetadata(this);
         }
-    }
-
-    public ObjectNode providerToJson() {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode root = mapper.createObjectNode();
-        ObjectNode openId = mapper.createObjectNode();
-
-        root.put("issuer", issuer);
-        ArrayNode loginHint = mapper.createArrayNode();
-
-        for (String nextLogintHint : loginHintMethodsSupported) {
-            loginHint.add(nextLogintHint);
-        }
-
-        root.putPOJO("login_hint_methods_supported", loginHint);
-
-        ArrayNode claimsSupportedNode = mapper.createArrayNode();
-        for (String claims : claimsSupported) {
-            claimsSupportedNode.add(claims);
-        }
-        ArrayNode mcDiScopesSupportedNode = mapper.createArrayNode();
-        for (String claims : mcDiScopesSupported) {
-            mcDiScopesSupportedNode.add(claims);
-        }
-
-        ArrayNode idToken = mapper.createArrayNode();
-        for (String token : idTokenEncryptionAlgValuesSupported) {
-            idToken.add(token);
-        }
-
-        ArrayNode acrValuesSupportedNode = mapper.createArrayNode();
-        for (String acrValue : acrValuesSupported) {
-            acrValuesSupportedNode.add(acrValue);
-        }
-
-        ArrayNode scopes = mapper.createArrayNode();
-        for(String arrScopes : scopesSupported) {
-            scopes.add(arrScopes);
-        }
-
-        root.putPOJO("claims_supported", claimsSupportedNode);
-        root.putPOJO("mc_di_scopes_supported", mcDiScopesSupportedNode);
-        root.putPOJO("id_token_signing_alg_values_supported", idToken);
-        root.putPOJO("acr_values_supported", acrValuesSupportedNode);
-        root.putPOJO("scopes_supported", scopes);
-        openId.put("openid", "mc_v1.1");
-        root.putPOJO("mobile_connect_version_supported", openId);
-
-        return root;
     }
 }

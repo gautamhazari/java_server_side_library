@@ -41,6 +41,10 @@ public final class Parameters
     public static final String LOCAL_CLIENT_IP = "Local-Client-IP";
     public static final String MSISDN = "MSISDN";
     public static final String X_REDIRECT = "X-Redirect";
+    public static final String APIS = "apis";
+    public static final String LINK = "link";
+    public static final String OPERATORID = "operatorid";
+    public static final String RESPONSE = "response";
 
     public static final String MCC_MNC = "mcc_mnc";
     public static final String DISCOVERY_CALLBACK = "discovery_callback";
