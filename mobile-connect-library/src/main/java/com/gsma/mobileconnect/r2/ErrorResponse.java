@@ -31,6 +31,7 @@ public class ErrorResponse
     @SerializedName("error_description")
     private final String errorDescription;
     private final String description;
+    @SerializedName("error_uri")
     private final String errorUri;
     @SerializedName("correlation_id")
     private final String correlationId;

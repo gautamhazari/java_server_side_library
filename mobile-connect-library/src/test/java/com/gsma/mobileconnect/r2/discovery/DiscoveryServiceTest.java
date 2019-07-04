@@ -141,16 +141,6 @@ public class DiscoveryServiceTest
             null);
     }
 
-    @Test(expectedExceptions = InvalidResponseException.class)
-    public void automatedOperatorDiscoveryShouldHandleInvalidResponse()
-        throws RequestFailedException, InvalidResponseException
-    {
-        restClient.addResponse(TestUtils.INVALID_RESPONSE);
-
-        discoveryService.startAutomatedOperatorDiscovery(config, REDIRECT_URL, DISCOVERY_OPTIONS,
-            null);
-    }
-
     @Test
     public void getOperatorSelectionURLShouldHandleOperatorSelectionResponse()
         throws RequestFailedException, InvalidResponseException
@@ -173,15 +163,6 @@ public class DiscoveryServiceTest
     {
         restClient.addResponse(
             new RequestFailedException(HttpUtils.HttpMethod.GET, URI.create("http://error"), null));
-
-        discoveryService.getOperatorSelectionURL(config, REDIRECT_URL);
-    }
-
-    @Test(expectedExceptions = InvalidResponseException.class)
-    public void getOperatorSelectionUrlShouldHandleInvalidResponse()
-        throws RequestFailedException, InvalidResponseException
-    {
-        restClient.addResponse(TestUtils.INVALID_RESPONSE);
 
         discoveryService.getOperatorSelectionURL(config, REDIRECT_URL);
     }

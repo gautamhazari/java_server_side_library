@@ -110,33 +110,6 @@ public class RestClientTest
     }
 
     @Test
-    public void postJsonContent() throws RequestFailedException, IOException
-    {
-        final Object objContent = new KeyValuePair("test", "testvalue");
-        final String jsonContent = "{\"key\":\"test\",\"value\":\"testvalue\"}";
-
-        restClient.postJsonContent(TEST_URI, AUTHENTICATION, objContent, SOURCE_IP, COOKIES);
-
-        verify(httpClient).execute(requestCaptor.capture(),
-            isA(RestClient.RestResponseHandler.class));
-
-        final HttpEntityEnclosingRequest request =
-            verifyRequest("POST", TEST_URI, HttpEntityEnclosingRequest.class);
-
-        final StringEntity entity = (StringEntity) request.getEntity();
-        assertEqualsNoOrder(TestUtils.splitArray(getStringContent(entity)),
-            TestUtils.splitArray(jsonContent));
-        assertEquals(entity.getContentType().getValue(),
-            ContentType.APPLICATION_JSON.withCharset("UTF-8").toString());
-    }
-
-    @Test(expectedExceptions = RequestFailedException.class)
-    public void postJsonContent_invalid() throws RequestFailedException
-    {
-        restClient.postJsonContent(TEST_URI, AUTHENTICATION, new Object(), SOURCE_IP, COOKIES);
-    }
-
-    @Test
     public void postStringContent() throws RequestFailedException, IOException
     {
         final String content = "test content to go inside request";
