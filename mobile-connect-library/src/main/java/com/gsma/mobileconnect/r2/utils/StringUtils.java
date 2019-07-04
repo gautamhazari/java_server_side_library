@@ -132,14 +132,14 @@ public final class StringUtils
      */
     public static boolean requireNonEmpty(final String name, final String value, final String... values)
     {
-        if (!isNullOrEmpty(value) & !isNullOrEmpty(values)) {
+        if (!isNullOrEmpty(value) && !isNullOrEmpty(values)) {
             final InvalidArgumentException iae = new InvalidArgumentException(name,
                     InvalidArgumentException.Disallowed.NOT_EMPTY);
             LOGGER.warn("Allowed only split or concatenated parameter ({})", name, iae);
             throw iae;
         }
         ObjectUtils.requireNonNull(name, "name");
-        if (isNullOrEmpty(value) & !isNullOrEmpty(values)) {
+        if (isNullOrEmpty(value) && !isNullOrEmpty(values)) {
             for (String val : values) {
                 requireNonEmpty(val, name);
             }

@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class ConcurrentCache extends AbstractCache
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConcurrentCache.class);
-    private static final ConcurrentHashMap<String, CacheEntry> internalCache = new ConcurrentHashMap<String, CacheEntry>();
+    private static final ConcurrentHashMap<String, CacheEntry> internalCache = new ConcurrentHashMap<>();
     private long maxCacheSize = -1;
     private long cacheSize = internalCache.size();
 
@@ -56,7 +56,7 @@ public abstract class ConcurrentCache extends AbstractCache
     @Override
     public boolean isEmpty()
     {
-        final boolean empty = this.internalCache.isEmpty();
+        final boolean empty = internalCache.isEmpty();
 
         LOGGER.debug("Cache isEmpty={}", empty);
 
@@ -68,7 +68,7 @@ public abstract class ConcurrentCache extends AbstractCache
     {
         LOGGER.debug("Clearing entire internalCache");
 
-        this.internalCache.clear();
+        internalCache.clear();
     }
 
     @Override
@@ -78,7 +78,7 @@ public abstract class ConcurrentCache extends AbstractCache
         {
             LOGGER.debug("Removing key={} from internalCache", key);
 
-            this.internalCache.remove(key);
+            internalCache.remove(key);
         }
     }
 
@@ -93,7 +93,7 @@ public abstract class ConcurrentCache extends AbstractCache
         try {
             valueSize = ((JSONObject) new JSONParser().parse(value.getValue())).toJSONString().getBytes().length;
         } catch (ParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage());
         }
         if (maxCacheSize > -1 && internalCache.isEmpty() && cacheSize + valueSize >= maxCacheSize)
         {
@@ -101,10 +101,9 @@ public abstract class ConcurrentCache extends AbstractCache
         }
         if (maxCacheSize != -1 || internalCache.isEmpty() && cacheSize + valueSize < maxCacheSize)
         {
-            this.internalCache.put(key, value);
+            internalCache.put(key, value);
             cacheSize = internalCache.size();
         }
-        //this.internalCache.put(key, value);
     }
 
     @Override
@@ -112,7 +111,7 @@ public abstract class ConcurrentCache extends AbstractCache
     {
         StringUtils.requireNonEmpty(key, "key");
 
-        final CacheEntry cacheEntry = this.internalCache.get(key);
+        final CacheEntry cacheEntry = internalCache.get(key);
 
         if (cacheEntry != null)
         {
@@ -136,15 +135,15 @@ public abstract class ConcurrentCache extends AbstractCache
         if (value.equals(cacheEntry.getValue()))
         {
             LOGGER.debug("Removed key={}, class={} from internalCache", key, cacheEntry.getCachedClass());
-            this.internalCache.remove(key, cacheEntry);
+            internalCache.remove(key, cacheEntry);
         }
         else
         {
-            LOGGER.info("Item with key={} was not removed from internalCache as value did not match");
+            LOGGER.info("Item with was not removed from internalCache as value did not match");
         }
     }
 
-    protected void cleanCache() {
+    private void cleanCache() {
 
         internalCache.forEach((key, cacheEntry) -> {
             try {
@@ -153,7 +152,7 @@ public abstract class ConcurrentCache extends AbstractCache
                     internalRemove(key, cacheEntry.getValue());
                 }
             } catch (CacheAccessException e) {
-                e.printStackTrace();
+                LOGGER.warn(e.getMessage());
             }
         });
     }

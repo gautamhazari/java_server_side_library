@@ -1,12 +1,14 @@
 package com.gsma.mobileconnect.r2.authentication;
 
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DiscoveryResponseGenerateOptions {
     private String clientSecret;
@@ -23,30 +25,40 @@ public class DiscoveryResponseGenerateOptions {
         this.rel = builder.rel;
     }
 
-    ObjectNode responseToJson() {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode resp = mapper.createObjectNode();
-        ObjectNode response = mapper.createObjectNode();
-        ObjectNode apis = mapper.createObjectNode();
-        ObjectNode operatorId = mapper.createObjectNode();
-        ArrayNode linkArray = mapper.createArrayNode();
+    String responseToJson() {
 
+        Gson gson = new Gson();
+
+        List<Map> links = new ArrayList<>();
         for (int i = 0; i < linksList.size(); i++) {
-            ObjectNode link = mapper.createObjectNode();
-            link.put("href", linksList.get(i));
-            link.put("rel", rel.get(i));
-            linkArray.add(link);
+            Map<String, Object> linkMap = new HashMap<>();
+            linkMap.put("href", linksList.get(i));
+            linkMap.put("rel", rel.get(i));
+            links.add(linkMap);
         }
 
-        resp.putPOJO("response", response);
-        response.put("client_secret", clientSecret);
-        response.put("client_name", clientApplicationName);
-        response.put("client_id", clientKey);
-        response.putPOJO("apis", apis);
-        apis.putPOJO("operatorid", operatorId);
-        operatorId.putPOJO("link", linkArray);
+        JsonObject clientSecret = new JsonObject();
+        clientSecret.addProperty(Parameters.CLIENT_SECRET, this.clientSecret);
+        JsonObject clientName = new JsonObject();
+        clientName.addProperty(Parameters.CLIENT_NAME, clientApplicationName);
+        JsonObject clientId = new JsonObject();
+        clientId.addProperty(Parameters.CLIENT_ID, clientKey);
+        JsonObject link = new JsonObject();
+        link.add(Parameters.LINK, gson.toJsonTree(links, new TypeToken<List<String>>(){}.getType()));
+        JsonObject operatorId = new JsonObject();
+        operatorId.add(Parameters.OPERATORID, link);
+        JsonObject apis = new JsonObject();
+        apis.add(Parameters.APIS, operatorId);
+        JsonObject response = new JsonObject();
 
-        return resp;
+        Map<String, Object> responseMap = new HashMap();
+        responseMap.put(Parameters.APIS, operatorId);
+        responseMap.put(Parameters.CLIENT_ID, clientKey);
+        responseMap.put(Parameters.CLIENT_NAME, clientApplicationName);
+        responseMap.put(Parameters.CLIENT_SECRET, this.clientSecret);
+        response.add(Parameters.RESPONSE, gson.toJsonTree(responseMap, new TypeToken<HashMap<String, Object>>(){}.getType()));
+
+        return gson.toJson(response);
     }
 
     public String getSecret() {

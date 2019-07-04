@@ -16,44 +16,62 @@
  */
 package com.gsma.mobileconnect.r2.claims;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 import com.gsma.mobileconnect.r2.constants.LinkRels;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class to construct required claims for the mobile connect process.
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = KYCClaimsParameter.Builder.class)
 public class KYCClaimsParameter {
     private final String name;
+    @SerializedName(KYCClaimsConstants.GIVEN_NAME)
     private final String givenName;
+    @SerializedName(KYCClaimsConstants.FAMILY_NAME)
     private final String familyName;
+    @SerializedName(KYCClaimsConstants.ADDRESS)
     private final String address;
+    @SerializedName(KYCClaimsConstants.HOUSENO_OR_HOUSENAME)
     private final String housenoOrHousename;
+    @SerializedName(KYCClaimsConstants.POSTAL_CODE)
     private final String postalCode;
+    @SerializedName(KYCClaimsConstants.TOWN)
     private final String town;
+    @SerializedName(KYCClaimsConstants.COUNTRY)
     private final String country;
+    @SerializedName(KYCClaimsConstants.BIRTHDATE)
     private final String birthdate;
 
+    @SerializedName(KYCClaimsConstants.NAME_HASHED)
     private final String nameHashed;
+    @SerializedName(KYCClaimsConstants.GIVEN_NAME_HASHED)
     private final String givenNameHashed;
+    @SerializedName(KYCClaimsConstants.FAMILY_NAME_HASHED)
     private final String familyNameHashed;
+    @SerializedName(KYCClaimsConstants.ADDRESS_HASHED)
     private final String addressHashed;
+    @SerializedName(KYCClaimsConstants.HOUSENO_OR_HOUSENAME_HASHED)
     private final String housenoOrHousenameHashed;
+    @SerializedName(KYCClaimsConstants.POSTAL_CODE_HASHED)
     private final String postalCodeHashed;
+    @SerializedName(KYCClaimsConstants.TOWN_HASHED)
     private final String townHashed;
+    @SerializedName(KYCClaimsConstants.COUNTRY_HASHED)
     private final String countryHashed;
+    @SerializedName(KYCClaimsConstants.BIRTHDATE_HASHED)
     private final String birthdateHashed;
 
-    private final ObjectMapper mapper = new ObjectMapper();
     private static final Logger LOGGER = LoggerFactory.getLogger(KYCClaimsParameter.class);
 
     private KYCClaimsParameter(Builder builder)
@@ -80,45 +98,44 @@ public class KYCClaimsParameter {
     }
 
     public String toJson() {
-        ObjectNode node = mapper.createObjectNode();
-        paramToJson(node, name, KYCClaimsConstants.NAME);
-        paramToJson(node, givenName, KYCClaimsConstants.GIVEN_NAME);
-        paramToJson(node, familyName, KYCClaimsConstants.FAMILY_NAME);
-        paramToJson(node, address, KYCClaimsConstants.ADDRESS);
-        paramToJson(node, housenoOrHousename, KYCClaimsConstants.HOUSENO_OR_HOUSENAME);
-        paramToJson(node, postalCode, KYCClaimsConstants.POSTAL_CODE);
-        paramToJson(node, town, KYCClaimsConstants.TOWN);
-        paramToJson(node, country, KYCClaimsConstants.COUNTRY);
-        paramToJson(node, birthdate, KYCClaimsConstants.BIRTHDATE);
 
-        paramToJson(node, nameHashed, KYCClaimsConstants.NAME_HASHED);
-        paramToJson(node, givenNameHashed, KYCClaimsConstants.GIVEN_NAME_HASHED);
-        paramToJson(node, familyNameHashed, KYCClaimsConstants.FAMILY_NAME_HASHED);
-        paramToJson(node, addressHashed, KYCClaimsConstants.ADDRESS_HASHED);
-        paramToJson(node, housenoOrHousenameHashed, KYCClaimsConstants.HOUSENO_OR_HOUSENAME_HASHED);
-        paramToJson(node, postalCodeHashed, KYCClaimsConstants.POSTAL_CODE_HASHED);
-        paramToJson(node, townHashed, KYCClaimsConstants.TOWN_HASHED);
-        paramToJson(node, countryHashed, KYCClaimsConstants.COUNTRY_HASHED);
-        paramToJson(node, birthdateHashed, KYCClaimsConstants.BIRTHDATE_HASHED);
+        Gson gson = new Gson();
+        List<JsonObject> claimsList = new ArrayList<>();
 
-        ObjectNode premiumInfo = mapper.createObjectNode();
-        premiumInfo.putPOJO(LinkRels.PREMIUMINFO, node);
-        String premiumInfoStr = null;
-        try {
-            premiumInfoStr = mapper.writeValueAsString(premiumInfo);
-        } catch (JsonProcessingException e) {
-            LOGGER.warn("Error deserializing idToken");
-        }
-        return premiumInfoStr;
+        claimsList.add(paramToJson(name, KYCClaimsConstants.NAME));
+        claimsList.add(paramToJson(givenName, KYCClaimsConstants.GIVEN_NAME));
+        claimsList.add(paramToJson(familyName, KYCClaimsConstants.FAMILY_NAME));
+        claimsList.add(paramToJson(address, KYCClaimsConstants.ADDRESS));
+        claimsList.add(paramToJson(housenoOrHousename, KYCClaimsConstants.HOUSENO_OR_HOUSENAME));
+        claimsList.add(paramToJson(postalCode, KYCClaimsConstants.POSTAL_CODE));
+        claimsList.add(paramToJson(town, KYCClaimsConstants.TOWN));
+        claimsList.add(paramToJson(country, KYCClaimsConstants.COUNTRY));
+        claimsList.add(paramToJson(birthdate, KYCClaimsConstants.BIRTHDATE));
+
+        claimsList.add(paramToJson(nameHashed, KYCClaimsConstants.NAME_HASHED));
+        claimsList.add(paramToJson(givenNameHashed, KYCClaimsConstants.GIVEN_NAME_HASHED));
+        claimsList.add(paramToJson(familyNameHashed, KYCClaimsConstants.FAMILY_NAME_HASHED));
+        claimsList.add(paramToJson(addressHashed, KYCClaimsConstants.ADDRESS_HASHED));
+        claimsList.add(paramToJson(housenoOrHousenameHashed, KYCClaimsConstants.HOUSENO_OR_HOUSENAME_HASHED));
+        claimsList.add(paramToJson(postalCodeHashed, KYCClaimsConstants.POSTAL_CODE_HASHED));
+        claimsList.add(paramToJson(townHashed, KYCClaimsConstants.TOWN_HASHED));
+        claimsList.add(paramToJson(countryHashed, KYCClaimsConstants.COUNTRY_HASHED));
+        claimsList.add(paramToJson(birthdateHashed, KYCClaimsConstants.BIRTHDATE_HASHED));
+
+        JsonObject premiumInfo = new JsonObject();
+        premiumInfo.add(LinkRels.PREMIUMINFO, gson.toJsonTree(claimsList, new TypeToken<List<JsonObject>>(){}.getType()));
+
+        return gson.toJson(premiumInfo);
     }
 
-    private ObjectNode paramToJson(ObjectNode node, String param, String name) {
+    private JsonObject paramToJson(String param, String name) {
+        JsonObject paramJson = new JsonObject();
         if (!StringUtils.isNullOrEmpty(param)) {
-            ObjectNode valueNode = mapper.createObjectNode();
-            valueNode.put(LinkRels.VALUE, param);
-            node.putPOJO(name, valueNode);
+            JsonObject value = new JsonObject();
+            value.addProperty(LinkRels.VALUE, param);
+            paramJson.add(param, value);
         }
-        return node;
+        return paramJson;
     }
 
     public String getName()

@@ -27,7 +27,7 @@ import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.rest.*;
 import com.gsma.mobileconnect.r2.utils.HttpUtils;
@@ -64,7 +64,7 @@ public class MobileConnectWebInterfaceTest
         .withDiscoveryUrl(URI.create("http://discovery/test"))
         .withRedirectUrl(URI.create("http://redirect/test"))
         .build();
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
     private final MockRestClient restClient = new MockRestClient();
     private final MobileConnect mobileConnect = MobileConnect
         .builder(this.config, new DefaultEncodeDecoder(), new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build(),
@@ -435,7 +435,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.revokeToken(this.request, "AccessToken",
-                Parameters.ACCESS_TOKEN_HINT, discoveryResponse);
+                Parameters.ACCESS_TOKEN, discoveryResponse);
 
         assertNotNull(status);
 
@@ -458,7 +458,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.revokeToken(this.request, "AccessToken",
-                Parameters.ACCESS_TOKEN_HINT, "111_11");
+                Parameters.ACCESS_TOKEN, "111_11");
 
         assertNotNull(status);
 
@@ -500,8 +500,8 @@ public class MobileConnectWebInterfaceTest
                 .withMethod("GET")
                 .withContent(providerMetadata).build();
 
-        when(restClientLocal.get(any(URI.class), (RestAuthentication) eq(null), anyString(), (String) eq(null),
-                (List<KeyValuePair>) eq(null), (Iterable<KeyValuePair>) eq(null)))
+        when(restClientLocal.get(any(URI.class), eq(null), anyString(), eq(null),
+                eq(null), eq(null)))
                 .thenReturn(response).thenReturn(response);
 
         DiscoveryResponse discoveryResponse = mobileConnectWebInterface.generateDiscoveryManually(secretKey, clientKey, name, operatorUrls);

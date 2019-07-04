@@ -5,7 +5,7 @@ Mobile Connect is a mobile identity service based on the OpenID Connect & OAuth2
 
 ## Minimum Requirements
 
-MobileConnect supports Java 6 and above, and is dependent upon Jackson Databind 2.6.3 and Apache HTTP Client 4.5.2.  It uses the SLF-4J logging framework and is dependent upon SLF-4J 1.7.21.
+MobileConnect supports Java 6 and above, and is dependent upon Apache HTTP Client 4.5.1.  It uses the SLF-4J logging framework and is dependent upon SLF-4J 1.7.21.
 
 ## Getting Started
 
@@ -16,12 +16,11 @@ You must have first registered an account on the [MobileConnect Developer Site](
 Build the SDK using [Maven](https://maven.apache.org/) repository.
 
 ```posh
-cd r2-java-sdk
-cd mobile-connect-sdk
+cd mobile-connect-library
 mvn clean install
 ```
 
-Import the generated mobile-connect-sdk-2.4.7.jar into your java project.
+Import the generated mobile-connect-library.jar into your java project.
 
 To enable logging import an appropriate binding to your project, see [SLF4J](http://www.slf4j.org/) for more information.
 

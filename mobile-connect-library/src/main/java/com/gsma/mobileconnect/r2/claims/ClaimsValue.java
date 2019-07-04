@@ -16,9 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.claims;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
 /**
@@ -26,16 +23,15 @@ import com.gsma.mobileconnect.r2.utils.IBuilder;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = ClaimsValue.Builder.class)
 public class ClaimsValue
 {
-    @JsonProperty private final Boolean essential;
+    private final Boolean essential;
     private final Object value;
     private final Object[] values;
 
     private ClaimsValue(Builder builder)
     {
-        this.essential = Boolean.TRUE == builder.essential ? Boolean.TRUE : null;
+        this.essential = Boolean.TRUE.equals(builder.essential) ? Boolean.TRUE : null;
         this.value = builder.value;
         this.values = builder.values;
     }
@@ -43,7 +39,6 @@ public class ClaimsValue
     /**
      * @return true if the claim is essential.
      */
-    @JsonIgnore
     public boolean isEssential()
     {
         return this.essential != null;

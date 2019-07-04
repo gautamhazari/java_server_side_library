@@ -40,6 +40,18 @@ public class JsonSerializationException extends Exception
     }
 
     /**
+     * Create a new json serialization exception.
+     *
+     * @param object the object that was being serialised to json.
+     */
+    public JsonSerializationException(final Object object)
+    {
+        super(String.format("Failed to serialize instance of %s to json",
+            object.getClass().getName()));
+        this.object = object;
+    }
+
+    /**
      * @return the object that was being serialized to json.
      */
     public Object getSerializationObject()

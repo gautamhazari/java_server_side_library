@@ -16,9 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.web;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
@@ -29,7 +26,6 @@ import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
  *
  * @since 2.0
  */
-@JsonNaming(value = PropertyNamingStrategy.class)
 public final class MobileConnectWebResponse
 {
     private final String status;
@@ -158,7 +154,6 @@ public final class MobileConnectWebResponse
         return outcome;
     }
 
-    @JsonRawValue
     public String getIdentity()
     {
         return this.identity;

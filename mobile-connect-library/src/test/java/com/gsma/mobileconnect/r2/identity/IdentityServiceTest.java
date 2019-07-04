@@ -19,7 +19,7 @@ package com.gsma.mobileconnect.r2.identity;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.rest.MockRestClient;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.rest.RestResponse;
@@ -66,7 +66,7 @@ public class IdentityServiceTest
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     private final IIdentityService identityService = new IdentityService.Builder()
-        .withJsonService(new JacksonJsonService())
+        .withJsonService(new GsonJsonService())
         .withRestClient(this.restClient)
         .build();
 

@@ -16,7 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.identity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
@@ -29,36 +29,54 @@ import com.gsma.mobileconnect.r2.utils.IBuilder;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = UserInfoData.Builder.class)
 public class UserInfoData
 {
     private final String sub;
 
     // profile
+    @SerializedName("name")
     private final String name;
+    @SerializedName(value = "family_name", alternate = "familyName")
     private final String familyName;
+    @SerializedName(value = "given_name", alternate = "givenName")
     private final String givenName;
+    @SerializedName(value = "middle_name", alternate = "middleName")
     private final String middleName;
+    @SerializedName("nickname")
     private final String nickname;
+    @SerializedName(value = "preferred_username", alternate = "preferredUsername")
     private final String preferredUsername;
+    @SerializedName("profile")
     private final String profile;
+    @SerializedName("picture")
     private final String picture;
+    @SerializedName("website")
     private final String website;
+    @SerializedName("gender")
     private final String gender;
+    @SerializedName("birthdate")
     private final String birthdate;
+    @SerializedName("zoneinfo")
     private final String zoneinfo;
+    @SerializedName("locale")
     private final String locale;
+    @SerializedName(value = "updated_at" ,alternate = "updatedAt")
     private final Long updatedAt;
 
     // email
+    @SerializedName("email")
     private final String email;
+    @SerializedName(value = "email_verified", alternate = "emailVerified")
     private final Boolean emailVerified;
 
     // address
+    @SerializedName("address")
     private final AddressData address;
 
     // phone
+    @SerializedName(value = "phone_number", alternate = "phoneNumber")
     private final String phoneNumber;
+    @SerializedName(value = "phone_number_verified", alternate = "phoneNumberVerified")
     private final Boolean phoneNumberVerified;
 
     private UserInfoData(Builder builder)

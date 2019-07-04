@@ -16,7 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.identity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
@@ -29,29 +29,42 @@ import com.gsma.mobileconnect.r2.utils.IBuilder;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = IdentityData.Builder.class)
 public class IdentityData
 {
     private final String sub;
 
     // signup
+    @SerializedName(value = "phone_number_alternate", alternate = "phoneNumberAlternate")
     private final String phoneNumberAlternate;
+    @SerializedName("title")
     private final String title;
+    @SerializedName(value = "given_name", alternate = "givenName")
     private final String givenName;
+    @SerializedName(value = "family_name", alternate = "familyName")
     private final String familyName;
+    @SerializedName(value = "middle_name", alternate = "middleName")
     private final String middleName;
+    @SerializedName(value = "street_address", alternate = "streetAddress")
     private final String streetAddress;
+    @SerializedName("city")
     private final String city;
+    @SerializedName("state")
     private final String state;
+    @SerializedName(value = "postal_code", alternate = "postalCode")
     private final String postalCode;
+    @SerializedName("country")
     private final String country;
+    @SerializedName("email")
     private final String email;
 
     // phone number
+    @SerializedName(value = "phone_number", alternate = "phoneNumber")
     private final String phoneNumber;
 
     // national id:
+    @SerializedName("birthdate")
     private final String birthdate;
+    @SerializedName(value = "national_identifier", alternate = "nationalIdentifier")
     private final String nationalIdentifier;
 
     private IdentityData(Builder builder)

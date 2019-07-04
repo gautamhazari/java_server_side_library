@@ -20,7 +20,7 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.utils.KeyValuePair;
 import com.gsma.mobileconnect.r2.utils.TestUtils;
 import org.apache.commons.io.IOUtils;
@@ -81,7 +81,7 @@ public class RestClientTest
 
     @Captor private ArgumentCaptor<HttpUriRequest> requestCaptor;
 
-    private IJsonService jsonService = new JacksonJsonService();
+    private IJsonService jsonService = new GsonJsonService();
     private RestClient restClient;
 
     private static String getStringContent(final StringEntity entity) throws IOException
@@ -107,33 +107,6 @@ public class RestClientTest
     {
         scheduledExecutorService.shutdown();
         assertTrue(scheduledExecutorService.awaitTermination(5L, TimeUnit.SECONDS));
-    }
-
-    @Test
-    public void postJsonContent() throws RequestFailedException, IOException
-    {
-        final Object objContent = new KeyValuePair("test", "testvalue");
-        final String jsonContent = "{\"key\":\"test\",\"value\":\"testvalue\"}";
-
-        restClient.postJsonContent(TEST_URI, AUTHENTICATION, objContent, SOURCE_IP, COOKIES);
-
-        verify(httpClient).execute(requestCaptor.capture(),
-            isA(RestClient.RestResponseHandler.class));
-
-        final HttpEntityEnclosingRequest request =
-            verifyRequest("POST", TEST_URI, HttpEntityEnclosingRequest.class);
-
-        final StringEntity entity = (StringEntity) request.getEntity();
-        assertEqualsNoOrder(TestUtils.splitArray(getStringContent(entity)),
-            TestUtils.splitArray(jsonContent));
-        assertEquals(entity.getContentType().getValue(),
-            ContentType.APPLICATION_JSON.withCharset("UTF-8").toString());
-    }
-
-    @Test(expectedExceptions = RequestFailedException.class)
-    public void postJsonContent_invalid() throws RequestFailedException
-    {
-        restClient.postJsonContent(TEST_URI, AUTHENTICATION, new Object(), SOURCE_IP, COOKIES);
     }
 
     @Test

@@ -127,8 +127,8 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
                         .withScope(scope)
-                        .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.BindingMsg : null)
+                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.BINDING_MSG : null)
                         .withClientName(clientName)
                         .withLoginHint(loginHint)
                         .build())
@@ -154,12 +154,12 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
     }
 
     private void getWDParameters() {
-        operatorParams = ReadAndParseFiles.ReadFile(Constants.WDConfigFilePath);
+        operatorParams = ReadAndParseFiles.readFile(Constants.WD_CONFIG_FILE_PATH);
         if(operatorParams == null) {
-            operatorParams = ReadAndParseFiles.ReadFile(Constants.WDConfigFilePath.replace("file:/", ""));
+            operatorParams = ReadAndParseFiles.readFile(Constants.WD_CONFIG_FILE_PATH.replace("file:/", ""));
         }
         if(operatorParams == null) {
-            operatorParams = ReadAndParseFiles.ReadFile(Constants.WDConfigFilePath.replace("file:", ""));
+            operatorParams = ReadAndParseFiles.readFile(Constants.WD_CONFIG_FILE_PATH.replace("file:", ""));
         }
 
         apiVersion = operatorParams.getApiVersion();

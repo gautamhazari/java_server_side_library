@@ -21,6 +21,13 @@ package com.gsma.mobileconnect.r2.constants;
  */
 public final class Parameters
 {
+    //Common
+    public static final String RESPONSE_CODE = "response_code";
+    public static final String ERROR_RESPONSE = "error_response";
+    public static final String RESPONSE_DATA = "response_data";
+    public static final String OPERATOR_URLS = "operator_urls";
+    public static final String PROVIDER_METADATA = "provider_metadata";
+
     // Required param for discovery
     public static final String REDIRECT_URL = "Redirect_URL";
 
@@ -34,11 +41,19 @@ public final class Parameters
     public static final String LOCAL_CLIENT_IP = "Local-Client-IP";
     public static final String MSISDN = "MSISDN";
     public static final String X_REDIRECT = "X-Redirect";
+    public static final String APIS = "apis";
+    public static final String LINK = "link";
+    public static final String OPERATORID = "operatorid";
+    public static final String RESPONSE = "response";
 
     public static final String MCC_MNC = "mcc_mnc";
     public static final String DISCOVERY_CALLBACK = "discovery_callback";
     public static final String SUBSCRIBER_ID = "subscriber_id";
     public static final String CORRELATION_ID = "correlation_id";
+
+    //Discovery
+    public static final String CLIENT_SECRET = "client_secret";
+    public static final String TTL = "ttl";
 
     // Required params for authentication
     public static final String CLIENT_ID = "client_id";
@@ -57,6 +72,7 @@ public final class Parameters
     public static final String UI_LOCALES = "ui_locales";
     public static final String CLAIMS_LOCALES = "claims_locales";
     public static final String ID_TOKEN_HINT = "id_token_hint";
+    public static final String ID_TOKEN = "id_token";
     public static final String LOGIN_HINT = "login_hint";
     public static final String LOGIN_HINT_TOKEN = "login_hint_token";
     public static final String DTBS = "dtbs";
@@ -80,8 +96,10 @@ public final class Parameters
     public static final String REFRESH_TOKEN = "refresh_token";
     public static final String TOKEN = "token";
     public static final String TOKEN_TYPE_HINT = "token_type_hint";
+    public static final String TOKEN_TYPE = "token_type";
+    public static final String EXPIRES_IN = "expires_in";
 
-    public static final String ACCESS_TOKEN_HINT = "access_token";
+    public static final String ACCESS_TOKEN = "access_token";
     public static final String REFRESH_TOKEN_HINT = "refresh_token";
 
     //Version of current SDK

@@ -16,12 +16,13 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.ErrorResponse;
 import com.gsma.mobileconnect.r2.cache.AbstractCacheable;
 import com.gsma.mobileconnect.r2.constants.DefaultOptions;
 import com.gsma.mobileconnect.r2.constants.LinkRels;
+import com.gsma.mobileconnect.r2.constants.Parameters;
+import com.gsma.mobileconnect.r2.exceptions.ProviderMetadataUnavailableException;
 import com.gsma.mobileconnect.r2.json.DiscoveryResponseData;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
@@ -38,16 +39,22 @@ import java.util.*;
  * @see IDiscoveryService
  * @since 2.0
  */
-@JsonDeserialize(builder = DiscoveryResponse.Builder.class)
 public class DiscoveryResponse extends AbstractCacheable
 {
+    @SerializedName(Parameters.TTL)
     private final Date ttl;
+    @SerializedName(Parameters.RESPONSE_CODE)
     private final int responseCode;
     private final List<KeyValuePair> headers;
+    @SerializedName(Parameters.ERROR_RESPONSE)
     private final ErrorResponse errorResponse;
+    @SerializedName(Parameters.RESPONSE_DATA)
     private final DiscoveryResponseData responseData;
+    @SerializedName(Parameters.OPERATOR_URLS)
     private final OperatorUrls operatorUrls;
+    @SerializedName(Parameters.CLIENT_NAME)
     private final String clientName;
+    @SerializedName(Parameters.PROVIDER_METADATA)
     private ProviderMetadata providerMetadata;
 
 
@@ -81,8 +88,7 @@ public class DiscoveryResponse extends AbstractCacheable
         ObjectUtils.requireNonNull(restResponse, "restResponse");
         ObjectUtils.requireNonNull(jsonService, "jsonService");
 
-        final DiscoveryResponseData responseData =
-            jsonService.deserialize(restResponse.getContent(), DiscoveryResponseData.class);
+        final DiscoveryResponseData responseData = new DiscoveryResponseData.Builder(jsonService.deserialize(restResponse.getContent(), DiscoveryResponseData.class)).build();
 
         return new Builder()
             .withResponseCode(restResponse.getStatusCode())
@@ -280,7 +286,6 @@ public class DiscoveryResponse extends AbstractCacheable
             return this;
         }
 
-        @JsonIgnore
         public Builder withHeaders(final List<KeyValuePair> val)
         {
             this.headers = val;

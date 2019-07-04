@@ -16,9 +16,10 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.constants.LinkRels;
 import com.gsma.mobileconnect.r2.json.DiscoveryResponseData;
+import com.gsma.mobileconnect.r2.json.JsonRequired;
 import com.gsma.mobileconnect.r2.json.Link;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.ListUtils;
@@ -35,17 +36,25 @@ import static com.gsma.mobileconnect.r2.utils.ObjectUtils.defaultIfNull;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = OperatorUrls.Builder.class)
 public class OperatorUrls
 {
-    private String authorizationUrl;
-    private String requestTokenUrl;
+    @SerializedName(value = "authorization_url", alternate = {"authorizationUrl", "authorization_endpoint"})
+    @JsonRequired private String authorizationUrl;
+    @SerializedName(value = "request_token_url", alternate = {"requestTokenUrl", "token_endpoint"})
+    @JsonRequired private String requestTokenUrl;
+    @SerializedName(value = "userinfo_url", alternate = {"userinfo_endpoint", "userInfoUrl"})
     private String userInfoUrl;
+    @SerializedName(value = "premiuminfo_uri", alternate = {"premiumInfoUri", "premiuminfo_endpoint"})
     private String premiumInfoUri;
+    @SerializedName(value = "jwks_uri")
     private String jwksUri;
+    @SerializedName(value = "revoke_token_url", alternate = {"revokeTokenUrl", "revocation_endpoint"})
     private String revokeTokenUrl;
+    @SerializedName(value = "refresh_token_url", alternate = {"refreshTokenUrl"})
     private String refreshTokenUrl;
+    @SerializedName(value = "scope_url", alternate = {"scopeUrl"})
     private String scopeUrl;
+    @SerializedName(value = "provider_metadata_uri", alternate = {"providerMetadataUri"})
     private String providerMetadataUri;
 
     private OperatorUrls(Builder builder)
@@ -240,15 +249,15 @@ public class OperatorUrls
 
     public static final class Builder implements IBuilder<OperatorUrls>
     {
-        private String authorizationUrl;
-        private String requestTokenUrl;
-        private String userInfoUrl;
-        private String premiumInfoUri;
-        private String jwksUri;
-        private String revokeTokenUrl;
-        private String refreshTokenUrl;
-        private String scopeUrl;
-        private String providerMetadataUri;
+        private String authorizationUrl = null;
+        private String requestTokenUrl = null;
+        private String userInfoUrl = null;
+        private String premiumInfoUri = null;
+        private String jwksUri = null;
+        private String revokeTokenUrl = null;
+        private String refreshTokenUrl = null;
+        private String scopeUrl = null;
+        private String providerMetadataUri = null;
 
         public Builder withAuthorizationUrl(final String val)
         {

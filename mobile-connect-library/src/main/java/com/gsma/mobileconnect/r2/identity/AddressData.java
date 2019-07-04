@@ -16,7 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.identity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
 /**
@@ -24,14 +24,19 @@ import com.gsma.mobileconnect.r2.utils.IBuilder;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = AddressData.Builder.class)
 public class AddressData
 {
+    @SerializedName("formatted")
     private final String formatted;
+    @SerializedName(value = "street_address", alternate = "streetAddress")
     private final String streetAddress;
+    @SerializedName("locality")
     private final String locality;
+    @SerializedName("region")
     private final String region;
+    @SerializedName(value = "postal_code", alternate = "postalCode")
     private final String postalCode;
+    @SerializedName("country")
     private final String country;
 
     private AddressData(Builder builder)

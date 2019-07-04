@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.json;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
 /**
@@ -24,26 +23,25 @@ import com.gsma.mobileconnect.r2.utils.IBuilder;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = Apis.Builder.class)
 public class Apis
 {
-    private final OperatorId operatorId;
+    private final Operatorid operatorid;
 
     private Apis(Builder builder)
     {
-        this.operatorId = builder.operatorid;
+        this.operatorid = builder.operatorid;
     }
 
-    public OperatorId getOperatorId()
+    public Operatorid getOperatorid()
     {
-        return this.operatorId;
+        return this.operatorid;
     }
 
     public static final class Builder implements IBuilder<Apis>
     {
-        private OperatorId operatorid = null;
+        private Operatorid operatorid = null;
 
-        public Builder withOperatorid(OperatorId val)
+        public Builder withOperatorid(Operatorid val)
         {
             this.operatorid = val;
             return this;

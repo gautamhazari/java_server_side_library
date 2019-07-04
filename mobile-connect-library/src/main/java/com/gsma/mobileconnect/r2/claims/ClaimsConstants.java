@@ -61,17 +61,47 @@ public class ClaimsConstants
     /**
      * Key for Issuer
      */
-    public static final String ISSUER = "iss";
+    public static final String ISS = "iss";
+
+    /**
+     * Key for sub
+     */
+    public static final String SUB = "sub";
 
     /**
      * Key for expiry time
      */
-    public static final String EXPIRED = "exp";
+    public static final String EXP = "exp";
 
     /**
      * Key for issued at tme
      */
-    public static final String ISSUED_AT_TIME = "iat";
+    public static final String IAT = "iat";
+
+    /**
+     * Key auth_time
+     */
+    public static final String AUTH_TIME = "auth_time";
+
+    /**
+     * Key displayed_data
+     */
+    public static final String DISPLAYED_DATA = "displayed_data";
+
+    /**
+     * Key dts
+     */
+    public static final String DTS = "dts";
+
+    /**
+     * Key dts time
+     */
+    public static final String DTS_TIME = "dts_time";
+
+    /**
+     * Key upk
+     */
+    public static final String UPK = "upk";
 
     private ClaimsConstants()
     {

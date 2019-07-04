@@ -17,8 +17,6 @@
 package com.gsma.mobileconnect.r2.authentication;
 
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
-import com.gsma.mobileconnect.r2.claims.Claims;
-import com.gsma.mobileconnect.r2.claims.ClaimsParameter;
 import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
@@ -26,7 +24,7 @@ import com.gsma.mobileconnect.r2.exceptions.HeadlessOperationFailedException;
 import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.json.JsonSerializationException;
 import com.gsma.mobileconnect.r2.rest.IRestClient;
@@ -43,7 +41,6 @@ import org.testng.annotations.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -62,7 +59,7 @@ public class AuthenticationServiceTest
     private final static URI REDIRECT_URL = URI.create("http://localhost:8080/");
     private final static URI AUTHORIZE_URL = URI.create("http://localhost:8080/authorize");
     private final static URI TOKEN_URL = URI.create("http://localhost:8080/token");
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
     private final IRestClient restClient = Mockito.mock(RestClient.class);
 
     private final IAuthenticationService authentication = new AuthenticationService.Builder()
@@ -125,26 +122,6 @@ public class AuthenticationServiceTest
 
         this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
             REDIRECT_URL, "state", "nonce", null, options, "mc_v1.1");
-    }
-
-    @Test
-    public void startAuthenticationWithClaimsShouldEncodeAndIncludeClaims()
-        throws JsonSerializationException
-    {
-        final ClaimsParameter claimsParameter = new ClaimsParameter.Builder()
-            .withIdToken(new Claims.Builder().addEssential("test1"))
-            .withUserinfo(new Claims.Builder().add("test2", false, "testvalue"))
-            .build();
-
-        final AuthenticationOptions options =
-            new AuthenticationOptions.Builder().withClaims(claimsParameter).build();
-        final String expectedClaims = this.jsonService.serialize(claimsParameter);
-
-        final StartAuthenticationResponse response =
-            this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                REDIRECT_URL, "state", "nonce", null, options, "mc_v1.1");
-
-        assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "claims"), expectedClaims);
     }
 
     @Test
@@ -382,7 +359,7 @@ public class AuthenticationServiceTest
         final String outcome =
             this.authentication.revokeToken(this.config.getClientId(),
                 this.config.getClientSecret(), TOKEN_URL, "AccessToken",
-                Parameters.ACCESS_TOKEN_HINT);
+                Parameters.ACCESS_TOKEN);
 
         // Then
         assertNotNull(outcome);
@@ -480,7 +457,7 @@ public class AuthenticationServiceTest
                 .withMethod("GET")
                 .withContent(providerMetadata).build();
 
-        when(restClient.get(any(URI.class), (RestAuthentication) eq(null), anyString(), (String) eq(null), (List<KeyValuePair>) eq(null), (Iterable<KeyValuePair>) eq(null))).thenReturn(response).thenReturn(response);
+        when(restClient.get(any(URI.class), eq(null), anyString(), eq(null), eq(null), eq(null))).thenReturn(response).thenReturn(response);
 
         //When
         final DiscoveryResponse discoveryResponse =

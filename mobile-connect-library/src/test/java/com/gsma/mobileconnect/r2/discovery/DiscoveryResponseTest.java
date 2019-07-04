@@ -16,8 +16,9 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
+import com.gsma.mobileconnect.r2.exceptions.ProviderMetadataUnavailableException;
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.json.JsonSerializationException;
 import com.gsma.mobileconnect.r2.rest.RestResponse;
@@ -36,7 +37,7 @@ import static org.testng.Assert.*;
  */
 public class DiscoveryResponseTest
 {
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
 
     @Test
     public void operatorUrlsShouldBeOverridenByProviderMetadataOnSet()
@@ -102,7 +103,7 @@ public class DiscoveryResponseTest
             DiscoveryResponse.fromRestResponse(restResponse, this.jsonService);
         discoveryResponse.setProviderMetadata(providerMetadata);
 
-        final IJsonService jsonService = new JacksonJsonService();
+        final IJsonService jsonService = new GsonJsonService();
         final String serialized = jsonService.serialize(discoveryResponse);
         final DiscoveryResponse actual =
             jsonService.deserialize(serialized, DiscoveryResponse.class);

@@ -16,7 +16,9 @@
  */
 package com.gsma.mobileconnect.r2.identity;
 
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.ErrorResponse;
+import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.json.IJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
@@ -28,6 +30,7 @@ import com.gsma.mobileconnect.r2.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Parameter;
 import java.util.regex.Pattern;
 
 /**
@@ -41,7 +44,9 @@ public class IdentityResponse
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityResponse.class);
 
     private static final Pattern ERROR_REGEX = Pattern.compile("\\\"error\\\":");
+    @SerializedName(Parameters.RESPONSE_CODE)
     private final int responseCode;
+    @SerializedName(Parameters.ERROR_RESPONSE)
     private final ErrorResponse errorResponse;
     private final String responseJson;
     private Object convertedResponseData;

@@ -31,7 +31,7 @@ import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 import com.gsma.mobileconnect.r2.identity.IIdentityService;
 import com.gsma.mobileconnect.r2.identity.IdentityService;
 import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.rest.IRestClient;
 import com.gsma.mobileconnect.r2.rest.RestClient;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
@@ -266,7 +266,7 @@ public final class MobileConnect
             IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder,
                        ConcurrentCache cache, ConcurrentCache discoveryCache)
         {
-            this.jsonService = new JacksonJsonService();
+            this.jsonService = new GsonJsonService();
             this.iMobileConnectEncodeDecoder = iMobileConnectEncodeDecoder;
             this.config = ObjectUtils.requireNonNull(config, "config");
             this.cache = cache;

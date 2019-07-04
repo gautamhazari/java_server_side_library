@@ -12,6 +12,8 @@ import java.util.List;
 public class VersionDetection {
     private static final Logger LOGGER = LoggerFactory.getLogger(VersionDetection.class);
 
+    private VersionDetection() {}
+
     public static String getCurrentVersion(String version, String scope, ProviderMetadata providerMetadata) throws InvalidScopeException {
         List<String> supportedVersions = getSupportedVersions(providerMetadata);
         if (version != null && isVersionSupported(version)) {
@@ -21,18 +23,17 @@ public class VersionDetection {
             return version;
         } else {
             List<String> currentScopes = StringUtils.convertToListBySpase(scope);
-            if (supportedVersions.contains(Version.MC_DI_R2_V2_3) & containsScopesV2_3(currentScopes)) {
+            if (supportedVersions.contains(Version.MC_DI_R2_V2_3) && containsScopesV2_3(currentScopes)) {
                 return Version.MC_DI_R2_V2_3;
-            } else if (supportedVersions.contains(Version.MC_V2_0) & containsScopesV2_0(currentScopes)) {
+            } else if (supportedVersions.contains(Version.MC_V2_0) && containsScopesV2_0(currentScopes)) {
                 return Version.MC_V2_0;
-            } else if (supportedVersions.contains(Version.MC_V1_1) & containsScopesV1_1(currentScopes)) {
+            } else if (supportedVersions.contains(Version.MC_V1_1) && containsScopesV1_1(currentScopes)) {
                 return Version.MC_V1_1;
-            } else if(supportedVersions.contains(Version.MC_V1_2) & supportedVersions.size() == 1 & containsScopesV2_0(currentScopes)) {
+            } else if(supportedVersions.contains(Version.MC_V1_2) && supportedVersions.size() == 1 && containsScopesV2_0(currentScopes)) {
                 LOGGER.warn("Version is deprecated");
                 return Version.MC_V1_2;
             } else {
-                final InvalidScopeException scopeException = new InvalidScopeException(scope);
-                throw scopeException;
+                throw new InvalidScopeException(scope);
             }
         }
     }
@@ -53,19 +54,19 @@ public class VersionDetection {
     }
 
     private static boolean containsScopesV1_1(List<String> currentScopes) {
-        return (containsOpenidScope(currentScopes) & currentScopes.size() == 1) ||
-                (containsOpenidScope(currentScopes) & containsUniversalIndianScopes(currentScopes));
+        return (containsOpenidScope(currentScopes) && currentScopes.size() == 1) ||
+                (containsOpenidScope(currentScopes) && containsUniversalIndianScopes(currentScopes));
     }
 
     private static boolean containsScopesV2_0(List<String> currentScopes) {
-        return containsOpenidScope(currentScopes) & (currentScopes.contains(Scope.AUTHN) || currentScopes.contains(Scope.AUTHZ) ||
+        return containsOpenidScope(currentScopes) && (currentScopes.contains(Scope.AUTHN) || currentScopes.contains(Scope.AUTHZ) ||
                 currentScopes.contains(Scope.IDENTITY_PHONE) || currentScopes.contains(Scope.IDENTITY_NATIONALID) ||
                 currentScopes.contains(Scope.IDENTITY_SIGNUP) || currentScopes.contains(Scope.IDENTITY_SIGNUPPLUS) ||
                 containsUniversalIndianScopes(currentScopes));
     }
 
     private static boolean containsScopesV2_3(List<String> currentScopes) {
-        return containsOpenidScope(currentScopes) & (containsScopesV2_0(currentScopes) || currentScopes.contains(Scope.KYC_HASHED)
+        return containsOpenidScope(currentScopes) && (containsScopesV2_0(currentScopes) || currentScopes.contains(Scope.KYC_HASHED)
                 || currentScopes.contains(Scope.KYC_PLAIN));
     }
 

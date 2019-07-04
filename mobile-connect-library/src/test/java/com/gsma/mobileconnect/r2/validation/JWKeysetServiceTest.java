@@ -17,9 +17,8 @@
 package com.gsma.mobileconnect.r2.validation;
 
 import com.google.common.collect.ImmutableMap;
-import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
 import com.gsma.mobileconnect.r2.rest.RestAuthentication;
 import com.gsma.mobileconnect.r2.rest.RestClient;
@@ -69,7 +68,7 @@ public class JWKeysetServiceTest
         this.jwKeysetServiceWithCache = new JWKeysetService.Builder()
             .withRestClient(this.mockRestClient)
             .withICache(
-                new DiscoveryCache.Builder().withJsonService(new JacksonJsonService()).build())
+                new DiscoveryCache.Builder().withJsonService(new GsonJsonService()).build())
             .build();
 
         this.jwKeysetServiceWithoutCache = new JWKeysetService.Builder()
@@ -93,12 +92,12 @@ public class JWKeysetServiceTest
         final List<JWKey> jwKeyList = jwKeyset.getKeys();
         assertEquals(jwKeyList.size(), 1);
         final JWKey jwKey = jwKeyList.get(0);
-        assertEquals(jwKey.getKeyType(), "RSA");
+        assertEquals(jwKey.getKty(), "RSA");
         assertEquals(jwKey.getUse(), "sig");
         assertEquals(jwKey.getRsaN(),
             "ALyIC8vj1tqEIvAvpDMQfgosw13LpBS9Z2lsMmuaLDNJjN_FKIb-HVR2qtMj7AYC0-wYJhGxJpTXJTVRRDz-zLN7uredNxuhVj76vmU1tfvEN0Xq2INYoWeJ3d9fZtkBgKl7Enfkgz858DLAfZuJzDycOzuZXR5r29zXMDstT5F5");
         assertEquals(jwKey.getRsaE(), "AQAB");
-        assertEquals(jwKey.getKeyId(), "PHPOP-00");
+        assertEquals(jwKey.getKid(), "PHPOP-00");
     }
 
 
@@ -122,12 +121,12 @@ public class JWKeysetServiceTest
         List<JWKey> jwKeyList = cachedJwKeyset.getKeys();
         assertEquals(jwKeyList.size(), 1);
         final JWKey jwKey = jwKeyList.get(0);
-        assertEquals(jwKey.getKeyType(), "RSA");
+        assertEquals(jwKey.getKty(), "RSA");
         assertEquals(jwKey.getUse(), "sig");
         assertEquals(jwKey.getRsaN(),
             "ALyIC8vj1tqEIvAvpDMQfgosw13LpBS9Z2lsMmuaLDNJjN_FKIb-HVR2qtMj7AYC0-wYJhGxJpTXJTVRRDz-zLN7uredNxuhVj76vmU1tfvEN0Xq2INYoWeJ3d9fZtkBgKl7Enfkgz858DLAfZuJzDycOzuZXR5r29zXMDstT5F5");
         assertEquals(jwKey.getRsaE(), "AQAB");
-        assertEquals(jwKey.getKeyId(), "PHPOP-00");
+        assertEquals(jwKey.getKid(), "PHPOP-00");
     }
 
     @SuppressWarnings("unchecked")
@@ -146,12 +145,12 @@ public class JWKeysetServiceTest
         final List<JWKey> jwKeyList = jwKeyset.getKeys();
         assertEquals(jwKeyList.size(), 1);
         final JWKey jwKey = jwKeyList.get(0);
-        assertEquals(jwKey.getKeyType(), "RSA");
+        assertEquals(jwKey.getKty(), "RSA");
         assertEquals(jwKey.getUse(), "sig");
         assertEquals(jwKey.getRsaN(),
             "ALyIC8vj1tqEIvAvpDMQfgosw13LpBS9Z2lsMmuaLDNJjN_FKIb-HVR2qtMj7AYC0-wYJhGxJpTXJTVRRDz-zLN7uredNxuhVj76vmU1tfvEN0Xq2INYoWeJ3d9fZtkBgKl7Enfkgz858DLAfZuJzDycOzuZXR5r29zXMDstT5F5");
         assertEquals(jwKey.getRsaE(), "AQAB");
-        assertEquals(jwKey.getKeyId(), "PHPOP-00");
+        assertEquals(jwKey.getKid(), "PHPOP-00");
     }
 
 

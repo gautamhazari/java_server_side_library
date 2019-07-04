@@ -18,7 +18,7 @@ package com.gsma.mobileconnect.r2.validation;
 
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ICache;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.json.GsonJsonService;
 import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.rest.IRestClient;
 import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
@@ -40,7 +40,7 @@ public class JWKeysetService implements IJWKeysetService
     private final IRestClient restClient;
     private final ICache iCache;
 
-    private final JacksonJsonService jacksonJsonService;
+    private final GsonJsonService gsonJsonService;
 
     /**
      * Creates an instance of the JWKeysetService with a configured cache
@@ -51,7 +51,7 @@ public class JWKeysetService implements IJWKeysetService
     {
         this.restClient = builder.restClient;
         this.iCache = builder.iCache;
-        this.jacksonJsonService = new JacksonJsonService();
+        this.gsonJsonService = new GsonJsonService();
     }
 
     /**
@@ -87,7 +87,7 @@ public class JWKeysetService implements IJWKeysetService
         }
         final RestResponse response = this.restClient.get(URI.create(url), null, null,null, null, null);
         final JWKeyset jwKeyset =
-            this.jacksonJsonService.deserialize(response.getContent(), JWKeyset.class);
+            this.gsonJsonService.deserialize(response.getContent(), JWKeyset.class);
 
         addToCache(url, jwKeyset);
 

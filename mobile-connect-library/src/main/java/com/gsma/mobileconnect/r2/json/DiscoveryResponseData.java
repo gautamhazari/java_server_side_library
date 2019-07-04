@@ -16,7 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.json;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.gson.annotations.SerializedName;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.ListUtils;
 
@@ -27,7 +27,6 @@ import java.util.List;
  *
  * @since 2.0
  */
-@JsonDeserialize(builder = DiscoveryResponseData.Builder.class)
 public class DiscoveryResponseData
 {
     private final long ttl;
@@ -35,8 +34,11 @@ public class DiscoveryResponseData
     private final String description;
     private final List<Link> links;
     private final Response response;
+    @SerializedName("subscriber_id")
     private String subscriberId;
+    @SerializedName("client_name")
     private String clientName;
+    @SerializedName("correlation_id")
     private String correlationId;
 
     private DiscoveryResponseData(final Builder builder)
@@ -45,6 +47,7 @@ public class DiscoveryResponseData
         this.subscriberId = builder.subscriberId;
         this.error = builder.error;
         this.description = builder.description;
+        builder.setLinks();
         this.links = builder.links;
         this.response = builder.response;
         this.clientName = builder.clientName;
@@ -159,6 +162,7 @@ public class DiscoveryResponseData
         public Builder withResponse(final Response val)
         {
             this.response = val;
+            setLinks();
             return this;
         }
 
@@ -177,25 +181,28 @@ public class DiscoveryResponseData
         @Override
         public DiscoveryResponseData build()
         {
+            setLinks();
+
+            if (this.clientName == null && this.response != null)
+            {
+                this.clientName = this.response.getClientName();
+            }
+            return new DiscoveryResponseData(this);
+        }
+
+        private void setLinks() {
             if (this.links == null && this.response != null)
             {
                 final Apis apis = this.response.getApis();
                 if (apis != null)
                 {
-                    final OperatorId operatorId = apis.getOperatorId();
+                    final Operatorid operatorId = apis.getOperatorid();
                     if (operatorId != null)
                     {
                         this.links = operatorId.getLink();
                     }
                 }
             }
-
-            if (this.clientName == null && this.response != null)
-            {
-                this.clientName = this.response.getClientName();
-            }
-
-            return new DiscoveryResponseData(this);
         }
     }
 }
