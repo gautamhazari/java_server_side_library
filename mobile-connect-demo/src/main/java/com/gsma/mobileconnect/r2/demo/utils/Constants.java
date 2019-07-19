@@ -7,6 +7,7 @@ public class Constants {
         public static final String VERSION_1_1 = "mc_v1.1";
         public static final String VERSION_2_0 = "mc_v2.0";
         public static final String VERSION_2_3 = "mc_di_r2_v2.3";
+        public static final String VERSION_3_0 = "mc_di_v3.0";
         public static final String CONTEXT_BINDING_MSG = "demo context";
         public static final String BINDING_MSG = "demo binding";
         public static final String SERVER_SIDE_VERSION = "Java-3.4.1";

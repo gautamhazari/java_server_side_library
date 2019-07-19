@@ -28,6 +28,7 @@ public final class DefaultOptions
     private static final String MC_V1_2 = "mc_v1.2";
     public static final String MC_V2_0 = "mc_v2.0";
     public static final String MC_V2_3 = "mc_di_r2_v2.3";
+    public static final String MC_V3_0 = "mc_di_v3.0";
 
     public static final long TIMEOUT_MS = TimeUnit.SECONDS.toMillis(300L);
     public static final boolean MANUAL_SELECT = false;
