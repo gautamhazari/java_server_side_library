@@ -10,7 +10,7 @@ public class Constants {
         public static final String VERSION_3_0 = "mc_di_v3.0";
         public static final String CONTEXT_BINDING_MSG = "demo context";
         public static final String BINDING_MSG = "demo binding";
-        public static final String SERVER_SIDE_VERSION = "Java-3.4.1";
+        public static final String SERVER_SIDE_VERSION = "Java-3.4.2";
         public static final String SUCCESS_HTML_PAGE = "success.html";
         public static final String FAIL_HTML_PAGE = "fail.html";
 
