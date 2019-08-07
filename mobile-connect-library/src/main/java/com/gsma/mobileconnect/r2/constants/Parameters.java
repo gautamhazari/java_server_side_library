@@ -49,6 +49,7 @@ public final class Parameters
     public static final String MCC_MNC = "mcc_mnc";
     public static final String DISCOVERY_CALLBACK = "discovery_callback";
     public static final String SUBSCRIBER_ID = "subscriber_id";
+    public static final String SUBSCRIBER_ID_TOKEN = "subscriber_id_token";
     public static final String CORRELATION_ID = "correlation_id";
 
     //Discovery

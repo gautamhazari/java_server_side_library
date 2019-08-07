@@ -124,6 +124,16 @@ class MobileConnectInterfaceHelper
                     response = response.withSubscriberId(encryptedMsisdn);
                 }
 
+                if (response.getResponseData().getSubscriberIdToken() == null)
+                {
+                    final String loginHintToken = parsedDiscoveryRedirect.getLoginHintToken();
+                    LOGGER.debug(
+                        "Setting encryptedMsisdn={} against cached DiscoveryResponse for redirectedUrl={}",
+                        LogUtils.mask(loginHintToken, LOGGER, Level.DEBUG),
+                        LogUtils.maskUri(redirectedUrl, LOGGER, Level.DEBUG));
+                    response = response.withSubscriberIdToken(loginHintToken);
+                }
+
                 return extractStatus(response, discoveryService,
                     "attemptDiscoveryAfterOperatorSelection");
             }

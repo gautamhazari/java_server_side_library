@@ -185,6 +185,14 @@ public class DiscoveryResponse extends AbstractCacheable
                 .build())
             .build();
     }
+    public DiscoveryResponse withSubscriberIdToken(final String subscriberIdToken)
+    {
+        return new Builder(this)
+            .withResponseData(new DiscoveryResponseData.Builder(this.responseData)
+                .withSubscriberIdToken(subscriberIdToken)
+                .build())
+            .build();
+    }
 
     /**
      * Check to see if provided scopes are supported by the operator linked to the discovery

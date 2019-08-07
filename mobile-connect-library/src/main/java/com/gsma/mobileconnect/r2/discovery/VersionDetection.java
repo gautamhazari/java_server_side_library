@@ -23,7 +23,9 @@ public class VersionDetection {
             return version;
         } else {
             List<String> currentScopes = StringUtils.convertToListBySpase(scope);
-            if (supportedVersions.contains(Version.MC_DI_R2_V2_3) && containsScopesV2_3(currentScopes)) {
+            if (supportedVersions.contains(Version.MC_DI_V3_0) && containsScopesV3_0(currentScopes)) {
+                return Version.MC_DI_R2_V2_3;
+            } else if (supportedVersions.contains(Version.MC_DI_R2_V2_3) && containsScopesV2_3(currentScopes)) {
                 return Version.MC_DI_R2_V2_3;
             } else if (supportedVersions.contains(Version.MC_V2_0) && containsScopesV2_0(currentScopes)) {
                 return Version.MC_V2_0;
@@ -68,6 +70,13 @@ public class VersionDetection {
     private static boolean containsScopesV2_3(List<String> currentScopes) {
         return containsOpenidScope(currentScopes) && (containsScopesV2_0(currentScopes) || currentScopes.contains(Scope.KYC_HASHED)
                 || currentScopes.contains(Scope.KYC_PLAIN));
+    }
+
+    private static boolean containsScopesV3_0(List<String> currentScopes) {
+        return containsOpenidScope(currentScopes) && (currentScopes.contains(Scope.AUTHN) || currentScopes.contains(Scope.AUTHZ) ||
+                currentScopes.contains(Scope.MC_PHONE) || currentScopes.contains(Scope.MC_NATIONALID) ||
+                currentScopes.contains(Scope.MC_SIGNUP) || containsUniversalIndianScopes(currentScopes) ||
+                currentScopes.contains(Scope.KYC_HASHED) || currentScopes.contains(Scope.KYC_PLAIN));
     }
 
     private static List<String> getSupportedVersions(ProviderMetadata providerMetadata) {

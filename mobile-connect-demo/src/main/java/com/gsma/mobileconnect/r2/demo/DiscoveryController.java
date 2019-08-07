@@ -212,6 +212,7 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
                         .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
                         .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.BINDING_MSG : null)
                         .withClientName(clientName)
+                        .withLoginHintToken(discoveryResponse.getResponseData().getSubscriberIdToken())
                         .build())
                 .build();
         final MobileConnectStatus status =

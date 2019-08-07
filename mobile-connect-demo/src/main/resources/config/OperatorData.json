@@ -1,13 +1,13 @@
 ﻿{
-  "clientID": "6b5d870c-624e-464b-b826-bd21a1357703",
-  "clientSecret": "0941089b-3774-407b-980b-f80fa7f8c4f6",
-  "clientName": "demoAppSDK",
-  "discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
-  "redirectURL": "http://3.8.5.176:8080/mobile-connect/server_side_api/discovery_callback",
+  "clientID": "4b4ef8f6-dc0e-44ef-aa08-5d8461fed405",
+  "clientSecret": "9980f22f-eb5d-4f85-b212-4aa2877f2ddc",
+  "clientName": "demoApp",
+  "discoveryURL": "https://discovery.integration.sandbox.mobileconnect.io/v2/discovery",
+  "redirectURL": "http://172.19.2.20:8080/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "True",
-  "apiVersion": "mc_di_r2_v2.3",
-  "scope": "openid mc_identity_phonenumber",
+  "apiVersion": "mc_di_v3.0",
+  "scope": "openid mc_phonenumber",
   "acrValues": "2",
   "MaxDiscoveryCacheSize": 104857600
 }
