@@ -24,7 +24,7 @@ public class VersionDetection {
         } else {
             List<String> currentScopes = StringUtils.convertToListBySpase(scope);
             if (supportedVersions.contains(Version.MC_DI_V3_0) && containsScopesV3_0(currentScopes)) {
-                return Version.MC_DI_R2_V2_3;
+                return Version.MC_DI_V3_0;
             } else if (supportedVersions.contains(Version.MC_DI_R2_V2_3) && containsScopesV2_3(currentScopes)) {
                 return Version.MC_DI_R2_V2_3;
             } else if (supportedVersions.contains(Version.MC_V2_0) && containsScopesV2_0(currentScopes)) {
