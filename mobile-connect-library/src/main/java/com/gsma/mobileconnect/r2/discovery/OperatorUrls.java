@@ -111,13 +111,12 @@ public class OperatorUrls
 
         final List<Link> links = responseData.getLinks();
 
-        String providerMetadataUrl = getUrl(LinkRels.OPENID_CONFIGURATION, links);
-        if (StringUtils.isNullOrEmpty(providerMetadataUrl)) {
-            providerMetadataUrl = StringUtils.concatenateURL(getUrl(LinkRels.ISSUER, links), LinkRels.PROVIDER_METADATA_POSTFIX);
-        }
-
         if (links != null)
         {
+            String providerMetadataUrl = getUrl(LinkRels.OPENID_CONFIGURATION, links);
+            if (StringUtils.isNullOrEmpty(providerMetadataUrl)) {
+                providerMetadataUrl = StringUtils.concatenateURL(getUrl(LinkRels.ISSUER, links), LinkRels.PROVIDER_METADATA_POSTFIX);
+            }
             builder
                     .withAuthorizationUrl(getUrl(LinkRels.AUTHORIZATION, links))
                     .withRequestTokenUrl(getUrl(LinkRels.TOKEN, links))
