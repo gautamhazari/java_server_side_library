@@ -187,8 +187,8 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
                         .withScope(scope)
-                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
-                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.BINDING_MSG : null)
+                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3) || apiVersion.equals(Constants.VERSION_3_0)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3) || apiVersion.equals(Constants.VERSION_3_0)) ? Constants.BINDING_MSG : null)
                         .withClientName(clientName)
                         .withLoginHintToken(subscriberIdToken)
                         .build())
@@ -217,8 +217,8 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
-                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3) || apiVersion.equals(Constants.VERSION_3_0)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3) || apiVersion.equals(Constants.VERSION_3_0)) ? Constants.CONTEXT_BINDING_MSG : null)
                         .withClientName(clientName)
                         .build())
                 .build();
@@ -272,8 +272,8 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
-                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3) || apiVersion.equals(Constants.VERSION_3_0)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3) || apiVersion.equals(Constants.VERSION_3_0)) ? Constants.CONTEXT_BINDING_MSG : null)
                         .withClientName(clientName)
                         .build())
                 .build();
