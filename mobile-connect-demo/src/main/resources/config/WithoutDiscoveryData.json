@@ -1,13 +1,13 @@
 {
-  "clientID": "NmI1ZDg3MGMtNjI0ZS00NjRiLWI4MjYtYmQyMWExMzU3NzAzOm9wZXJhdG9yLWM=",
-  "clientSecret": "MDk0MTA4OWItMzc3NC00MDdiLTk4MGItZjgwZmE3ZjhjNGY2Om9wZXJhdG9yLWM=",
-  "clientName": "demoAppSDK",
+  "clientID": "MjlkNGM0NWEtYTViMy00MDU4LThiOTctYTQ0YTBhOGMwNmVjOm9wZXJhdG9yLWI=",
+  "clientSecret": "ZmRiNTM2NmQtMjk3My00MzFjLTgwZGQtYzY1NGNhMmVmODkzOm9wZXJhdG9yLWI=",
+  "clientName": "SDKTestApp",
   "discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
   "redirectURL": "http://3.8.5.176:8080/mobile-connect/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "True",
-  "apiVersion": "mc_di_r2_v2.3",
-  "scope": "openid mc_identity_phonenumber",
+  "apiVersion": "mc_di_v3.0",
+  "scope": "openid",
   "acrValues": "2",
   "MaxDiscoveryCacheSize": 104857600,
   "operatorUrls": {

@@ -14,6 +14,7 @@ public class OperatorParameters {
     private String scope;
     private String arcValues;
     private long maxDiscoveryCacheSize;
+    private String loginHintTokenPreference;
     private OperatorUrls operatorUrls;
 
     public String getClientID() {
@@ -110,6 +111,14 @@ public class OperatorParameters {
 
     public void setOperatorUrls(OperatorUrls operatorUrls) {
         this.operatorUrls = operatorUrls;
+    }
+
+    public String getLoginHintTokenPreference() {
+        return loginHintTokenPreference;
+    }
+
+    public void setLoginHintTokenPreference(String loginHintTokenPreference) {
+        this.loginHintTokenPreference = loginHintTokenPreference;
     }
 }
 

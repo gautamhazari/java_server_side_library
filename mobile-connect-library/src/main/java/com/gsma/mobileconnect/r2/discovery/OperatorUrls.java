@@ -21,10 +21,7 @@ import com.gsma.mobileconnect.r2.constants.LinkRels;
 import com.gsma.mobileconnect.r2.json.DiscoveryResponseData;
 import com.gsma.mobileconnect.r2.json.JsonRequired;
 import com.gsma.mobileconnect.r2.json.Link;
-import com.gsma.mobileconnect.r2.utils.IBuilder;
-import com.gsma.mobileconnect.r2.utils.ListUtils;
-import com.gsma.mobileconnect.r2.utils.ObjectUtils;
-import com.gsma.mobileconnect.r2.utils.Predicate;
+import com.gsma.mobileconnect.r2.utils.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +93,7 @@ public class OperatorUrls
         rel.add(LinkRels.TOKENREFRESH);
         rel.add(LinkRels.SCOPE);
         rel.add(LinkRels.OPENID_CONFIGURATION);
+        rel.add(LinkRels.ISSUER);
 
         return rel;
     }
@@ -113,6 +111,11 @@ public class OperatorUrls
 
         final List<Link> links = responseData.getLinks();
 
+        String providerMetadataUrl = getUrl(LinkRels.OPENID_CONFIGURATION, links);
+        if (StringUtils.isNullOrEmpty(providerMetadataUrl)) {
+            providerMetadataUrl = StringUtils.concatenateURL(getUrl(LinkRels.ISSUER, links), LinkRels.PROVIDER_METADATA_POSTFIX);
+        }
+
         if (links != null)
         {
             builder
@@ -124,7 +127,7 @@ public class OperatorUrls
                     .withRefershTokenUrl(getUrl(LinkRels.TOKENREFRESH, links))
                     .withRevokeTokenUrl(getUrl(LinkRels.TOKENREVOKE, links))
                     .withScopeUri(getUrl(LinkRels.SCOPE, links))
-                    .withProviderMetadataUri(getUrl(LinkRels.OPENID_CONFIGURATION, links));
+                    .withProviderMetadataUri(providerMetadataUrl);
 
         }
 

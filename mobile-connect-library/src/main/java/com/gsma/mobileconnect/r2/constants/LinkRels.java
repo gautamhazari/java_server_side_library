@@ -73,6 +73,16 @@ public final class LinkRels
     public static final String OPENID_CONFIGURATION = "openid-configuration";
 
     /**
+     * Key for issuer
+     */
+    public static final String ISSUER = "issuer";
+
+    /**
+     * Key for issuer
+     */
+    public static final String PROVIDER_METADATA_POSTFIX = ".well-known/openid-configuration";
+
+    /**
      * Key for operator selection
      */
     public static final String OPERATOR_SELECTION = "operatorSelection";

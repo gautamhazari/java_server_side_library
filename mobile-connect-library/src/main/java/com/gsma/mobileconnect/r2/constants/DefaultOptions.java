@@ -51,7 +51,11 @@ public final class DefaultOptions
     public static final String VERSION_MOBILECONNECTIDENTITY = MC_V1_2;
     public static final int THREAD_POOL_SIZE = 100;
 
-    public static final String PROMPT = "login";
+    public static final String LOGIN = "login";
+    public static final String NONE = "none";
+    public static final String CONSENT = "consent";
+    public static final String SELECT_ACCOUNT = "select_account";
+    public static final String NO_SEAM = "no_seam";
     public static final String X_REDIRECT_VALUE = "APP";
 
     // Since the wait time is 5 seconds & the maximum timeout = 2 mins

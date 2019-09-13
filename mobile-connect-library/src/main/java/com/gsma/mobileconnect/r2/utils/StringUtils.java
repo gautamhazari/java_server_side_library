@@ -248,4 +248,17 @@ public final class StringUtils
         }
         return Arrays.asList(initString.split("\\s+"));
     }
+
+    public static String concatenateURL(String url, String postfix) {
+        if (StringUtils.isNullOrEmpty(url)) {
+            return url;
+        }
+        String separator = "/";
+        if (url.endsWith(separator)) {
+            return url + postfix;
+        }
+        else {
+            return url + separator + postfix;
+        }
+    }
 }

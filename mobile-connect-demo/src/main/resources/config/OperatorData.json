@@ -1,13 +1,14 @@
 ﻿{
-  "clientID": "4b4ef8f6-dc0e-44ef-aa08-5d8461fed405",
-  "clientSecret": "9980f22f-eb5d-4f85-b212-4aa2877f2ddc",
-  "clientName": "demoApp",
-  "discoveryURL": "https://discovery.integration.sandbox.mobileconnect.io/v2/discovery",
-  "redirectURL": "http://172.19.2.20:8080/server_side_api/discovery_callback",
+  "clientID": "29d4c45a-a5b3-4058-8b97-a44a0a8c06ec",
+  "clientSecret": "fdb5366d-2973-431c-80dd-c654ca2ef893",
+  "clientName": "SDKTestApp",
+  "discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
+  "redirectURL": "http://3.8.5.176:8080/mobile-connect/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "True",
   "apiVersion": "mc_di_v3.0",
-  "scope": "openid mc_phonenumber",
+  "scope": "openid",
   "acrValues": "2",
-  "MaxDiscoveryCacheSize": 104857600
+  "MaxDiscoveryCacheSize": 104857600,
+  "loginHintTokenPreference": "True"
 }
