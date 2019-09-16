@@ -148,7 +148,7 @@ public class AuthenticationServiceTest
 
         final RequestTokenResponse response =
             this.authentication.requestToken(this.config.getClientId(), this.config.getClientSecret(), null,
-                    TOKEN_URL, REDIRECT_URL, "code");
+                    TOKEN_URL, REDIRECT_URL, "code", true);
 
         assertNotNull(response);
         assertEquals(response.getResponseCode(), HttpStatus.SC_ACCEPTED);
@@ -167,7 +167,7 @@ public class AuthenticationServiceTest
 
         final RequestTokenResponse response =
             this.authentication.requestToken(this.config.getClientId(),
-                this.config.getClientSecret(), null, TOKEN_URL, REDIRECT_URL, "code");
+                this.config.getClientSecret(), null, TOKEN_URL, REDIRECT_URL, "code", true);
 
         assertNotNull(response);
         assertEquals(response.getResponseCode(), HttpStatus.SC_BAD_REQUEST);
@@ -187,7 +187,7 @@ public class AuthenticationServiceTest
                 new Exception("test")));
 
         this.authentication.requestToken(this.config.getClientId(), this.config.getClientSecret(),null,
-            TOKEN_URL, REDIRECT_URL, "code");
+            TOKEN_URL, REDIRECT_URL, "code", true);
     }
 
     @DataProvider
@@ -245,7 +245,7 @@ public class AuthenticationServiceTest
         final String code) throws RequestFailedException, InvalidResponseException
     {
         this.authentication.requestToken(clientId, null, clientSecret, requestTokenUrl, redirectUrl,
-            code);
+            code, true);
     }
 
     @SuppressWarnings("unchecked")
@@ -266,7 +266,7 @@ public class AuthenticationServiceTest
         final Future<RequestTokenResponse> response =
             this.authentication.requestHeadlessAuthentication(this.config.getClientId(),
                 this.config.getClientSecret(), null, AUTHORIZE_URL, REDIRECT_URL, TOKEN_URL, "state",
-                "nonce", null, null, "mc_v1.1");
+                "nonce", null, null, "mc_v1.1", true);
 
         // Then
         assertNotNull(response);
@@ -305,7 +305,7 @@ public class AuthenticationServiceTest
         final Future<RequestTokenResponse> response =
             this.authentication.requestHeadlessAuthentication(this.config.getClientId(),
                 this.config.getClientSecret(), null, AUTHORIZE_URL, REDIRECT_URL, TOKEN_URL, "state",
-                "nonce", null, options, "mc_v1.1");
+                "nonce", null, options, "mc_v1.1", true);
 
 
         // Then

@@ -423,6 +423,9 @@ public class DiscoveryService implements IDiscoveryService
 
             builder.withEncryptedMsisdn(
                     HttpUtils.extractQueryValue(redirectedUrl, Parameters.SUBSCRIBER_ID));
+
+            builder.setwithLoginHintToken(
+                    HttpUtils.extractQueryValue(redirectedUrl, Parameters.SUBSCRIBER_ID_TOKEN));
         }
 
         return builder.build();

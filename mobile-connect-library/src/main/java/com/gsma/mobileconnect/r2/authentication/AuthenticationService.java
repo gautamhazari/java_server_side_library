@@ -226,7 +226,7 @@ public class AuthenticationService implements IAuthenticationService
                 .addIfNotEmpty(Parameters.STATE, options.getState())
                 .addIfNotEmpty(Parameters.NONCE, options.getNonce())
                 .addIfNotEmpty(Parameters.DISPLAY, options.getDisplay())
-                .addIfNotEmpty(Parameters.PROMPT, options.getPrompt())
+                .addIfNotEmpty(Parameters.PROMPT, getPrompt(options.getPrompt(), version))
                 .addIfNotEmpty(Parameters.MAX_AGE, String.valueOf(options.getMaxAge()))
                 .addIfNotEmpty(Parameters.UI_LOCALES, options.getUiLocales())
                 .addIfNotEmpty(Parameters.CLAIMS_LOCALES, options.getClaimsLocales())
@@ -260,11 +260,30 @@ public class AuthenticationService implements IAuthenticationService
         return builder.buildAsNameValuePairList();
     }
 
+    private String getPrompt(String currentPrompt, String currentVersion) {
+        if (StringUtils.isNullOrEmpty(currentPrompt)) {
+            return null;
+        }
+        if (!currentVersion.equals(DefaultOptions.MC_V3_0)) {
+            if (currentPrompt.equals(DefaultOptions.CONSENT) || currentPrompt.equals(DefaultOptions.SELECT_ACCOUNT)) {
+                return currentPrompt;
+            }
+        }
+        if (currentPrompt.equals(DefaultOptions.NONE) || currentPrompt.equals(DefaultOptions.LOGIN)
+                || currentPrompt.equals(DefaultOptions.NO_SEAM)) {
+            return currentPrompt;
+        }
+        return null;
+
+    }
+
     @Override
     public Future<RequestTokenResponse> requestHeadlessAuthentication(final String clientId, final String clientSecret,
                                                                       final String correlationId, final URI authorizationUrl, final URI requestTokenUrl,
                                                                       final URI redirectUrl, final String state,
-                                                                      final String nonce, final String encryptedMsisdn, final AuthenticationOptions options, final String currentVersion)
+                                                                      final String nonce, final String encryptedMsisdn,
+                                                                      final AuthenticationOptions options, final String currentVersion,
+                                                                      final boolean isBasicAuth)
             throws RequestFailedException
     {
         final String scope;
@@ -285,17 +304,21 @@ public class AuthenticationService implements IAuthenticationService
 
         if (this.shouldUseAuthorize(scope, context))
         {
-            optionsBuilder.withPrompt(DefaultOptions.PROMPT);
+            optionsBuilder.withPrompt(DefaultOptions.LOGIN);
         }
 
         StartAuthenticationResponse startAuthenticationResponse =
                 startAuthentication(clientId, correlationId, authorizationUrl, redirectUrl, state, nonce,
                         encryptedMsisdn, optionsBuilder.build(), currentVersion);
-        final RestAuthentication authentication =
-                RestAuthentication.basic(clientId, clientSecret, iMobileConnectEncodeDecoder);
-
         URI authUrl = startAuthenticationResponse.getUrl();
-        URI finalRedirectUrl = restClient.getFinalRedirect(authUrl, redirectUrl, authentication);
+        URI finalRedirectUrl;
+        if (isBasicAuth) {
+            final RestAuthentication authentication =
+                    RestAuthentication.basic(clientId, clientSecret, iMobileConnectEncodeDecoder);
+            finalRedirectUrl = restClient.getFinalRedirect(authUrl, redirectUrl, authentication);
+        } else {
+            finalRedirectUrl = restClient.getFinalRedirect(authUrl, redirectUrl, null);
+        }
 
         final String code = HttpUtils.extractQueryValue(finalRedirectUrl, "code");
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -305,7 +328,7 @@ public class AuthenticationService implements IAuthenticationService
             public RequestTokenResponse call() throws Exception
             {
                 return AuthenticationService.this.requestToken(clientId, clientSecret, correlationId,
-                        requestTokenUrl, redirectUrl, code);
+                        requestTokenUrl, redirectUrl, code, isBasicAuth);
             }
         });
         executorService.shutdownNow();
@@ -371,7 +394,7 @@ public class AuthenticationService implements IAuthenticationService
 
     @Override
     public RequestTokenResponse requestToken(final String clientId, final String clientSecret, final String correlationId,
-                                             final URI requestTokenUrl, final URI redirectUrl, final String code)
+                                             final URI requestTokenUrl, final URI redirectUrl, final String code, final boolean isBasicAuth)
             throws RequestFailedException, InvalidResponseException
     {
         final List<KeyValuePair> formData = new KeyValuePair.ListBuilder()
@@ -380,10 +403,15 @@ public class AuthenticationService implements IAuthenticationService
                 .add(Parameters.CODE, StringUtils.requireNonEmpty(code, "code"))
                 .add(Parameters.GRANT_TYPE, DefaultOptions.GRANT_TYPE_AUTH_CODE)
                 .addIfNotEmpty(Parameters.CORRELATION_ID, correlationId)
+                .addIfNotEmpty(Parameters.CLIENT_ID, isBasicAuth ? clientId : null)
+                .addIfNotEmpty(Parameters.CLIENT_SECRET, isBasicAuth ? clientSecret : null)
                 .build();
 
-        final RestAuthentication authentication =
-                RestAuthentication.basic(clientId, clientSecret, this.iMobileConnectEncodeDecoder);
+        RestAuthentication authentication = null;
+        if (isBasicAuth) {
+            authentication =
+                    RestAuthentication.basic(clientId, clientSecret, this.iMobileConnectEncodeDecoder);
+        }
         final RestResponse restResponse =
                 this.restClient.postFormData(requestTokenUrl, authentication, null, formData, null, null);
 
@@ -395,7 +423,7 @@ public class AuthenticationService implements IAuthenticationService
     public Future<RequestTokenResponse> requestTokenAsync(final String clientId,
                                                           final String clientSecret, final String correlationId,
                                                           final URI requestTokenUrl, final URI redirectUrl,
-                                                          final String code)
+                                                          final String code, final boolean isBasicAuth)
     {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Future<RequestTokenResponse> requestTokenResponseFuture = executorService.submit(new Callable<RequestTokenResponse>()
@@ -404,7 +432,7 @@ public class AuthenticationService implements IAuthenticationService
             public RequestTokenResponse call() throws Exception
             {
                 return AuthenticationService.this.requestToken(clientId, clientSecret, correlationId,
-                        requestTokenUrl, redirectUrl, code);
+                        requestTokenUrl, redirectUrl, code, isBasicAuth);
             }
         });
         executorService.shutdownNow();
@@ -484,7 +512,10 @@ public class AuthenticationService implements IAuthenticationService
         for (Link link : discoveryResponseData.getResponse().getApis().getOperatorid().getLink()) {
             if (link.getRel().equals(LinkRels.OPENID_CONFIGURATION)) {
                 linkToProviderMetadata = link.getHref();
+            } else if (link.getRel().equals(LinkRels.ISSUER)) {
+                linkToProviderMetadata = StringUtils.concatenateURL(link.getHref(), LinkRels.PROVIDER_METADATA_POSTFIX);
             }
+
         }
 
         if (linkToProviderMetadata != null) {

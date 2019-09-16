@@ -124,6 +124,16 @@ class MobileConnectInterfaceHelper
                     response = response.withSubscriberId(encryptedMsisdn);
                 }
 
+                if (response.getResponseData().getSubscriberIdToken() == null)
+                {
+                    final String loginHintToken = parsedDiscoveryRedirect.getLoginHintToken();
+                    LOGGER.debug(
+                        "Setting encryptedMsisdn={} against cached DiscoveryResponse for redirectedUrl={}",
+                        LogUtils.mask(loginHintToken, LOGGER, Level.DEBUG),
+                        LogUtils.maskUri(redirectedUrl, LOGGER, Level.DEBUG));
+                    response = response.withSubscriberIdToken(loginHintToken);
+                }
+
                 return extractStatus(response, discoveryService,
                     "attemptDiscoveryAfterOperatorSelection");
             }
@@ -185,7 +195,7 @@ class MobileConnectInterfaceHelper
         final String expectedState, final String expectedNonce, final MobileConnectConfig config,
         final MobileConnectRequestOptions options,
         final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder,
-        final IJWKeysetService jwKeysetService, final IJsonService jsonService, final String currentVersion)
+        final IJWKeysetService jwKeysetService, final IJsonService jsonService, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(discoveryResponse, DISCOVERY_RESPONSE);
 
@@ -217,7 +227,7 @@ class MobileConnectInterfaceHelper
             final Future<RequestTokenResponse> requestTokenResponseAsync =
                 authnService.requestHeadlessAuthentication(clientId, clientSecret, correlationId, authorizationUrl,
                     tokenUrl, config.getRedirectUrl(), expectedState, expectedNonce,
-                    encryptedMsisdn, authenticationOptions, currentVersion);
+                    encryptedMsisdn, authenticationOptions, currentVersion, isBasicAuth);
 
             final RequestTokenResponse requestTokenResponse = requestTokenResponseAsync.get();
 
@@ -265,7 +275,7 @@ class MobileConnectInterfaceHelper
         final URI redirectedUrl, final String expectedState, final String expectedNonce,
         final MobileConnectConfig config, final MobileConnectRequestOptions options,
         final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion)
+        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(discoveryResponse, DISCOVERY_RESPONSE);
         StringUtils.requireNonEmpty(expectedState, "expectedState");
@@ -325,7 +335,7 @@ class MobileConnectInterfaceHelper
             {
                 final Future<RequestTokenResponse> requestTokenResponseFuture =
                     authnService.requestTokenAsync(clientId, clientSecret, correlationId,
-                        URI.create(requestTokenUrl), config.getRedirectUrl(), code);
+                        URI.create(requestTokenUrl), config.getRedirectUrl(), code, isBasicAuth);
 
                 final RequestTokenResponse requestTokenResponse = requestTokenResponseFuture.get();
 
@@ -467,7 +477,7 @@ class MobileConnectInterfaceHelper
         final URI redirectedUrl, final DiscoveryResponse discoveryResponse,
         final String expectedState, final String expectedNonce, final MobileConnectConfig config,
         final MobileConnectRequestOptions options, final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion)
+        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(redirectedUrl, "redirectedUrl");
 
@@ -480,7 +490,7 @@ class MobileConnectInterfaceHelper
 
             MobileConnectStatus tokenStatus = requestToken(authnService, jwKeysetService, discoveryResponse, redirectedUrl,
                     expectedState, expectedNonce, config, options, jsonService,
-                    iMobileConnectEncodeDecoder, currentVersion);
+                    iMobileConnectEncodeDecoder, currentVersion, isBasicAuth);
             return tokenStatus;
 
         }
@@ -493,7 +503,7 @@ class MobileConnectInterfaceHelper
 
             MobileConnectStatus tokenStatus = requestToken(authnService, jwKeysetService, discoveryResponse, redirectedUrl,
                     expectedState, expectedNonce, config, options, jsonService,
-                    iMobileConnectEncodeDecoder, currentVersion);
+                    iMobileConnectEncodeDecoder, currentVersion, isBasicAuth);
             return tokenStatus;
 
 

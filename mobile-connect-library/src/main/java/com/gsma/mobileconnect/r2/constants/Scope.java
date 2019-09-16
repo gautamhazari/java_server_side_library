@@ -39,6 +39,10 @@ public class Scope
     public static final String IDENTITY_SIGNUPPLUS = "mc_identity_signupplus";
     public static final String IDENTITY_NATIONALID = "mc_identity_nationalid";
 
+    public static final String MC_PHONE = "mc_phonenumber";
+    public static final String MC_SIGNUP = "mc_signup";
+    public static final String MC_NATIONALID = "mc_nationalid";
+
     public static final String KYC_PLAIN = "mc_kyc_plain";
     public static final String KYC_HASHED = "mc_kyc_hashed";
     public static final String ATTR_VM_MATCH = "mc_attr_vm_match";

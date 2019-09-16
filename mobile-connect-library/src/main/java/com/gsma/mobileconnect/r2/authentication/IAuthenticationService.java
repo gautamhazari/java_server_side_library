@@ -69,7 +69,8 @@ public interface IAuthenticationService
      * @throws InvalidResponseException on failure to process response from endpoint.
      */
     RequestTokenResponse requestToken(final String clientId, final String clientSecret, //NOSONAR
-                                      final String correlationId, final URI requestTokenUrl, final URI redirectUrl, final String code)
+                                      final String correlationId, final URI requestTokenUrl, final URI redirectUrl, final String code,
+                                      final boolean isBasicAuth)
         throws RequestFailedException, InvalidResponseException;
 
     /**
@@ -88,7 +89,7 @@ public interface IAuthenticationService
      *                        authentication/authorization API (Required)
      */
     Future<RequestTokenResponse> requestTokenAsync(final String clientId, final String clientSecret,
-                                                   final String correlationId, final URI requestTokenUrl, final URI redirectUrl, final String code);
+                                                   final String correlationId, final URI requestTokenUrl, final URI redirectUrl, final String code, final boolean isBasicAuth);
 
     /**
      * Initiates headless authentication, if authentication is successful a token will be returned.
@@ -113,7 +114,7 @@ public interface IAuthenticationService
     Future<RequestTokenResponse> requestHeadlessAuthentication(final String clientId, //NOSONAR
                                                                final String clientSecret, final String correlationId, final URI authorizationUrl, final URI requestTokenUrl,
                                                                final URI redirectUrl, final String state, final String nonce, final String encryptedMsisdn,
-                                                               final AuthenticationOptions options, final String currentVersion)
+                                                               final AuthenticationOptions options, final String currentVersion, final boolean isBasicAuth)
         throws RequestFailedException, HeadlessOperationFailedException;
 
     /**

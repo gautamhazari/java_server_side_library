@@ -29,12 +29,15 @@ public class ParsedDiscoveryRedirect
     private final String selectedMcc;
     private final String selectedMnc;
     private final String encryptedMsisdn;
+    private final String loginHintToken;
 
     private ParsedDiscoveryRedirect(Builder builder)
     {
         this.selectedMcc = builder.selectedMcc;
         this.selectedMnc = builder.selectedMnc;
         this.encryptedMsisdn = builder.encryptedMsisdn;
+        this.loginHintToken = builder.loginHintToken;
+
     }
 
     /**
@@ -70,11 +73,16 @@ public class ParsedDiscoveryRedirect
             this.selectedMnc);
     }
 
+    public String getLoginHintToken() {
+        return loginHintToken;
+    }
+
     public static final class Builder implements IBuilder<ParsedDiscoveryRedirect>
     {
         private String selectedMcc;
         private String selectedMnc;
         private String encryptedMsisdn;
+        private String loginHintToken;
 
         public Builder withSelectedMcc(final String val)
         {
@@ -98,6 +106,11 @@ public class ParsedDiscoveryRedirect
         public ParsedDiscoveryRedirect build()
         {
             return new ParsedDiscoveryRedirect(this);
+        }
+
+        public Builder setwithLoginHintToken(String loginHintToken) {
+            this.loginHintToken = loginHintToken;
+            return this;
         }
     }
 }

@@ -28,6 +28,7 @@ public final class DefaultOptions
     private static final String MC_V1_2 = "mc_v1.2";
     public static final String MC_V2_0 = "mc_v2.0";
     public static final String MC_V2_3 = "mc_di_r2_v2.3";
+    public static final String MC_V3_0 = "mc_di_v3.0";
 
     public static final long TIMEOUT_MS = TimeUnit.SECONDS.toMillis(300L);
     public static final boolean MANUAL_SELECT = false;
@@ -50,7 +51,11 @@ public final class DefaultOptions
     public static final String VERSION_MOBILECONNECTIDENTITY = MC_V1_2;
     public static final int THREAD_POOL_SIZE = 100;
 
-    public static final String PROMPT = "mobile";
+    public static final String LOGIN = "login";
+    public static final String NONE = "none";
+    public static final String CONSENT = "consent";
+    public static final String SELECT_ACCOUNT = "select_account";
+    public static final String NO_SEAM = "no_seam";
     public static final String X_REDIRECT_VALUE = "APP";
 
     // Since the wait time is 5 seconds & the maximum timeout = 2 mins

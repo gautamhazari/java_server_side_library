@@ -36,6 +36,8 @@ public class DiscoveryResponseData
     private final Response response;
     @SerializedName("subscriber_id")
     private String subscriberId;
+    @SerializedName("subscriber_id_token")
+    private String subscriberIdToken;
     @SerializedName("client_name")
     private String clientName;
     @SerializedName("correlation_id")
@@ -52,6 +54,7 @@ public class DiscoveryResponseData
         this.response = builder.response;
         this.clientName = builder.clientName;
         this.correlationId = builder.correlationId;
+        this.subscriberIdToken = builder.subscriberIdToken;
     }
 
     public long getTtl()
@@ -62,6 +65,11 @@ public class DiscoveryResponseData
     public String getSubscriberId()
     {
         return this.subscriberId;
+    }
+
+    public String getSubscriberIdToken()
+    {
+        return this.subscriberIdToken;
     }
 
     public void clearSubscriberId()
@@ -108,6 +116,7 @@ public class DiscoveryResponseData
         private Response response = null;
         private String clientName = null;
         private String correlationId = null;
+        private String subscriberIdToken = null;
 
         public Builder()
         {
@@ -126,6 +135,7 @@ public class DiscoveryResponseData
                 this.response = responseData.response;
                 this.clientName = responseData.clientName;
                 this.correlationId = responseData.correlationId;
+                this.subscriberIdToken = responseData.subscriberIdToken;
             }
         }
 
@@ -138,6 +148,12 @@ public class DiscoveryResponseData
         public Builder withSubscriberId(final String val)
         {
             this.subscriberId = val;
+            return this;
+        }
+
+        public Builder withSubscriberIdToken(final String val)
+        {
+            this.subscriberIdToken = val;
             return this;
         }
 
