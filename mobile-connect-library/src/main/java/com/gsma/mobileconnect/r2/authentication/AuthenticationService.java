@@ -403,8 +403,8 @@ public class AuthenticationService implements IAuthenticationService
                 .add(Parameters.CODE, StringUtils.requireNonEmpty(code, "code"))
                 .add(Parameters.GRANT_TYPE, DefaultOptions.GRANT_TYPE_AUTH_CODE)
                 .addIfNotEmpty(Parameters.CORRELATION_ID, correlationId)
-                .addIfNotEmpty(Parameters.CLIENT_ID, isBasicAuth ? clientId : null)
-                .addIfNotEmpty(Parameters.CLIENT_SECRET, isBasicAuth ? clientSecret : null)
+                .addIfNotEmpty(Parameters.CLIENT_ID, !isBasicAuth ? clientId : null)
+                .addIfNotEmpty(Parameters.CLIENT_SECRET, !isBasicAuth ? clientSecret : null)
                 .build();
 
         RestAuthentication authentication = null;
