@@ -7,8 +7,8 @@
   "xRedirect": "True",
   "includeRequestIP": "True",
   "apiVersion": "mc_di_v3.0",
-  "scope": "openid",
+  "scope": "openid mc_authz",
   "acrValues": "2",
   "MaxDiscoveryCacheSize": 104857600,
-  "loginHintTokenPreference": "True"
+  "loginHintTokenPreference": "False"
 }

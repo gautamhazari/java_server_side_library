@@ -16,6 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.demo;
 
+import com.apix.ipcheck.IPCheck;
 import com.gsma.mobileconnect.r2.MobileConnect;
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
@@ -34,6 +35,10 @@ import com.gsma.mobileconnect.r2.discovery.Version;
 import com.gsma.mobileconnect.r2.discovery.VersionDetection;
 import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
 import com.gsma.mobileconnect.r2.exceptions.InvalidScopeException;
+import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
+import com.gsma.mobileconnect.r2.rest.RestAuthentication;
+import com.gsma.mobileconnect.r2.rest.RestClient;
+import com.gsma.mobileconnect.r2.rest.RestResponse;
 import com.gsma.mobileconnect.r2.utils.HttpUtils;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
@@ -48,10 +53,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 /**
  * @since 2.0
@@ -87,6 +96,44 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
 
         if (StringUtils.isNullOrEmpty(sourceIp) && !ignoreIp) {
             sourceIp = includeRequestIP ? HttpUtils.extractClientIp(request) : null;
+        }
+        String filename = UUID.randomUUID().toString();
+
+
+        if (sourceIp != null) {
+            try {
+                RestResponse restResponse = restClient.get(new URI("https://{host}/{dev_org}/v2/discovery/iplist"),
+                        RestAuthentication.basic(mobileConnectConfig.getClientId(), mobileConnectConfig.getClientSecret(),
+                                new DefaultEncodeDecoder()), null, null, null, null);
+
+
+
+                BufferedWriter writer = null;
+                try {
+                    writer = new BufferedWriter(new FileWriter(filename));
+                    writer.write(restResponse.getContent());
+                    writer.close();
+                } catch (IOException e) {
+                    LOGGER.warn("Error during writing csv");
+                }
+
+
+                IPCheck ipCheck = new IPCheck();
+                boolean isIPresent = false;
+                try {
+                    isIPresent = ipCheck.isIPPresent(sourceIp, filename);
+                } catch (IOException e) {
+                    LOGGER.warn("Error during IP verification");
+                }
+                if(!isIPresent) {
+                    sourceIp = null;
+                }
+
+            } catch (RequestFailedException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
 
         DiscoveryResponse discoveryResponse = getDiscoveryCache(msisdn, mcc, mnc, sourceIp);

@@ -31,6 +31,7 @@ import com.gsma.mobileconnect.r2.rest.RestResponse;
 import com.gsma.mobileconnect.r2.utils.*;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class to hold a discovery response. This potentially holds cached data as indicated by the cached
@@ -121,7 +122,16 @@ public class DiscoveryResponse extends AbstractCacheable
             final long ttl = now + responseTtl;
 
             retval = Math.min(Math.max(min, ttl), max);
+            System.out.println("MIN");
+            System.out.println(DefaultOptions.MIN_TTL_MS);
+            System.out.println(min);
+            System.out.println("MAX");
+            System.out.println(DefaultOptions.MAX_TTL_MS);
+            System.out.println(max);
+            System.out.println(TimeUnit.MILLISECONDS.toDays(15551700000L));
+
         }
+
         return new Date(retval);
     }
 
