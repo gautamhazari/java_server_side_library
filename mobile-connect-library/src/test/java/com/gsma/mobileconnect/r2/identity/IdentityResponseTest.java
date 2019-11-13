@@ -17,11 +17,14 @@
 package com.gsma.mobileconnect.r2.identity;
 
 
-import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.ErrorResponse;
-import com.gsma.mobileconnect.r2.json.GsonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.rest.RestResponse;
+import com.gsma.mobileconnect.r2.utils.encoding.DefaultEncodeDecoder;
+import com.gsma.mobileconnect.r2.model.ErrorResponse;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.web.rest.RestResponse;
+import com.gsma.mobileconnect.r2.service.identity.AddressData;
+import com.gsma.mobileconnect.r2.service.identity.IdentityResponse;
+import com.gsma.mobileconnect.r2.service.identity.UserInfoData;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 

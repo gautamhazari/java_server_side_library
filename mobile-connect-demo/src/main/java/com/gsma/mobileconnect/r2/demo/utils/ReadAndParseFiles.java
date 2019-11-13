@@ -3,7 +3,7 @@ package com.gsma.mobileconnect.r2.demo.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
-import com.gsma.mobileconnect.r2.json.AnnotatedDeserializer;
+import com.gsma.mobileconnect.r2.model.json.AnnotatedDeserializer;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

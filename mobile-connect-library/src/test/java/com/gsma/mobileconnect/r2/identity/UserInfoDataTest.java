@@ -16,10 +16,12 @@
  */
 package com.gsma.mobileconnect.r2.identity;
 
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.GsonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.json.JsonSerializationException;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.model.json.JsonSerializationException;
+import com.gsma.mobileconnect.r2.service.identity.AddressData;
+import com.gsma.mobileconnect.r2.service.identity.UserInfoData;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

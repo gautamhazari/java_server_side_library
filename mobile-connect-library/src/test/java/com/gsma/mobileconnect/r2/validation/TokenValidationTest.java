@@ -16,11 +16,14 @@
 */
 package com.gsma.mobileconnect.r2.validation;
 
-import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
-import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
-import com.gsma.mobileconnect.r2.json.GsonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.service.authentication.RequestTokenResponseData;
+import com.gsma.mobileconnect.r2.utils.encoding.DefaultEncodeDecoder;
+import com.gsma.mobileconnect.r2.utils.encoding.IMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.service.validation.JWKeyset;
+import com.gsma.mobileconnect.r2.service.validation.TokenValidation;
+import com.gsma.mobileconnect.r2.service.validation.TokenValidationResult;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

@@ -16,7 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.utils;
 
-import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidArgumentException;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

@@ -16,12 +16,14 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.gsma.mobileconnect.r2.exceptions.ProviderMetadataUnavailableException;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.GsonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.json.JsonSerializationException;
-import com.gsma.mobileconnect.r2.rest.RestResponse;
+import com.gsma.mobileconnect.r2.model.exceptions.ProviderMetadataUnavailableException;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.model.json.JsonSerializationException;
+import com.gsma.mobileconnect.r2.web.rest.RestResponse;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.ProviderMetadata;
 import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.DataProvider;

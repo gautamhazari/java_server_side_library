@@ -1,6 +1,8 @@
 package com.gsma.mobileconnect.r2.validation;
 
-import com.gsma.mobileconnect.r2.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.service.validation.JWKey;
+import com.gsma.mobileconnect.r2.service.validation.JWKeyset;
 import com.gsma.mobileconnect.r2.utils.Predicate;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

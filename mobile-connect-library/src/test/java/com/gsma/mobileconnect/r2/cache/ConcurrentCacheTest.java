@@ -16,12 +16,12 @@
  */
 package com.gsma.mobileconnect.r2.cache;
 
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.ProviderMetadata;
-import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.GsonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.ProviderMetadata;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidArgumentException;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.utils.ListUtils;
 import com.gsma.mobileconnect.r2.utils.TestUtils;
 import com.gsma.mobileconnect.r2.utils.Tuple;

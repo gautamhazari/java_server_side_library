@@ -16,8 +16,8 @@
  */
 package com.gsma.mobileconnect.r2.utils;
 
-import com.gsma.mobileconnect.r2.ErrorResponse;
-import com.gsma.mobileconnect.r2.constants.Headers;
+import com.gsma.mobileconnect.r2.model.ErrorResponse;
+import com.gsma.mobileconnect.r2.model.constants.Headers;
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;

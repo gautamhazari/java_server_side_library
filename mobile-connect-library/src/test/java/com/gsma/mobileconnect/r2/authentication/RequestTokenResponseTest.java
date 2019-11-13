@@ -1,6 +1,8 @@
 package com.gsma.mobileconnect.r2.authentication;
 
-import com.gsma.mobileconnect.r2.ErrorResponse;
+import com.gsma.mobileconnect.r2.model.ErrorResponse;
+import com.gsma.mobileconnect.r2.service.authentication.RequestTokenResponse;
+import com.gsma.mobileconnect.r2.service.authentication.RequestTokenResponseData;
 import com.gsma.mobileconnect.r2.utils.KeyValuePair;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;

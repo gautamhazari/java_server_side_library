@@ -1,5 +1,7 @@
 package com.gsma.mobileconnect.r2.constants;
 
+import com.gsma.mobileconnect.r2.model.constants.DefaultOptions;
+import com.gsma.mobileconnect.r2.model.constants.Scopes;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;

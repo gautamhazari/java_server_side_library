@@ -1,6 +1,6 @@
 package com.gsma.mobileconnect.r2.demo.objects;
 
-import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
+import com.gsma.mobileconnect.r2.service.discovery.OperatorUrls;
 
 public class OperatorParameters {
     private String clientID;

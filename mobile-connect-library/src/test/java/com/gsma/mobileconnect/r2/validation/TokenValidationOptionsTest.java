@@ -1,5 +1,7 @@
 package com.gsma.mobileconnect.r2.validation;
 
+import com.gsma.mobileconnect.r2.service.validation.TokenValidationOptions;
+import com.gsma.mobileconnect.r2.service.validation.TokenValidationResult;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

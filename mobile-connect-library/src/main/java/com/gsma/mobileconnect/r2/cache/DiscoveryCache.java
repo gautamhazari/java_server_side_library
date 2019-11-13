@@ -1,6 +1,6 @@
 package com.gsma.mobileconnect.r2.cache;
 
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

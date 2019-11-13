@@ -17,8 +17,8 @@
 package com.gsma.mobileconnect.r2.web;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
-import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.authentication.RequestTokenResponseData;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
 
 /**
  * Helper class to convert from a heavyweight MobileConnectStatus instance to a Lightweight

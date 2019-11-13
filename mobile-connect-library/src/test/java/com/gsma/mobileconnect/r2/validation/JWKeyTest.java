@@ -1,7 +1,8 @@
 package com.gsma.mobileconnect.r2.validation;
 
-import com.gsma.mobileconnect.r2.json.GsonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.service.validation.JWKey;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
