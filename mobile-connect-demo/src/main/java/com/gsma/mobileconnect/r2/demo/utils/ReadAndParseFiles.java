@@ -1,7 +1,9 @@
 package com.gsma.mobileconnect.r2.demo.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.gsma.mobileconnect.r2.demo.objects.OperatorParameters;
+import com.gsma.mobileconnect.r2.model.json.AnnotatedDeserializer;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -17,12 +19,17 @@ import java.nio.file.Paths;
 public class ReadAndParseFiles {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReadAndParseFiles.class);
 
-    public static OperatorParameters ReadFile(String filePath)
+    private ReadAndParseFiles() {}
+
+    public static OperatorParameters readFile(String filePath)
     {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(OperatorParameters.class, new AnnotatedDeserializer<OperatorParameters>())
+                .create();
         OperatorParameters operatorParameters = null;
         try {
             String json = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
-            operatorParameters = new Gson().fromJson(json, OperatorParameters.class);
+            operatorParameters = gson.fromJson(json, OperatorParameters.class);
         } catch (Exception e) {
             LOGGER.warn(String.format("Failed to read file %s", filePath));
         }

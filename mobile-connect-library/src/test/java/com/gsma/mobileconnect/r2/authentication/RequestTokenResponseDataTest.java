@@ -1,5 +1,6 @@
 package com.gsma.mobileconnect.r2.authentication;
 
+import com.gsma.mobileconnect.r2.service.authentication.RequestTokenResponseData;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

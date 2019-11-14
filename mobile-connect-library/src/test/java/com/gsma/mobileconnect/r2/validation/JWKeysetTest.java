@@ -1,6 +1,8 @@
 package com.gsma.mobileconnect.r2.validation;
 
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.service.validation.JWKey;
+import com.gsma.mobileconnect.r2.service.validation.JWKeyset;
 import com.gsma.mobileconnect.r2.utils.Predicate;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -14,12 +16,12 @@ import static org.testng.Assert.*;
  */
 public class JWKeysetTest
 {
-    private JacksonJsonService jacksonJsonService;
+    private GsonJsonService gsonJsonService;
 
     @BeforeClass
     public void setUp()
     {
-        jacksonJsonService = new JacksonJsonService();
+        gsonJsonService = new GsonJsonService();
     }
 
     @Test
@@ -27,13 +29,13 @@ public class JWKeysetTest
     {
         final String jwksJson =
             "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO\",\"kty\":\"RSA\",\"use\":\"sig\"}]}";
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
 
         assertEquals(jwKeyset.getKeys().size(), 1);
 
         final String jwksJsonEmpty = "";
         final JWKeyset jwKeysetEmpty =
-            jacksonJsonService.deserialize(jwksJsonEmpty, JWKeyset.class);
+            gsonJsonService.deserialize(jwksJsonEmpty, JWKeyset.class);
 
         assertNull(jwKeysetEmpty);
     }
@@ -43,7 +45,7 @@ public class JWKeysetTest
     {
         final String jwksJson =
             "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO\",\"kty\":\"RSA\",\"use\":\"sig\"}]}";
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
 
         //predicate to get RSA keys only
         Predicate<JWKey> predicate = new Predicate<JWKey>()
@@ -77,14 +79,14 @@ public class JWKeysetTest
 
         final String jwksJsonMac =
             "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO\",\"kty\":\"OCT\",\"use\":\"sig\"}]}";
-        final JWKeyset jwKeysetMac = jacksonJsonService.deserialize(jwksJsonMac, JWKeyset.class);
+        final JWKeyset jwKeysetMac = gsonJsonService.deserialize(jwksJsonMac, JWKeyset.class);
 
         Iterator<JWKey> jwKeysetMatchingMac = jwKeysetMac.getMatching(predicate).iterator();
         assertFalse(jwKeysetMatchingMac.hasNext());
 
         final String jwksJsonEmpty = "";
         final JWKeyset jwKeysetEmpty =
-            jacksonJsonService.deserialize(jwksJsonEmpty, JWKeyset.class);
+            gsonJsonService.deserialize(jwksJsonEmpty, JWKeyset.class);
 
         assertNull(jwKeysetEmpty);
     }
@@ -94,7 +96,7 @@ public class JWKeysetTest
     {
         final String jwksJson =
             "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO\",\"kty\":\"OCT\",\"use\":\"sig\"}]}";
-        final JWKeyset jwKeyset = jacksonJsonService.deserialize(jwksJson, JWKeyset.class);
+        final JWKeyset jwKeyset = gsonJsonService.deserialize(jwksJson, JWKeyset.class);
 
         Iterator<JWKey> jwKeysetMatching = jwKeyset.getMatching(null).iterator();
         assertTrue(jwKeysetMatching.hasNext());

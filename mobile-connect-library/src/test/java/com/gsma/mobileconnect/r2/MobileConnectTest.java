@@ -1,17 +1,17 @@
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.authentication.IAuthenticationService;
+import com.gsma.mobileconnect.r2.service.authentication.IAuthenticationService;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.ICache;
-import com.gsma.mobileconnect.r2.constants.DefaultOptions;
-import com.gsma.mobileconnect.r2.discovery.IDiscoveryService;
-import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
-import com.gsma.mobileconnect.r2.identity.IIdentityService;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
-import com.gsma.mobileconnect.r2.rest.IRestClient;
-import com.gsma.mobileconnect.r2.validation.IJWKeysetService;
+import com.gsma.mobileconnect.r2.model.constants.DefaultOptions;
+import com.gsma.mobileconnect.r2.service.discovery.IDiscoveryService;
+import com.gsma.mobileconnect.r2.utils.encoding.DefaultEncodeDecoder;
+import com.gsma.mobileconnect.r2.utils.encoding.IMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.service.identity.IIdentityService;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.web.rest.IRestClient;
+import com.gsma.mobileconnect.r2.service.validation.IJWKeysetService;
 import org.apache.http.client.HttpClient;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -56,7 +56,7 @@ public class MobileConnectTest
     private IRestClient restClient;
 
     @Mock
-    private IJsonService jsonService = new JacksonJsonService();
+    private IJsonService jsonService = new GsonJsonService();
 
     private TimeUnit timeoutTimeUnit = TimeUnit.MILLISECONDS;
     private Long timeoutDuration = DefaultOptions.TIMEOUT_MS;

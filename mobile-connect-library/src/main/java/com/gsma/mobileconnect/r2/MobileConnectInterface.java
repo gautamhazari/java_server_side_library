@@ -16,14 +16,14 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.authentication.IAuthenticationService;
-import com.gsma.mobileconnect.r2.validation.IJWKeysetService;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.IDiscoveryService;
-import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
-import com.gsma.mobileconnect.r2.identity.IIdentityService;
-import com.gsma.mobileconnect.r2.json.IJsonService;
+import com.gsma.mobileconnect.r2.service.authentication.IAuthenticationService;
+import com.gsma.mobileconnect.r2.service.validation.IJWKeysetService;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.IDiscoveryService;
+import com.gsma.mobileconnect.r2.utils.encoding.DefaultEncodeDecoder;
+import com.gsma.mobileconnect.r2.utils.encoding.IMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.service.identity.IIdentityService;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
@@ -208,7 +208,7 @@ public class MobileConnectInterface
      */
     public Future<MobileConnectStatus> requestTokenAsync(final DiscoveryResponse discoveryResponse,
         final URI redirectedUrl, final String expectedState, final String expectedNonce,
-        final MobileConnectRequestOptions options, final String currentVersion)
+        final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         LOGGER.debug(
             "Queuing requestToken async for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -221,7 +221,7 @@ public class MobileConnectInterface
             public MobileConnectStatus call() throws Exception
             {
                 return MobileConnectInterface.this.requestToken(discoveryResponse, redirectedUrl,
-                    expectedState, expectedNonce, options, currentVersion);
+                    expectedState, expectedNonce, options, currentVersion, isBasicAuth);
             }
         });
         executorService.shutdownNow();
@@ -246,7 +246,7 @@ public class MobileConnectInterface
      */
     public MobileConnectStatus requestToken(final DiscoveryResponse discoveryResponse,
         final URI redirectedUrl, final String expectedState, final String expectedNonce,
-        final MobileConnectRequestOptions options, final String currentVersion)
+        final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         LOGGER.debug(
             "Running requestToken for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -255,7 +255,7 @@ public class MobileConnectInterface
 
         return MobileConnectInterfaceHelper.requestToken(this.authnService, jwKeysetService,
             discoveryResponse, redirectedUrl, expectedState, expectedNonce, this.config, options,
-            this.jsonService, this.iMobileConnectEncodeDecoder, currentVersion);
+            this.jsonService, this.iMobileConnectEncodeDecoder, currentVersion, isBasicAuth);
     }
 
 
@@ -311,7 +311,7 @@ public class MobileConnectInterface
      */
     public Future<MobileConnectStatus> handleUrlRedirectAsync(final URI redirectedUrl,
         final DiscoveryResponse discoveryResponse, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         LOGGER.debug(
             "Queuing handleUrlRedirect async for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -324,7 +324,7 @@ public class MobileConnectInterface
             public MobileConnectStatus call() throws Exception
             {
                 return MobileConnectInterface.this.handleUrlRedirect(redirectedUrl,
-                    discoveryResponse, expectedState, expectedNonce, options, currentVersion);
+                    discoveryResponse, expectedState, expectedNonce, options, currentVersion, isBasicAuth);
             }
         });
         executorService.shutdownNow();
@@ -349,7 +349,7 @@ public class MobileConnectInterface
      */
     public MobileConnectStatus handleUrlRedirect(final URI redirectedUrl,
         final DiscoveryResponse discoveryResponse, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         LOGGER.debug(
             "Running handleUrlRedirect for redirectedUrl={}, expectedState={}, expectedNonce={}",
@@ -359,7 +359,7 @@ public class MobileConnectInterface
         return MobileConnectInterfaceHelper.handleUrlRedirect(this.discoveryService,
             this.jwKeysetService, this.authnService, redirectedUrl, discoveryResponse,
             expectedState, expectedNonce, this.config, options, this.jsonService,
-            this.iMobileConnectEncodeDecoder, currentVersion);
+            this.iMobileConnectEncodeDecoder, currentVersion, isBasicAuth);
     }
 
     /**

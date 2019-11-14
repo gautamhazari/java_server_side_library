@@ -1,5 +1,6 @@
 package com.gsma.mobileconnect.r2.exceptions;
 
+import com.gsma.mobileconnect.r2.model.exceptions.MobileConnectInvalidJWKException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

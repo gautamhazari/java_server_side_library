@@ -16,11 +16,14 @@
  */
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.json.JsonSerializationException;
-import com.gsma.mobileconnect.r2.rest.RestResponse;
+import com.gsma.mobileconnect.r2.model.exceptions.ProviderMetadataUnavailableException;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.model.json.JsonSerializationException;
+import com.gsma.mobileconnect.r2.web.rest.RestResponse;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.ProviderMetadata;
 import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.DataProvider;
@@ -36,7 +39,7 @@ import static org.testng.Assert.*;
  */
 public class DiscoveryResponseTest
 {
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
 
     @Test
     public void operatorUrlsShouldBeOverridenByProviderMetadataOnSet()
@@ -102,7 +105,7 @@ public class DiscoveryResponseTest
             DiscoveryResponse.fromRestResponse(restResponse, this.jsonService);
         discoveryResponse.setProviderMetadata(providerMetadata);
 
-        final IJsonService jsonService = new JacksonJsonService();
+        final IJsonService jsonService = new GsonJsonService();
         final String serialized = jsonService.serialize(discoveryResponse);
         final DiscoveryResponse actual =
             jsonService.deserialize(serialized, DiscoveryResponse.class);

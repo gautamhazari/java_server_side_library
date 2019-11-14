@@ -16,10 +16,11 @@
  */
 package com.gsma.mobileconnect.r2.identity;
 
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.json.JsonSerializationException;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.model.json.JsonSerializationException;
+import com.gsma.mobileconnect.r2.service.identity.IdentityData;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -31,7 +32,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class IdentityDataTest
 {
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
 
     @Test
     public void identityDataShouldSerializeAndDeserialize()

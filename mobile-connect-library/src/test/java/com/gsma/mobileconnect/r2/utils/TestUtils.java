@@ -16,7 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.utils;
 
-import com.gsma.mobileconnect.r2.rest.RestResponse;
+import com.gsma.mobileconnect.r2.web.rest.RestResponse;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 

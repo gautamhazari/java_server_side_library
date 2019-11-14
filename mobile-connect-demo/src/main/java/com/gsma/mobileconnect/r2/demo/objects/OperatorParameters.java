@@ -1,6 +1,6 @@
 package com.gsma.mobileconnect.r2.demo.objects;
 
-import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
+import com.gsma.mobileconnect.r2.service.discovery.OperatorUrls;
 
 public class OperatorParameters {
     private String clientID;
@@ -13,7 +13,8 @@ public class OperatorParameters {
     private String apiVersion;
     private String scope;
     private String arcValues;
-    private long MaxDiscoveryCacheSize;
+    private long maxDiscoveryCacheSize;
+    private String loginHintTokenPreference;
     private OperatorUrls operatorUrls;
 
     public String getClientID() {
@@ -81,11 +82,11 @@ public class OperatorParameters {
     }
 
     public long getMaxDiscoveryCacheSize() {
-        return MaxDiscoveryCacheSize;
+        return maxDiscoveryCacheSize;
     }
 
-    public void setMaxDiscoveryCacheSize(long MaxDiscoveryCacheSize) {
-        this.MaxDiscoveryCacheSize = MaxDiscoveryCacheSize;
+    public void setMaxDiscoveryCacheSize(long maxDiscoveryCacheSize) {
+        this.maxDiscoveryCacheSize = maxDiscoveryCacheSize;
     }
 
     public String getArcValues() {
@@ -110,6 +111,14 @@ public class OperatorParameters {
 
     public void setOperatorUrls(OperatorUrls operatorUrls) {
         this.operatorUrls = operatorUrls;
+    }
+
+    public String getLoginHintTokenPreference() {
+        return loginHintTokenPreference;
+    }
+
+    public void setLoginHintTokenPreference(String loginHintTokenPreference) {
+        this.loginHintTokenPreference = loginHintTokenPreference;
     }
 }
 

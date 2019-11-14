@@ -17,22 +17,20 @@
 package com.gsma.mobileconnect.r2.authentication;
 
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
-import com.gsma.mobileconnect.r2.claims.Claims;
-import com.gsma.mobileconnect.r2.claims.ClaimsParameter;
-import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
-import com.gsma.mobileconnect.r2.exceptions.HeadlessOperationFailedException;
-import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
-import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.json.JsonSerializationException;
-import com.gsma.mobileconnect.r2.rest.IRestClient;
-import com.gsma.mobileconnect.r2.rest.RestAuthentication;
-import com.gsma.mobileconnect.r2.rest.RestClient;
-import com.gsma.mobileconnect.r2.rest.RestResponse;
+import com.gsma.mobileconnect.r2.model.constants.Parameters;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.OperatorUrls;
+import com.gsma.mobileconnect.r2.model.exceptions.HeadlessOperationFailedException;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidResponseException;
+import com.gsma.mobileconnect.r2.model.exceptions.RequestFailedException;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.web.rest.IRestClient;
+import com.gsma.mobileconnect.r2.web.rest.RestAuthentication;
+import com.gsma.mobileconnect.r2.web.rest.RestClient;
+import com.gsma.mobileconnect.r2.web.rest.RestResponse;
+import com.gsma.mobileconnect.r2.service.authentication.*;
 import com.gsma.mobileconnect.r2.utils.HttpUtils;
 import com.gsma.mobileconnect.r2.utils.KeyValuePair;
 import com.gsma.mobileconnect.r2.utils.TestUtils;
@@ -43,7 +41,6 @@ import org.testng.annotations.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -62,7 +59,7 @@ public class AuthenticationServiceTest
     private final static URI REDIRECT_URL = URI.create("http://localhost:8080/");
     private final static URI AUTHORIZE_URL = URI.create("http://localhost:8080/authorize");
     private final static URI TOKEN_URL = URI.create("http://localhost:8080/token");
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
     private final IRestClient restClient = Mockito.mock(RestClient.class);
 
     private final IAuthenticationService authentication = new AuthenticationService.Builder()
@@ -128,26 +125,6 @@ public class AuthenticationServiceTest
     }
 
     @Test
-    public void startAuthenticationWithClaimsShouldEncodeAndIncludeClaims()
-        throws JsonSerializationException
-    {
-        final ClaimsParameter claimsParameter = new ClaimsParameter.Builder()
-            .withIdToken(new Claims.Builder().addEssential("test1"))
-            .withUserinfo(new Claims.Builder().add("test2", false, "testvalue"))
-            .build();
-
-        final AuthenticationOptions options =
-            new AuthenticationOptions.Builder().withClaims(claimsParameter).build();
-        final String expectedClaims = this.jsonService.serialize(claimsParameter);
-
-        final StartAuthenticationResponse response =
-            this.authentication.startAuthentication(this.config.getClientId(), null, AUTHORIZE_URL,
-                REDIRECT_URL, "state", "nonce", null, options, "mc_v1.1");
-
-        assertEquals(HttpUtils.extractQueryValue(response.getUrl(), "claims"), expectedClaims);
-    }
-
-    @Test
     public void startAuthenticationWithClaimsShouldEncodeAndIncludeClaimsJson()
     {
         final String claims = null;
@@ -171,7 +148,7 @@ public class AuthenticationServiceTest
 
         final RequestTokenResponse response =
             this.authentication.requestToken(this.config.getClientId(), this.config.getClientSecret(), null,
-                    TOKEN_URL, REDIRECT_URL, "code");
+                    TOKEN_URL, REDIRECT_URL, "code", true);
 
         assertNotNull(response);
         assertEquals(response.getResponseCode(), HttpStatus.SC_ACCEPTED);
@@ -190,7 +167,7 @@ public class AuthenticationServiceTest
 
         final RequestTokenResponse response =
             this.authentication.requestToken(this.config.getClientId(),
-                this.config.getClientSecret(), null, TOKEN_URL, REDIRECT_URL, "code");
+                this.config.getClientSecret(), null, TOKEN_URL, REDIRECT_URL, "code", true);
 
         assertNotNull(response);
         assertEquals(response.getResponseCode(), HttpStatus.SC_BAD_REQUEST);
@@ -210,7 +187,7 @@ public class AuthenticationServiceTest
                 new Exception("test")));
 
         this.authentication.requestToken(this.config.getClientId(), this.config.getClientSecret(),null,
-            TOKEN_URL, REDIRECT_URL, "code");
+            TOKEN_URL, REDIRECT_URL, "code", true);
     }
 
     @DataProvider
@@ -268,7 +245,7 @@ public class AuthenticationServiceTest
         final String code) throws RequestFailedException, InvalidResponseException
     {
         this.authentication.requestToken(clientId, null, clientSecret, requestTokenUrl, redirectUrl,
-            code);
+            code, true);
     }
 
     @SuppressWarnings("unchecked")
@@ -289,7 +266,7 @@ public class AuthenticationServiceTest
         final Future<RequestTokenResponse> response =
             this.authentication.requestHeadlessAuthentication(this.config.getClientId(),
                 this.config.getClientSecret(), null, AUTHORIZE_URL, REDIRECT_URL, TOKEN_URL, "state",
-                "nonce", null, null, "mc_v1.1");
+                "nonce", null, null, "mc_v1.1", true);
 
         // Then
         assertNotNull(response);
@@ -328,7 +305,7 @@ public class AuthenticationServiceTest
         final Future<RequestTokenResponse> response =
             this.authentication.requestHeadlessAuthentication(this.config.getClientId(),
                 this.config.getClientSecret(), null, AUTHORIZE_URL, REDIRECT_URL, TOKEN_URL, "state",
-                "nonce", null, options, "mc_v1.1");
+                "nonce", null, options, "mc_v1.1", true);
 
 
         // Then
@@ -382,7 +359,7 @@ public class AuthenticationServiceTest
         final String outcome =
             this.authentication.revokeToken(this.config.getClientId(),
                 this.config.getClientSecret(), TOKEN_URL, "AccessToken",
-                Parameters.ACCESS_TOKEN_HINT);
+                Parameters.ACCESS_TOKEN);
 
         // Then
         assertNotNull(outcome);
@@ -480,7 +457,7 @@ public class AuthenticationServiceTest
                 .withMethod("GET")
                 .withContent(providerMetadata).build();
 
-        when(restClient.get(any(URI.class), (RestAuthentication) eq(null), anyString(), (String) eq(null), (List<KeyValuePair>) eq(null), (Iterable<KeyValuePair>) eq(null))).thenReturn(response).thenReturn(response);
+        when(restClient.get(any(URI.class), eq(null), anyString(), eq(null), eq(null), eq(null))).thenReturn(response).thenReturn(response);
 
         //When
         final DiscoveryResponse discoveryResponse =

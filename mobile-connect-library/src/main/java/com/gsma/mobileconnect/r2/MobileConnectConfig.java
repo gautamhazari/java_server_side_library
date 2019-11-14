@@ -16,7 +16,7 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.discovery.IPreferences;
+import com.gsma.mobileconnect.r2.service.discovery.IPreferences;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;

@@ -16,27 +16,29 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
-import com.gsma.mobileconnect.r2.authentication.IAuthenticationService;
-import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
-import com.gsma.mobileconnect.r2.authentication.StartAuthenticationResponse;
-import com.gsma.mobileconnect.r2.constants.DefaultOptions;
-import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.IDiscoveryService;
-import com.gsma.mobileconnect.r2.discovery.ParsedDiscoveryRedirect;
-import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
-import com.gsma.mobileconnect.r2.exceptions.AbstractMobileConnectException;
-import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
-import com.gsma.mobileconnect.r2.identity.IIdentityService;
-import com.gsma.mobileconnect.r2.identity.IdentityResponse;
-import com.gsma.mobileconnect.r2.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.ErrorResponse;
+import com.gsma.mobileconnect.r2.model.IHasMobileConnectStatus;
+import com.gsma.mobileconnect.r2.service.authentication.AuthenticationOptions;
+import com.gsma.mobileconnect.r2.service.authentication.IAuthenticationService;
+import com.gsma.mobileconnect.r2.service.authentication.RequestTokenResponse;
+import com.gsma.mobileconnect.r2.service.authentication.StartAuthenticationResponse;
+import com.gsma.mobileconnect.r2.model.constants.DefaultOptions;
+import com.gsma.mobileconnect.r2.model.constants.Parameters;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryOptions;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.IDiscoveryService;
+import com.gsma.mobileconnect.r2.service.discovery.ParsedDiscoveryRedirect;
+import com.gsma.mobileconnect.r2.utils.encoding.IMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.model.exceptions.AbstractMobileConnectException;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidArgumentException;
+import com.gsma.mobileconnect.r2.service.identity.IIdentityService;
+import com.gsma.mobileconnect.r2.service.identity.IdentityResponse;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
 import com.gsma.mobileconnect.r2.utils.*;
-import com.gsma.mobileconnect.r2.validation.IJWKeysetService;
-import com.gsma.mobileconnect.r2.validation.JWKeyset;
-import com.gsma.mobileconnect.r2.validation.TokenValidation;
-import com.gsma.mobileconnect.r2.validation.TokenValidationResult;
+import com.gsma.mobileconnect.r2.service.validation.IJWKeysetService;
+import com.gsma.mobileconnect.r2.service.validation.JWKeyset;
+import com.gsma.mobileconnect.r2.service.validation.TokenValidation;
+import com.gsma.mobileconnect.r2.service.validation.TokenValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -124,6 +126,16 @@ class MobileConnectInterfaceHelper
                     response = response.withSubscriberId(encryptedMsisdn);
                 }
 
+                if (response.getResponseData().getSubscriberIdToken() == null)
+                {
+                    final String loginHintToken = parsedDiscoveryRedirect.getLoginHintToken();
+                    LOGGER.debug(
+                        "Setting encryptedMsisdn={} against cached DiscoveryResponse for redirectedUrl={}",
+                        LogUtils.mask(loginHintToken, LOGGER, Level.DEBUG),
+                        LogUtils.maskUri(redirectedUrl, LOGGER, Level.DEBUG));
+                    response = response.withSubscriberIdToken(loginHintToken);
+                }
+
                 return extractStatus(response, discoveryService,
                     "attemptDiscoveryAfterOperatorSelection");
             }
@@ -185,7 +197,7 @@ class MobileConnectInterfaceHelper
         final String expectedState, final String expectedNonce, final MobileConnectConfig config,
         final MobileConnectRequestOptions options,
         final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder,
-        final IJWKeysetService jwKeysetService, final IJsonService jsonService, final String currentVersion)
+        final IJWKeysetService jwKeysetService, final IJsonService jsonService, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(discoveryResponse, DISCOVERY_RESPONSE);
 
@@ -217,7 +229,7 @@ class MobileConnectInterfaceHelper
             final Future<RequestTokenResponse> requestTokenResponseAsync =
                 authnService.requestHeadlessAuthentication(clientId, clientSecret, correlationId, authorizationUrl,
                     tokenUrl, config.getRedirectUrl(), expectedState, expectedNonce,
-                    encryptedMsisdn, authenticationOptions, currentVersion);
+                    encryptedMsisdn, authenticationOptions, currentVersion, isBasicAuth);
 
             final RequestTokenResponse requestTokenResponse = requestTokenResponseAsync.get();
 
@@ -265,7 +277,7 @@ class MobileConnectInterfaceHelper
         final URI redirectedUrl, final String expectedState, final String expectedNonce,
         final MobileConnectConfig config, final MobileConnectRequestOptions options,
         final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion)
+        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(discoveryResponse, DISCOVERY_RESPONSE);
         StringUtils.requireNonEmpty(expectedState, "expectedState");
@@ -325,7 +337,7 @@ class MobileConnectInterfaceHelper
             {
                 final Future<RequestTokenResponse> requestTokenResponseFuture =
                     authnService.requestTokenAsync(clientId, clientSecret, correlationId,
-                        URI.create(requestTokenUrl), config.getRedirectUrl(), code);
+                        URI.create(requestTokenUrl), config.getRedirectUrl(), code, isBasicAuth);
 
                 final RequestTokenResponse requestTokenResponse = requestTokenResponseFuture.get();
 
@@ -467,7 +479,7 @@ class MobileConnectInterfaceHelper
         final URI redirectedUrl, final DiscoveryResponse discoveryResponse,
         final String expectedState, final String expectedNonce, final MobileConnectConfig config,
         final MobileConnectRequestOptions options, final IJsonService jsonService,
-        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion)
+        final IMobileConnectEncodeDecoder iMobileConnectEncodeDecoder, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(redirectedUrl, "redirectedUrl");
 
@@ -480,7 +492,7 @@ class MobileConnectInterfaceHelper
 
             MobileConnectStatus tokenStatus = requestToken(authnService, jwKeysetService, discoveryResponse, redirectedUrl,
                     expectedState, expectedNonce, config, options, jsonService,
-                    iMobileConnectEncodeDecoder, currentVersion);
+                    iMobileConnectEncodeDecoder, currentVersion, isBasicAuth);
             return tokenStatus;
 
         }
@@ -493,7 +505,7 @@ class MobileConnectInterfaceHelper
 
             MobileConnectStatus tokenStatus = requestToken(authnService, jwKeysetService, discoveryResponse, redirectedUrl,
                     expectedState, expectedNonce, config, options, jsonService,
-                    iMobileConnectEncodeDecoder, currentVersion);
+                    iMobileConnectEncodeDecoder, currentVersion, isBasicAuth);
             return tokenStatus;
 
 

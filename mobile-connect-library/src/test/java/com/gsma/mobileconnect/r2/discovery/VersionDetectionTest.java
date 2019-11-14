@@ -1,8 +1,11 @@
 package com.gsma.mobileconnect.r2.discovery;
 
-import com.gsma.mobileconnect.r2.constants.Scope;
-import com.gsma.mobileconnect.r2.constants.Scopes;
-import com.gsma.mobileconnect.r2.exceptions.InvalidScopeException;
+import com.gsma.mobileconnect.r2.model.constants.Scope;
+import com.gsma.mobileconnect.r2.model.constants.Scopes;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidScopeException;
+import com.gsma.mobileconnect.r2.service.discovery.ProviderMetadata;
+import com.gsma.mobileconnect.r2.service.discovery.Version;
+import com.gsma.mobileconnect.r2.service.discovery.VersionDetection;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

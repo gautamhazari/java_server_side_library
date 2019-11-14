@@ -4,18 +4,18 @@ import com.gsma.mobileconnect.r2.MobileConnect;
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
-import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
+import com.gsma.mobileconnect.r2.service.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
 import com.gsma.mobileconnect.r2.cache.SessionCache;
-import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.constants.Scope;
+import com.gsma.mobileconnect.r2.model.constants.Parameters;
+import com.gsma.mobileconnect.r2.model.constants.Scope;
 import com.gsma.mobileconnect.r2.demo.utils.Constants;
 import com.gsma.mobileconnect.r2.demo.utils.ReadAndParseFiles;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.SessionData;
-import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.SessionData;
+import com.gsma.mobileconnect.r2.utils.encoding.DefaultEncodeDecoder;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
 import org.slf4j.Logger;
@@ -127,8 +127,8 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(new AuthenticationOptions.Builder()
                         .withScope(scope)
-                        .withContext((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.ContextBindingMsg : null)
-                        .withBindingMessage((apiVersion.equals(Constants.Version2_0) || apiVersion.equals(Constants.Version2_3)) ? Constants.BindingMsg : null)
+                        .withContext((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3) || apiVersion.equals(Constants.VERSION_3_0)) ? Constants.CONTEXT_BINDING_MSG : null)
+                        .withBindingMessage((apiVersion.equals(Constants.VERSION_2_0) || apiVersion.equals(Constants.VERSION_2_3) || apiVersion.equals(Constants.VERSION_3_0)) ? Constants.BINDING_MSG : null)
                         .withClientName(clientName)
                         .withLoginHint(loginHint)
                         .build())
@@ -154,12 +154,12 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
     }
 
     private void getWDParameters() {
-        operatorParams = ReadAndParseFiles.ReadFile(Constants.WDConfigFilePath);
+        operatorParams = ReadAndParseFiles.readFile(Constants.WD_CONFIG_FILE_PATH);
         if(operatorParams == null) {
-            operatorParams = ReadAndParseFiles.ReadFile(Constants.WDConfigFilePath.replace("file:/", ""));
+            operatorParams = ReadAndParseFiles.readFile(Constants.WD_CONFIG_FILE_PATH.replace("file:/", ""));
         }
         if(operatorParams == null) {
-            operatorParams = ReadAndParseFiles.ReadFile(Constants.WDConfigFilePath.replace("file:", ""));
+            operatorParams = ReadAndParseFiles.readFile(Constants.WD_CONFIG_FILE_PATH.replace("file:", ""));
         }
 
         apiVersion = operatorParams.getApiVersion();

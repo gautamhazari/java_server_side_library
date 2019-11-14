@@ -16,7 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.utils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.http.NameValuePair;
 
 import java.util.ArrayList;
@@ -88,7 +87,6 @@ public class KeyValuePair extends Tuple<String, String> implements NameValuePair
      * @return the key.
      */
     @Override
-    @JsonIgnore
     public String getName()
     {
         return this.getFirst();

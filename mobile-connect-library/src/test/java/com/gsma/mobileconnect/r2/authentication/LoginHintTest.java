@@ -16,7 +16,8 @@
 */
 package com.gsma.mobileconnect.r2.authentication;
 
-import com.gsma.mobileconnect.r2.constants.LoginHintPrefixes;
+import com.gsma.mobileconnect.r2.model.constants.LoginHintPrefixes;
+import com.gsma.mobileconnect.r2.service.authentication.LoginHint;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

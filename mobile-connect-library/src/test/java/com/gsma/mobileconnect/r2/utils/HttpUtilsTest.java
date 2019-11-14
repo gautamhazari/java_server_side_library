@@ -17,8 +17,8 @@
 package com.gsma.mobileconnect.r2.utils;
 
 import com.google.common.collect.ImmutableList;
-import com.gsma.mobileconnect.r2.ErrorResponse;
-import com.gsma.mobileconnect.r2.constants.Headers;
+import com.gsma.mobileconnect.r2.model.ErrorResponse;
+import com.gsma.mobileconnect.r2.model.constants.Headers;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.mockito.Mockito;

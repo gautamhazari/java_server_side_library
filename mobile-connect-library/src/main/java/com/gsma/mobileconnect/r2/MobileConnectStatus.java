@@ -16,12 +16,11 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.gsma.mobileconnect.r2.authentication.IAuthenticationService;
-import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.IDiscoveryService;
-import com.gsma.mobileconnect.r2.identity.IdentityResponse;
+import com.gsma.mobileconnect.r2.service.authentication.IAuthenticationService;
+import com.gsma.mobileconnect.r2.service.authentication.RequestTokenResponse;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.IDiscoveryService;
+import com.gsma.mobileconnect.r2.service.identity.IdentityResponse;
 import com.gsma.mobileconnect.r2.utils.*;
 
 import java.util.List;
@@ -33,7 +32,6 @@ import java.util.List;
  * @since 2.0
  */
 @SuppressWarnings("WeakerAccess")
-@JsonDeserialize(builder = MobileConnectStatus.Builder.class)
 public class MobileConnectStatus
 {
     public static final String INTERNAL_ERROR_CODE = "internal error";

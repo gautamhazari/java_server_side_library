@@ -1,7 +1,7 @@
 package com.gsma.mobileconnect.r2.authentication;
 
-import com.gsma.mobileconnect.r2.claims.ClaimsParameter;
-import com.gsma.mobileconnect.r2.constants.DefaultOptions;
+import com.gsma.mobileconnect.r2.model.constants.DefaultOptions;
+import com.gsma.mobileconnect.r2.service.authentication.AuthenticationOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -32,7 +32,6 @@ public class AuthenticationOptionsTest
     private String context = "context";
     private String bindingMessage = "bindingMessage";
     private String claimsJson = "claimsJson";
-    private ClaimsParameter claims = null;
 
     @BeforeMethod
     public void setUp() throws Exception
@@ -52,7 +51,6 @@ public class AuthenticationOptionsTest
             .withContext(context)
             .withBindingMessage(bindingMessage)
             .withClaimsJson(claimsJson)
-            .withClaims(claims)
             .build();
     }
 
@@ -172,17 +170,10 @@ public class AuthenticationOptionsTest
     }
 
     @Test
-    public void testGetClaims() throws Exception
-    {
-        assertEquals(authenticationOptions.getClaims(), claims);
-    }
-
-    @Test
     public void builderObjectShouldBuildAuthenticationOptions() throws URISyntaxException
     {
         final String acrValues = "2";
         final String bindingMessage = "bindingMessage";
-        final ClaimsParameter claimsParameter = new ClaimsParameter.Builder().build();
         final String claimsJson = "{\"k\":\"v\"}";
         final String claimsLocales = "claimsLocale";
         final String clientId = "clientId";
@@ -203,7 +194,6 @@ public class AuthenticationOptionsTest
         final AuthenticationOptions authenticationOptions = new AuthenticationOptions.Builder()
             .withAcrValues(acrValues)
             .withBindingMessage(bindingMessage)
-            .withClaims(claimsParameter)
             .withClaimsJson(claimsJson)
             .withClaimsLocales(claimsLocales)
             .withClientId(clientId)
@@ -224,7 +214,6 @@ public class AuthenticationOptionsTest
 
         assertEquals(authenticationOptions.getAcrValues(), acrValues);
         assertEquals(authenticationOptions.getBindingMessage(), bindingMessage);
-        assertEquals(authenticationOptions.getClaims(), claimsParameter);
         assertEquals(authenticationOptions.getClaimsJson(), claimsJson);
         assertEquals(authenticationOptions.getClaimsLocales(), claimsLocales);
         assertEquals(authenticationOptions.getClientId(), clientId);

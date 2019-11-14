@@ -1,5 +1,6 @@
 package com.gsma.mobileconnect.r2;
 
+import com.gsma.mobileconnect.r2.model.ErrorResponse;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

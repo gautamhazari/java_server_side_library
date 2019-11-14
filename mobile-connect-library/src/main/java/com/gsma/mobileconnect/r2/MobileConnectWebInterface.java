@@ -16,19 +16,19 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
-import com.gsma.mobileconnect.r2.authentication.IAuthenticationService;
+import com.gsma.mobileconnect.r2.service.authentication.AuthenticationOptions;
+import com.gsma.mobileconnect.r2.service.authentication.IAuthenticationService;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ICache;
-import com.gsma.mobileconnect.r2.discovery.*;
-import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
-import com.gsma.mobileconnect.r2.exceptions.InvalidScopeException;
-import com.gsma.mobileconnect.r2.identity.IIdentityService;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.utils.encoding.DefaultEncodeDecoder;
+import com.gsma.mobileconnect.r2.utils.encoding.IMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidScopeException;
+import com.gsma.mobileconnect.r2.service.identity.IIdentityService;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.service.discovery.*;
 import com.gsma.mobileconnect.r2.utils.*;
-import com.gsma.mobileconnect.r2.validation.IJWKeysetService;
+import com.gsma.mobileconnect.r2.service.validation.IJWKeysetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -266,7 +266,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus requestHeadlessAuthentication(final HttpServletRequest request,
         final DiscoveryResponse discoveryResponse, final String encryptedMsisdn, final String state,
-        final String nonce, final MobileConnectRequestOptions options, final String currentVersion)
+        final String nonce, final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -285,7 +285,7 @@ public class MobileConnectWebInterface
                 this.identityService, discoveryResponse, encryptedMsisdn, rState, rNonce, this.config,
                 options, iMobileConnectEncodeDecoder, this.jwKeysetService, this.jsonService,
                     VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
-                            discoveryResponse.getProviderMetadata()));
+                            discoveryResponse.getProviderMetadata()), isBasicAuth);
         } catch (InvalidScopeException e) {
             return e.toMobileConnectStatus(currentVersion);
         }
@@ -317,7 +317,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus requestHeadlessAuthentication(final HttpServletRequest request,
         final String sdkSession, final String encryptedMsisdn, final String state,
-        final String nonce, final MobileConnectRequestOptions options, final String currentVersion)
+        final String nonce, final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -335,7 +335,7 @@ public class MobileConnectWebInterface
                     return MobileConnectWebInterface.this.requestHeadlessAuthentication(request, cached,
                         encryptedMsisdn, state, nonce, options,
                             VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
-                                    cached.getProviderMetadata()));
+                                    cached.getProviderMetadata()), isBasicAuth);
                 } catch (InvalidScopeException e) {
                     return e.toMobileConnectStatus(currentVersion);
                 }
@@ -362,7 +362,7 @@ public class MobileConnectWebInterface
     public MobileConnectStatus requestToken(final HttpServletRequest request,
         final DiscoveryResponse discoveryResponse, final URI redirectedUrl,
         final String expectedState, final String expectedNonce,
-        final MobileConnectRequestOptions options, final String currentVersion)
+        final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -376,7 +376,7 @@ public class MobileConnectWebInterface
                 discoveryResponse, redirectedUrl, expectedState, expectedNonce, this.config, options,
                 this.jsonService, this.iMobileConnectEncodeDecoder,
                     VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
-                            discoveryResponse.getProviderMetadata()));
+                            discoveryResponse.getProviderMetadata()), isBasicAuth);
         } catch (InvalidScopeException e) {
             return e.toMobileConnectStatus(currentVersion);
         }
@@ -401,7 +401,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus requestToken(final HttpServletRequest request,
         final String sdkSession, final URI redirectedUrl, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -421,7 +421,7 @@ public class MobileConnectWebInterface
                     return MobileConnectWebInterface.this.requestToken(request, cached, redirectedUrl,
                         expectedState, expectedNonce, options,
                             VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
-                                    cached.getProviderMetadata()));
+                                    cached.getProviderMetadata()), isBasicAuth);
                 } catch (InvalidScopeException e) {
                     return e.toMobileConnectStatus(currentVersion);
                 }
@@ -554,7 +554,7 @@ public class MobileConnectWebInterface
     public MobileConnectStatus handleUrlRedirect(final HttpServletRequest request,
         final URI redirectedUrl, final DiscoveryResponse discoveryResponse,
         final String expectedState, final String expectedNonce,
-        final MobileConnectRequestOptions options, final String currentVersion)
+        final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -570,7 +570,7 @@ public class MobileConnectWebInterface
                 expectedState, expectedNonce, this.config, options, this.jsonService,
                 this.iMobileConnectEncodeDecoder,
                     VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
-                            discoveryResponse.getProviderMetadata()));
+                            discoveryResponse.getProviderMetadata()), isBasicAuth);
         } catch (InvalidScopeException e) {
             return e.toMobileConnectStatus(currentVersion);
         }
@@ -600,7 +600,7 @@ public class MobileConnectWebInterface
      */
     public MobileConnectStatus handleUrlRedirect(final HttpServletRequest request,
         final URI redirectedUrl, final String sdkSession, final String expectedState,
-        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion)
+        final String expectedNonce, final MobileConnectRequestOptions options, final String currentVersion, final boolean isBasicAuth)
     {
         ObjectUtils.requireNonNull(request, ARG_REQUEST);
 
@@ -623,7 +623,7 @@ public class MobileConnectWebInterface
                                     options, MobileConnectWebInterface.this.jsonService,
                                     MobileConnectWebInterface.this.iMobileConnectEncodeDecoder,
                                     VersionDetection.getCurrentVersion(currentVersion, getScopeFromOptions(options),
-                                            cached.getProviderMetadata())));
+                                            cached.getProviderMetadata()), isBasicAuth));
                 } catch (InvalidScopeException e) {
                     return e.toMobileConnectStatus(currentVersion);
                 }

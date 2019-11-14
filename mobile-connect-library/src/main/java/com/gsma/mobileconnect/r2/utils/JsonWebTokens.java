@@ -16,7 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.utils;
 
-import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.utils.encoding.IMobileConnectEncodeDecoder;
 
 import java.nio.charset.Charset;
 

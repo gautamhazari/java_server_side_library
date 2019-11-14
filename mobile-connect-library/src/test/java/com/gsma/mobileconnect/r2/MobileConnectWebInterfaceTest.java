@@ -16,22 +16,21 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
-import com.gsma.mobileconnect.r2.authentication.AuthenticationService;
+import com.gsma.mobileconnect.r2.service.authentication.AuthenticationOptions;
+import com.gsma.mobileconnect.r2.service.authentication.AuthenticationService;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
-import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.constants.Scope;
-import com.gsma.mobileconnect.r2.discovery.*;
-import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
-import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.rest.*;
+import com.gsma.mobileconnect.r2.model.constants.Parameters;
+import com.gsma.mobileconnect.r2.model.constants.Scope;
+import com.gsma.mobileconnect.r2.utils.encoding.DefaultEncodeDecoder;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidResponseException;
+import com.gsma.mobileconnect.r2.model.exceptions.RequestFailedException;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.web.rest.*;
+import com.gsma.mobileconnect.r2.service.discovery.*;
 import com.gsma.mobileconnect.r2.utils.HttpUtils;
-import com.gsma.mobileconnect.r2.utils.KeyValuePair;
 import com.gsma.mobileconnect.r2.utils.TestUtils;
 import junit.framework.Assert;
 import org.mockito.Mockito;
@@ -43,7 +42,6 @@ import org.testng.annotations.Test;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
@@ -64,7 +62,7 @@ public class MobileConnectWebInterfaceTest
         .withDiscoveryUrl(URI.create("http://discovery/test"))
         .withRedirectUrl(URI.create("http://redirect/test"))
         .build();
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
     private final MockRestClient restClient = new MockRestClient();
     private final MobileConnect mobileConnect = MobileConnect
         .builder(this.config, new DefaultEncodeDecoder(), new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build(),
@@ -203,7 +201,7 @@ public class MobileConnectWebInterfaceTest
     {
         final MobileConnectStatus status =
             this.mcWebInterface.requestToken(this.request, "invalidid", URI.create("http://test"),
-                "state", "nonce", null, "mc_v1.1");
+                "state", "nonce", null, "mc_v1.1", true);
 
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.ERROR);
         assertEquals(status.getErrorCode(), "sdksession_not_found");
@@ -226,7 +224,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             mcWebInterface.requestToken(this.request, "invalidid", URI.create("http://test"),
-                "state", "nonce", null, "mc_v1.1");
+                "state", "nonce", null, "mc_v1.1", true);
 
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.ERROR);
         assertEquals(status.getErrorCode(), "cache_disabled");
@@ -249,7 +247,7 @@ public class MobileConnectWebInterfaceTest
 
          final MobileConnectStatus status =
          this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
-         "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options, "mc_v1.1");
+         "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options, "mc_v1.1", true);
 
         assertNotNull(status);
 
@@ -287,7 +285,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options, "mc_v1.1");
+                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options, "mc_v1.1", true);
 
         assertNotNull(status);
 
@@ -323,7 +321,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a7", options, "mc_v1.1");
+                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a7", options, "mc_v1.1", true);
 
         assertNotNull(status);
 
@@ -360,7 +358,7 @@ public class MobileConnectWebInterfaceTest
         final MobileConnectStatus status =
             this.mcWebInterface.requestHeadlessAuthentication(this.request,
                 "111_11",
-                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options, "mc_v1.1");
+                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options, "mc_v1.1", true);
 
         assertNotNull(status);
 
@@ -435,7 +433,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.revokeToken(this.request, "AccessToken",
-                Parameters.ACCESS_TOKEN_HINT, discoveryResponse);
+                Parameters.ACCESS_TOKEN, discoveryResponse);
 
         assertNotNull(status);
 
@@ -458,7 +456,7 @@ public class MobileConnectWebInterfaceTest
 
         final MobileConnectStatus status =
             this.mcWebInterface.revokeToken(this.request, "AccessToken",
-                Parameters.ACCESS_TOKEN_HINT, "111_11");
+                Parameters.ACCESS_TOKEN, "111_11");
 
         assertNotNull(status);
 
@@ -500,8 +498,8 @@ public class MobileConnectWebInterfaceTest
                 .withMethod("GET")
                 .withContent(providerMetadata).build();
 
-        when(restClientLocal.get(any(URI.class), (RestAuthentication) eq(null), anyString(), (String) eq(null),
-                (List<KeyValuePair>) eq(null), (Iterable<KeyValuePair>) eq(null)))
+        when(restClientLocal.get(any(URI.class), eq(null), anyString(), eq(null),
+                eq(null), eq(null)))
                 .thenReturn(response).thenReturn(response);
 
         DiscoveryResponse discoveryResponse = mobileConnectWebInterface.generateDiscoveryManually(secretKey, clientKey, name, operatorUrls);

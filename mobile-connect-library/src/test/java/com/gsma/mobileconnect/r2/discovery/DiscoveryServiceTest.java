@@ -20,13 +20,14 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.cache.ConcurrentCache;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
-import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
-import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
-import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
-import com.gsma.mobileconnect.r2.rest.MockRestClient;
-import com.gsma.mobileconnect.r2.rest.RestResponse;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidArgumentException;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidResponseException;
+import com.gsma.mobileconnect.r2.model.exceptions.RequestFailedException;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.web.rest.MockRestClient;
+import com.gsma.mobileconnect.r2.web.rest.RestResponse;
+import com.gsma.mobileconnect.r2.service.discovery.*;
 import com.gsma.mobileconnect.r2.utils.HttpUtils;
 import com.gsma.mobileconnect.r2.utils.TestUtils;
 import org.apache.http.HttpStatus;
@@ -49,7 +50,7 @@ public class DiscoveryServiceTest
     private static final DiscoveryOptions DISCOVERY_OPTIONS =
         new DiscoveryOptions.Builder().withIdentifiedMnc("100").withIdentifiedMcc("10").build();
 
-    private static final IJsonService jsonService = new JacksonJsonService();
+    private static final IJsonService jsonService = new GsonJsonService();
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
     private static final MockRestClient restClient = new MockRestClient();
     private static MobileConnectConfig config;
@@ -141,16 +142,6 @@ public class DiscoveryServiceTest
             null);
     }
 
-    @Test(expectedExceptions = InvalidResponseException.class)
-    public void automatedOperatorDiscoveryShouldHandleInvalidResponse()
-        throws RequestFailedException, InvalidResponseException
-    {
-        restClient.addResponse(TestUtils.INVALID_RESPONSE);
-
-        discoveryService.startAutomatedOperatorDiscovery(config, REDIRECT_URL, DISCOVERY_OPTIONS,
-            null);
-    }
-
     @Test
     public void getOperatorSelectionURLShouldHandleOperatorSelectionResponse()
         throws RequestFailedException, InvalidResponseException
@@ -173,15 +164,6 @@ public class DiscoveryServiceTest
     {
         restClient.addResponse(
             new RequestFailedException(HttpUtils.HttpMethod.GET, URI.create("http://error"), null));
-
-        discoveryService.getOperatorSelectionURL(config, REDIRECT_URL);
-    }
-
-    @Test(expectedExceptions = InvalidResponseException.class)
-    public void getOperatorSelectionUrlShouldHandleInvalidResponse()
-        throws RequestFailedException, InvalidResponseException
-    {
-        restClient.addResponse(TestUtils.INVALID_RESPONSE);
 
         discoveryService.getOperatorSelectionURL(config, REDIRECT_URL);
     }

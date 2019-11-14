@@ -16,13 +16,16 @@
  */
 package com.gsma.mobileconnect.r2.identity;
 
-import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
-import com.gsma.mobileconnect.r2.exceptions.InvalidResponseException;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
-import com.gsma.mobileconnect.r2.rest.MockRestClient;
-import com.gsma.mobileconnect.r2.exceptions.RequestFailedException;
-import com.gsma.mobileconnect.r2.rest.RestResponse;
+import com.gsma.mobileconnect.r2.utils.encoding.DefaultEncodeDecoder;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidArgumentException;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidResponseException;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.web.rest.MockRestClient;
+import com.gsma.mobileconnect.r2.model.exceptions.RequestFailedException;
+import com.gsma.mobileconnect.r2.web.rest.RestResponse;
+import com.gsma.mobileconnect.r2.service.identity.IIdentityService;
+import com.gsma.mobileconnect.r2.service.identity.IdentityResponse;
+import com.gsma.mobileconnect.r2.service.identity.IdentityService;
 import com.gsma.mobileconnect.r2.utils.HttpUtils;
 import com.gsma.mobileconnect.r2.utils.KeyValuePair;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
@@ -66,7 +69,7 @@ public class IdentityServiceTest
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     private final IIdentityService identityService = new IdentityService.Builder()
-        .withJsonService(new JacksonJsonService())
+        .withJsonService(new GsonJsonService())
         .withRestClient(this.restClient)
         .build();
 

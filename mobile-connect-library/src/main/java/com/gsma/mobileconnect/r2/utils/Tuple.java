@@ -16,8 +16,6 @@
  */
 package com.gsma.mobileconnect.r2.utils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * Simple tuple linking two related values.  Context will be applied by its use.
  *
@@ -27,8 +25,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class Tuple<T1, T2>
 {
-    private final T1 first;
-    private final T2 second;
+    private transient final T1 first;
+    private transient final T2 second;
 
     /**
      * Create the instance of the tuple.
@@ -45,7 +43,6 @@ public class Tuple<T1, T2>
     /**
      * @return the first item.
      */
-    @JsonIgnore
     public T1 getFirst()
     {
         return this.first;
@@ -54,7 +51,6 @@ public class Tuple<T1, T2>
     /**
      * @return the second item.
      */
-    @JsonIgnore
     public T2 getSecond()
     {
         return this.second;

@@ -16,10 +16,10 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.authentication.DiscoveryResponseGenerateOptions;
-import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
-import com.gsma.mobileconnect.r2.validation.TokenValidationOptions;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
+import com.gsma.mobileconnect.r2.service.authentication.DiscoveryResponseGenerateOptions;
+import com.gsma.mobileconnect.r2.service.authentication.AuthenticationOptions;
+import com.gsma.mobileconnect.r2.service.validation.TokenValidationOptions;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryOptions;
 import com.gsma.mobileconnect.r2.utils.IBuilder;
 
 /**

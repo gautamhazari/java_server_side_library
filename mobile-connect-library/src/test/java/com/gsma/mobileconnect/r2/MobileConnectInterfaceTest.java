@@ -16,17 +16,17 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.authentication.AuthenticationService;
+import com.gsma.mobileconnect.r2.service.authentication.AuthenticationService;
 import com.gsma.mobileconnect.r2.cache.DiscoveryCache;
-import com.gsma.mobileconnect.r2.constants.Parameters;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryService;
-import com.gsma.mobileconnect.r2.encoding.DefaultEncodeDecoder;
-import com.gsma.mobileconnect.r2.identity.IdentityService;
-import com.gsma.mobileconnect.r2.json.IJsonService;
-import com.gsma.mobileconnect.r2.json.JacksonJsonService;
-import com.gsma.mobileconnect.r2.json.JsonDeserializationException;
-import com.gsma.mobileconnect.r2.rest.MockRestClient;
+import com.gsma.mobileconnect.r2.model.constants.Parameters;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryService;
+import com.gsma.mobileconnect.r2.utils.encoding.DefaultEncodeDecoder;
+import com.gsma.mobileconnect.r2.service.identity.IdentityService;
+import com.gsma.mobileconnect.r2.model.json.IJsonService;
+import com.gsma.mobileconnect.r2.model.json.GsonJsonService;
+import com.gsma.mobileconnect.r2.model.json.JsonDeserializationException;
+import com.gsma.mobileconnect.r2.web.rest.MockRestClient;
 import com.gsma.mobileconnect.r2.utils.TestUtils;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
@@ -51,7 +51,7 @@ public class MobileConnectInterfaceTest
         .withRedirectUrl(URI.create("http://redirect/test"))
         .build();
     private final MockRestClient restClient = new MockRestClient();
-    private final IJsonService jsonService = new JacksonJsonService();
+    private final IJsonService jsonService = new GsonJsonService();
 
     private final MobileConnectInterface mobileConnectInterface = MobileConnect
         .builder(this.config, new DefaultEncodeDecoder(),new DiscoveryCache.Builder().withJsonService(jsonService).withMaxCacheSize(999999999).build(),
@@ -121,7 +121,7 @@ public class MobileConnectInterfaceTest
         this.restClient.addResponse(TestUtils.REVOKE_TOKEN_SUCCESS_RESPONSE);
 
         final MobileConnectStatus status =
-            this.mobileConnectInterface.revokeToken("AccessToken", Parameters.ACCESS_TOKEN_HINT,
+            this.mobileConnectInterface.revokeToken("AccessToken", Parameters.ACCESS_TOKEN,
                 discoveryResponse);
 
         assertNotNull(status);

@@ -1,10 +1,10 @@
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.authentication.DiscoveryResponseGenerateOptions;
-import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
-import com.gsma.mobileconnect.r2.discovery.ProviderMetadata;
-import com.gsma.mobileconnect.r2.validation.TokenValidationOptions;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
+import com.gsma.mobileconnect.r2.service.authentication.DiscoveryResponseGenerateOptions;
+import com.gsma.mobileconnect.r2.service.authentication.AuthenticationOptions;
+import com.gsma.mobileconnect.r2.service.discovery.ProviderMetadata;
+import com.gsma.mobileconnect.r2.service.validation.TokenValidationOptions;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

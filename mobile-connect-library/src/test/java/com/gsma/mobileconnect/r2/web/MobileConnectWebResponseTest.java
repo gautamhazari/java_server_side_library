@@ -17,11 +17,11 @@
 package com.gsma.mobileconnect.r2.web;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
-import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.json.DiscoveryResponseData;
-import com.gsma.mobileconnect.r2.json.Link;
-import com.gsma.mobileconnect.r2.json.Response;
+import com.gsma.mobileconnect.r2.service.authentication.RequestTokenResponse;
+import com.gsma.mobileconnect.r2.service.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.model.json.DiscoveryResponseData;
+import com.gsma.mobileconnect.r2.model.json.Link;
+import com.gsma.mobileconnect.r2.model.json.Response;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;

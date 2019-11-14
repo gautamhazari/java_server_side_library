@@ -16,7 +16,7 @@
  */
 package com.gsma.mobileconnect.r2.utils;
 
-import com.gsma.mobileconnect.r2.exceptions.InvalidArgumentException;
+import com.gsma.mobileconnect.r2.model.exceptions.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,14 +132,14 @@ public final class StringUtils
      */
     public static boolean requireNonEmpty(final String name, final String value, final String... values)
     {
-        if (!isNullOrEmpty(value) & !isNullOrEmpty(values)) {
+        if (!isNullOrEmpty(value) && !isNullOrEmpty(values)) {
             final InvalidArgumentException iae = new InvalidArgumentException(name,
                     InvalidArgumentException.Disallowed.NOT_EMPTY);
             LOGGER.warn("Allowed only split or concatenated parameter ({})", name, iae);
             throw iae;
         }
         ObjectUtils.requireNonNull(name, "name");
-        if (isNullOrEmpty(value) & !isNullOrEmpty(values)) {
+        if (isNullOrEmpty(value) && !isNullOrEmpty(values)) {
             for (String val : values) {
                 requireNonEmpty(val, name);
             }
@@ -247,5 +247,18 @@ public final class StringUtils
             return new ArrayList<>();
         }
         return Arrays.asList(initString.split("\\s+"));
+    }
+
+    public static String concatenateURL(String url, String postfix) {
+        if (StringUtils.isNullOrEmpty(url)) {
+            return url;
+        }
+        String separator = "/";
+        if (url.endsWith(separator)) {
+            return url + postfix;
+        }
+        else {
+            return url + separator + postfix;
+        }
     }
 }

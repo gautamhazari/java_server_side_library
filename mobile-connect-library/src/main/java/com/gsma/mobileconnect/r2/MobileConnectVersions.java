@@ -16,8 +16,8 @@
  */
 package com.gsma.mobileconnect.r2;
 
-import com.gsma.mobileconnect.r2.constants.DefaultOptions;
-import com.gsma.mobileconnect.r2.constants.Scopes;
+import com.gsma.mobileconnect.r2.model.constants.DefaultOptions;
+import com.gsma.mobileconnect.r2.model.constants.Scopes;
 import com.gsma.mobileconnect.r2.utils.ObjectUtils;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
 
