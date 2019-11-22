@@ -323,7 +323,7 @@ class MobileConnectInterfaceHelper
                 discoveryResponse.getResponseData().getResponse().getClientSecret(),
                 config.getClientSecret());
 
-            if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
+            if (currentVersion.equals(DefaultOptions.MC_V3_0)) {
                 StringUtils.requireNonEmpty(clientSecret, "client_secret");
             }
             final String correlationId =

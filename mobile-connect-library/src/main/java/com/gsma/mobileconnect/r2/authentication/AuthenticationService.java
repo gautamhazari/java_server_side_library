@@ -108,8 +108,7 @@ public class AuthenticationService implements IAuthenticationService
 
         final boolean useAuthorize = this.shouldUseAuthorize(scope, context);
 
-        if (useAuthorize && (currentVersion.equals(Version.MC_V1_2) || currentVersion.equals(Version.MC_V2_0)
-                || currentVersion.equals(Version.MC_DI_R2_V2_3)))
+        if (useAuthorize && (currentVersion.equals(Version.MC_DI_V3_0)))
         {
             StringUtils.requireNonEmpty(options == null ? null : options.getContext(), "context");
             StringUtils.requireNonEmpty(options == null ? null : options.getClientName(),
@@ -121,14 +120,14 @@ public class AuthenticationService implements IAuthenticationService
             if (kycClaims != null) {
                 boolean isNamePresent = false;
                 boolean isAddressPresent = false;
-                if (currentVersion.equals(DefaultOptions.MC_V2_3) && scope.contains(Scope.KYC_PLAIN)) {
+                if (currentVersion.equals(DefaultOptions.MC_V3_0) && scope.contains(Scope.KYC_PLAIN)) {
                     isNamePresent = StringUtils.requireNonEmpty("name || given_name and family_name", kycClaims.getName(),
                             kycClaims.getGivenName(), kycClaims.getFamilyName());
                     isAddressPresent = StringUtils.requireNonEmpty("address || houseno_or_housename, postal_code, country, town",
                             kycClaims.getAddress(), kycClaims.getHousenoOrHousename(), kycClaims.getPostalCode(),
                             kycClaims.getCountry(), kycClaims.getTown());
                 }
-                if (currentVersion.equals(DefaultOptions.MC_V2_3) && scope.contains(Scope.KYC_HASHED)) {
+                if (currentVersion.equals(DefaultOptions.MC_V3_0) && scope.contains(Scope.KYC_HASHED)) {
                     isNamePresent = StringUtils.requireNonEmpty("name_hashed || given_name_hashed and family_name_hashed", kycClaims.getNameHashed(),
                             kycClaims.getGivenNameHashed(), kycClaims.getFamilyNameHashed());
                     isAddressPresent = StringUtils.requireNonEmpty("address_hashed || houseno_or_housename_hashed, postal_code_hashed, country_hashed, town_hashed",

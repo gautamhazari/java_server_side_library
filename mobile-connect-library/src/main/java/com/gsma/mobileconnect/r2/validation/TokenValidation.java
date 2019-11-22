@@ -221,7 +221,7 @@ public class TokenValidation
     {
         final IdToken decodedIdToken = decodeIdToken(idToken, jsonService, mobileConnectEncodeDecoder);
 
-        if (currentVersion.equals(DefaultOptions.MC_V2_3)) {
+        if (currentVersion.equals(DefaultOptions.MC_V3_0)) {
             if (!isAtHashPresent(decodedIdToken)) {
                 LOGGER.warn("Invalid at_hash");
                 return TokenValidationResult.INVALID_AT_HASH;

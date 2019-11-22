@@ -25,9 +25,6 @@ import java.util.concurrent.TimeUnit;
 public final class DefaultOptions
 {
     private static final String MC_V1_1 = "mc_v1.1";
-    private static final String MC_V1_2 = "mc_v1.2";
-    public static final String MC_V2_0 = "mc_v2.0";
-    public static final String MC_V2_3 = "mc_di_r2_v2.3";
     public static final String MC_V3_0 = "mc_di_v3.0";
 
     public static final long TIMEOUT_MS = TimeUnit.SECONDS.toMillis(300L);
@@ -47,8 +44,6 @@ public final class DefaultOptions
     public static final long PROVIDER_METADATA_TTL_MS = TimeUnit.SECONDS.toMillis(9L);
     public static final String VERSION_MOBILECONNECT = MC_V1_1;
     public static final String VERSION_MOBILECONNECTAUTHN = MC_V1_1;
-    public static final String VERSION_MOBILECONNECTAUTHZ = MC_V1_2;
-    public static final String VERSION_MOBILECONNECTIDENTITY = MC_V1_2;
     public static final int THREAD_POOL_SIZE = 100;
 
     public static final String LOGIN = "login";

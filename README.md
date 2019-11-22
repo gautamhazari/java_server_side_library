@@ -19,7 +19,7 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
   "redirectURL": "<protocol>://<hostname>/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "False",
-  "apiVersion": api version: "mc_v1.1", "mc_v2.0" or "mc_di_r2_v2.3",
+  "apiVersion": api version,
   "scope": scope,
   "acrValues":  acr_values,
   "MaxDiscoveryCacheSize": max cache size
@@ -36,7 +36,7 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
   "redirectURL": "<protocol>://<hostname>/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "True",
-  "apiVersion": api version: "mc_v1.1", "mc_v2.0" or "mc_di_r2_v2.3",
+  "apiVersion": api version,
   "scope": scope,
   "acrValues": acr_values,
   "MaxDiscoveryCacheSize": max cache size,

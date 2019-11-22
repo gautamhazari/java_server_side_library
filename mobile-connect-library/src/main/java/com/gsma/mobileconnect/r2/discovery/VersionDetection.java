@@ -25,15 +25,8 @@ public class VersionDetection {
             List<String> currentScopes = StringUtils.convertToListBySpase(scope);
             if (supportedVersions.contains(Version.MC_DI_V3_0) && containsScopesV3_0(currentScopes)) {
                 return Version.MC_DI_V3_0;
-            } else if (supportedVersions.contains(Version.MC_DI_R2_V2_3) && containsScopesV2_3(currentScopes)) {
-                return Version.MC_DI_R2_V2_3;
-            } else if (supportedVersions.contains(Version.MC_V2_0) && containsScopesV2_0(currentScopes)) {
-                return Version.MC_V2_0;
             } else if (supportedVersions.contains(Version.MC_V1_1) && containsScopesV1_1(currentScopes)) {
                 return Version.MC_V1_1;
-            } else if(supportedVersions.contains(Version.MC_V1_2) && supportedVersions.size() == 1 && containsScopesV2_0(currentScopes)) {
-                LOGGER.warn("Version is deprecated");
-                return Version.MC_V1_2;
             } else {
                 throw new InvalidScopeException(scope);
             }
@@ -41,8 +34,7 @@ public class VersionDetection {
     }
 
     private static boolean isVersionSupported(String version) {
-        return version.equals(Version.MC_V1_1) || version.equals(Version.MC_V1_2) || version.equals(Version.MC_V2_0)
-                || version.equals(Version.MC_DI_R2_V2_3);
+        return version.equals(Version.MC_V1_1) || version.equals(Version.MC_DI_V3_0);
     }
 
     private static boolean containsOpenidScope(List<String> currentScopes) {
@@ -58,18 +50,6 @@ public class VersionDetection {
     private static boolean containsScopesV1_1(List<String> currentScopes) {
         return (containsOpenidScope(currentScopes) && currentScopes.size() == 1) ||
                 (containsOpenidScope(currentScopes) && containsUniversalIndianScopes(currentScopes));
-    }
-
-    private static boolean containsScopesV2_0(List<String> currentScopes) {
-        return containsOpenidScope(currentScopes) && (currentScopes.contains(Scope.AUTHN) || currentScopes.contains(Scope.AUTHZ) ||
-                currentScopes.contains(Scope.IDENTITY_PHONE) || currentScopes.contains(Scope.IDENTITY_NATIONALID) ||
-                currentScopes.contains(Scope.IDENTITY_SIGNUP) || currentScopes.contains(Scope.IDENTITY_SIGNUPPLUS) ||
-                containsUniversalIndianScopes(currentScopes));
-    }
-
-    private static boolean containsScopesV2_3(List<String> currentScopes) {
-        return containsOpenidScope(currentScopes) && (containsScopesV2_0(currentScopes) || currentScopes.contains(Scope.KYC_HASHED)
-                || currentScopes.contains(Scope.KYC_PLAIN));
     }
 
     private static boolean containsScopesV3_0(List<String> currentScopes) {
