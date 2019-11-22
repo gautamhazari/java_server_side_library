@@ -98,21 +98,10 @@ public class AuthenticationService implements IAuthenticationService
         if (options == null)
         {
             scope = Scopes.MOBILE_CONNECT;
-            context = "";
         }
         else
         {
             scope = StringUtils.isNullOrEmpty(options.getScope()) ? Scopes.MOBILE_CONNECT : options.getScope();
-            context = options.getContext();
-        }
-
-        final boolean useAuthorize = this.shouldUseAuthorize(scope, context);
-
-        if (useAuthorize && (currentVersion.equals(Version.MC_DI_V3_0)))
-        {
-            StringUtils.requireNonEmpty(options == null ? null : options.getContext(), "context");
-            StringUtils.requireNonEmpty(options == null ? null : options.getClientName(),
-                    "clientName");
         }
 
         if (options != null) {
@@ -146,8 +135,7 @@ public class AuthenticationService implements IAuthenticationService
         {
             final URI uri = new URIBuilder(ObjectUtils.requireNonNull(authorizeUrl, "authorizeUrl"))
                     .addParameters(
-                            this.getAuthenticationQueryParams(optionsBuilder.build(), useAuthorize,
-                                    currentVersion, loginHint))
+                            this.getAuthenticationQueryParams(optionsBuilder.build(), currentVersion, loginHint))
                     .build();
 
             return new StartAuthenticationResponse(uri);
@@ -178,18 +166,8 @@ public class AuthenticationService implements IAuthenticationService
         return loginHint;
     }
 
-    private boolean shouldUseAuthorize(final String scope, final String context)
-    {
-        final int authnIndex = scope.indexOf(Scope.AUTHN.toLowerCase());
-        final boolean authnRequested = authnIndex > -1;
-        final boolean mcProductRequested = scope.toLowerCase().equals(Scope.AUTHZ.toLowerCase());
 
-        return mcProductRequested || (!authnRequested && !StringUtils.isNullOrEmpty(context));
-    }
-
-
-    private List<NameValuePair> getAuthenticationQueryParams(final AuthenticationOptions options,
-                                                             final boolean useAuthorize, final String version, final String encryptedMSISDN)
+    private List<NameValuePair> getAuthenticationQueryParams(final AuthenticationOptions options, final String version, final String encryptedMSISDN)
     {
         String claimsJson = options.getClaimsJson();
         if (StringUtils.isNullOrEmpty(claimsJson) && options.getClaims() != null)
@@ -233,7 +211,10 @@ public class AuthenticationService implements IAuthenticationService
                 .addIfNotEmpty(Parameters.DTBS, options.getDbts())
                 .addIfNotEmpty(Parameters.CLAIMS, claimsJson)
                 .addIfNotEmpty(Parameters.CLAIMS, kycClaimsJson)
-                .addIfNotEmpty(Parameters.VERSION, version);
+                .addIfNotEmpty(Parameters.VERSION, version)
+                .addIfNotEmpty(Parameters.CLIENT_NAME, options.getClientName())
+                .addIfNotEmpty(Parameters.CONTEXT, options.getContext())
+                .addIfNotEmpty(Parameters.BINDING_MESSAGE, options.getBindingMessage());
 
         if (!StringUtils.isNullOrEmpty(options.getLoginHint()) && !StringUtils.isNullOrEmpty(options.getLoginHintToken()))
         {
@@ -246,14 +227,6 @@ public class AuthenticationService implements IAuthenticationService
         else
         {
             builder.addIfNotEmpty(Parameters.LOGIN_HINT, extractLoginHint(options, encryptedMSISDN));
-        }
-
-        if (useAuthorize)
-        {
-            builder
-                    .addIfNotEmpty(Parameters.CLIENT_NAME, options.getClientName())
-                    .addIfNotEmpty(Parameters.CONTEXT, options.getContext())
-                    .addIfNotEmpty(Parameters.BINDING_MESSAGE, options.getBindingMessage());
         }
 
         return builder.buildAsNameValuePairList();
@@ -299,11 +272,6 @@ public class AuthenticationService implements IAuthenticationService
             optionsBuilder = new AuthenticationOptions.Builder(options);
             scope = ObjectUtils.defaultIfNull(options.getScope(), "").toLowerCase();
             context = options.getContext();
-        }
-
-        if (this.shouldUseAuthorize(scope, context))
-        {
-            optionsBuilder.withPrompt(DefaultOptions.LOGIN);
         }
 
         StartAuthenticationResponse startAuthenticationResponse =

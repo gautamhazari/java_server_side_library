@@ -53,8 +53,7 @@ public class VersionDetection {
     }
 
     private static boolean containsScopesV3_0(List<String> currentScopes) {
-        return containsOpenidScope(currentScopes) && (currentScopes.contains(Scope.AUTHN) || currentScopes.contains(Scope.AUTHZ) ||
-                currentScopes.contains(Scope.MC_PHONE) || currentScopes.contains(Scope.MC_NATIONALID) ||
+        return containsOpenidScope(currentScopes) && (currentScopes.contains(Scope.AUTHN) ||
                 currentScopes.contains(Scope.MC_SIGNUP) || containsUniversalIndianScopes(currentScopes) ||
                 currentScopes.contains(Scope.KYC_HASHED) || currentScopes.contains(Scope.KYC_PLAIN));
     }

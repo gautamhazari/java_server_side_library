@@ -36,14 +36,6 @@ public final class Scopes
      */
     public static final String MOBILE_CONNECT_AUTHENTICATION = "openid mc_authn";
     /**
-     * Scope value for Authorization
-     */
-    public static final String MOBILE_CONNECT_AUTHORIZATION = "openid mc_authz";
-    /**
-     * Scope value for Identity Phone Number
-     */
-    public static final String MOBILE_CONNECT_IDENTITY_PHONE = "openid mc_identity_phonenumber";
-    /**
      * Scope value for Identity Signup
      */
     public static final String MOBILE_CONNECT_IDENTITY_SIGNUP = "openid mc_identity_signup";
@@ -51,10 +43,6 @@ public final class Scopes
      * Scope value for Identity Signup Plus
      */
     public static final String MOBILE_CONNECT_IDENTITY_SIGNUP_PLUS = "openid mc_identity_signupplus";
-    /**
-     * Scope value for Identity National ID
-     */
-    public static final String MOBILE_CONNECT_IDENTITY_NATIONALID = "openid mc_identity_nationalid";
     /**
      * Scope value for KYC PLAIN
      */

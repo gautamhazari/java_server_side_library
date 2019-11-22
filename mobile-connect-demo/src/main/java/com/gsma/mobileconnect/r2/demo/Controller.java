@@ -47,9 +47,8 @@ public class Controller {
     protected ConcurrentCache discoveryCache;
     protected RestClient restClient;
     protected OperatorParameters operatorParams = new OperatorParameters();
-    protected static final String[] identityScopes = {Scope.IDENTITY_PHONE, Scope.IDENTITY_SIGNUP,
-            Scope.IDENTITY_NATIONALID, Scope.MC_PHONE, Scope.MC_SIGNUP,
-            Scope.MC_NATIONALID, Scope.IDENTITY_SIGNUPPLUS, Scope.KYC_HASHED, Scope.KYC_PLAIN};
+    protected static final String[] identityScopes = {Scope.IDENTITY_SIGNUP,
+            Scope.MC_SIGNUP, Scope.IDENTITY_SIGNUPPLUS, Scope.KYC_HASHED, Scope.KYC_PLAIN};
     protected static final String[] userinfoScopes = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
             Scope.PHONE, Scope.OFFLINE_ACCESS};
     private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);

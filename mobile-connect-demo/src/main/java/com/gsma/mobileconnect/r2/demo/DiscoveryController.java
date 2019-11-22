@@ -110,19 +110,11 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         setDiscoveryCache(msisdn, mcc, mnc, sourceIp, discoveryResponse);
 
         String url;
-        if (operatorParams.getScope().contains(Scope.AUTHZ)) {
-            url = startAuthorize(
+        url = startAuth(
                     discoveryResponse,
                     discoveryResponse.getResponseData().getSubscriberId(),
                     request,
                     msisdn, mcc, mnc, sourceIp);
-        } else {
-            url = startAuthentication(
-                    discoveryResponse,
-                    discoveryResponse.getResponseData().getSubscriberId(),
-                    request,
-                    msisdn, mcc, mnc, sourceIp);
-        }
 
         if (url == null) {
             return startDiscovery(null, null, null, null, true, request);
@@ -232,17 +224,10 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         if (status.getDiscoveryResponse() != null) {
             setDiscoveryCache(null, mcc, mnc, null, status.getDiscoveryResponse());
             String url;
-            if (operatorParams.getScope().contains(Scope.AUTHZ)) {
-                url = startAuthorize(
+            url = startAuth(
                         status.getDiscoveryResponse(),
                         subscriber_id,
                         request, null, mcc, mnc, null);
-            } else {
-                url = startAuthentication(
-                        status.getDiscoveryResponse(),
-                        subscriber_id,
-                        request, null, mcc, mnc, null);
-            }
             return new RedirectView(url);
         }
         else {

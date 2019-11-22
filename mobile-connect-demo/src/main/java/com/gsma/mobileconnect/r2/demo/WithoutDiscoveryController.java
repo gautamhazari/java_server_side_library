@@ -69,17 +69,11 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
 
         String url;
 
-        if (operatorParams.getScope().contains(Scope.AUTHZ)) {
-            url = startAuthorize(
+        url = startAuth(
                     discoveryResponse,
                     msisdn,
                     request);
-        } else {
-            url = startAuthentication(
-                    discoveryResponse,
-                    msisdn,
-                    request);
-        }
+
 
         return new RedirectView(url);
     }

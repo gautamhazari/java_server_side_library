@@ -23,7 +23,6 @@ public class Scope
 {
     public static final String OPENID = "openid";
     public static final String AUTHN = "mc_authn";
-    public static final String AUTHZ = "mc_authz";
 
     public static final String MC_PREFIX = "mc_";
 
@@ -34,14 +33,9 @@ public class Scope
     public static final String OFFLINE_ACCESS = "offline_access";
 
     public static final String IDENTITY = "mc_identity";
-    public static final String IDENTITY_PHONE = "mc_identity_phonenumber";
     public static final String IDENTITY_SIGNUP = "mc_identity_signup";
     public static final String IDENTITY_SIGNUPPLUS = "mc_identity_signupplus";
-    public static final String IDENTITY_NATIONALID = "mc_identity_nationalid";
-
-    public static final String MC_PHONE = "mc_phonenumber";
     public static final String MC_SIGNUP = "mc_signup";
-    public static final String MC_NATIONALID = "mc_nationalid";
 
     public static final String KYC_PLAIN = "mc_kyc_plain";
     public static final String KYC_HASHED = "mc_kyc_hashed";
