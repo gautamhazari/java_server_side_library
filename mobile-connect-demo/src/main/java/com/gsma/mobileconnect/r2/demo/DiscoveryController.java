@@ -147,9 +147,13 @@ public class DiscoveryController extends com.gsma.mobileconnect.r2.demo.Controll
         return startAuth(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
     }
 
+    /**
+     * Authorisation Product is deprecated
+     */
     @GetMapping({"start_authorization"})
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
+    @Deprecated
     public String startAuthorize(
             @RequestParam(required = false) final DiscoveryResponse discoveryResponse,
             @RequestParam(required = false) final String subscriberId, final HttpServletRequest request, final String msisdn,

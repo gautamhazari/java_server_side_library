@@ -38,10 +38,12 @@ public final class Scopes
     /**
      * Scope value for Authorization
      */
+    @Deprecated
     public static final String MOBILE_CONNECT_AUTHORIZATION = "openid mc_authz";
     /**
      * Scope value for Identity Phone Number
      */
+    @Deprecated
     public static final String MOBILE_CONNECT_IDENTITY_PHONE = "openid mc_identity_phonenumber";
     /**
      * Scope value for Identity Signup
@@ -54,6 +56,7 @@ public final class Scopes
     /**
      * Scope value for Identity National ID
      */
+    @Deprecated
     public static final String MOBILE_CONNECT_IDENTITY_NATIONALID = "openid mc_identity_nationalid";
     /**
      * Scope value for KYC PLAIN

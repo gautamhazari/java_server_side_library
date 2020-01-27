@@ -97,9 +97,13 @@ public class WithoutDiscoveryController extends com.gsma.mobileconnect.r2.demo.C
         return startAuth(discoveryResponse, msisdn, request);
     }
 
+    /**
+     * Authorisation Product is deprecated
+     */
     @GetMapping({"start_wd_authorization"})
     @ResponseBody
     @ResponseStatus(HttpStatus.FOUND)
+    @Deprecated
     public String startAuthorize(
             @RequestParam(required = false) final DiscoveryResponse discoveryResponse,
             @RequestParam(required = false) final String msisdn, final HttpServletRequest request)

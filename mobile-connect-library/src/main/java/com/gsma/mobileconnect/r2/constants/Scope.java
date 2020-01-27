@@ -23,6 +23,10 @@ public class Scope
 {
     public static final String OPENID = "openid";
     public static final String AUTHN = "mc_authn";
+    /**
+     * MC Authorisation Product is deprecated
+     */
+    @Deprecated
     public static final String AUTHZ = "mc_authz";
 
     public static final String MC_PREFIX = "mc_";
@@ -37,8 +41,16 @@ public class Scope
     public static final String IDENTITY_PHONE = "mc_identity_phonenumber";
     public static final String IDENTITY_SIGNUP = "mc_identity_signup";
     public static final String IDENTITY_SIGNUPPLUS = "mc_identity_signupplus";
+    /**
+     * MC National Identity Product is deprecated
+     */
+    @Deprecated
     public static final String IDENTITY_NATIONALID = "mc_identity_nationalid";
 
+    /**
+     * MC Identity Phone Number Product is deprecated
+     */
+    @Deprecated
     public static final String MC_PHONE = "mc_phonenumber";
     public static final String MC_SIGNUP = "mc_signup";
     public static final String MC_NATIONALID = "mc_nationalid";
