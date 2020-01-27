@@ -19,12 +19,16 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
   "redirectURL": "<protocol>://<hostname>/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "False",
-  "apiVersion": api version: "mc_v1.1", "mc_v2.0" or "mc_di_r2_v2.3",
-  "scope": scope,
+  "apiVersion": api version: "mc_v1.1" or "mc_di_v3.0"*,
+  "scope": scope**,
   "acrValues":  acr_values,
   "MaxDiscoveryCacheSize": max cache size
 }
 ```
+
+* - the SDK supports "mc_v1.1", "mc_di_v3.0" versions. Versions "mc_v2.0" and "mc_di_r2_v2.3" are deprecated (but also still supported by the SDK)
+** - the SDK supports "openid","openid mc_authn", "openid mc_identity_signup", "openid mc_signup" (DI 3.0), "openid mc_kyc_plain, "openid mc_kyc_hashed" scopes.
+Scopes openid mc_authz", "openid mc_identity_phonenumber", "openid mc_phonenumber" (DI 3.0), "openid mc_identity_nationalid", "openid mc_nationalid" (DI 3.0) are deprecated (but also still supported by the SDK).
 
 3. Open the configuration file [local path]\mobile-connect-demo\src\main\resources\config\WithoutDiscoveryData.json for setup the SDK in without discovery mode and set 17 parameters:
 ```posh
@@ -36,8 +40,8 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
   "redirectURL": "<protocol>://<hostname>/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "True",
-  "apiVersion": api version: "mc_v1.1", "mc_v2.0" or "mc_di_r2_v2.3",
-  "scope": scope,
+  "apiVersion": api version: "mc_v1.1" or "mc_di_v3.0"*,
+  "scope": scope**,
   "acrValues": acr_values,
   "MaxDiscoveryCacheSize": max cache size,
   "operatorUrls": {
@@ -49,6 +53,10 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
   }
 }
 ```
+
+* - the SDK supports "mc_v1.1", "mc_di_v3.0" versions. Versions "mc_v2.0" and "mc_di_r2_v2.3" are deprecated (but also still supported by the SDK)
+** - the SDK supports "openid","openid mc_authn", "openid mc_identity_signup", "openid mc_signup" (DI 3.0), "openid mc_kyc_plain, "openid mc_kyc_hashed" scopes.
+Scopes openid mc_authz", "openid mc_identity_phonenumber", "openid mc_phonenumber" (DI 3.0), "openid mc_identity_nationalid", "openid mc_nationalid" (DI 3.0) are deprecated (but also still supported by the SDK).
 
 4. Open sector_identifier_uri.json file and specify the value of sector_identifier_uri with a single JSON array of redirect_uri values.
 ```posh
