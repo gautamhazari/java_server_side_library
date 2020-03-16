@@ -1,6 +1,8 @@
 GSMA MobileConnect Java Server Side Library
 ==============================================================================================================
 
+:warning: <b>Important Notice:</b> <i>The Mobile Connect SDKs are no longer supported. The SDK documentation and links to the code will continue to be available on the Mobile Connect Developer Portal but the SDKs documentation and code will no longer be updated , and there will be no further bug fixes. Also, we will be unable to provide support for issues with the SDKs and their integration into applications via the Mobile Connect Service Desk.</i>
+
 Mobile Connect is a mobile identity service based on the OpenID Connect & OAuth2 where end users can authenticate themselves using their mobile phone via Mobile Connect. This allows them access to websites and applications without the need to remember passwords and usernames. It’s safe, secure and no personal information is shared without their permission.
 
 Note: if you operate in the EU then you should use EU Discovery Service domain in discovery URL: eu.discover.mobileconnect.io
